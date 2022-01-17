@@ -1,0 +1,74 @@
+/*
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        int mid=-1;
+        if(target < nums[0]|| target > nums[nums.size()-1])
+        {
+            return -1;
+        }
+        if(nums.size()==1)
+        {
+            if(target==nums[0])
+            {
+                mid=0;
+            }         
+        }//if
+        int left=0;
+        int right=nums.size()-1;
+        if(nums.size()>1)
+        {
+
+        //std::cout<<"left:"<<left<<"    "<<"right:"<<right<<endl;
+        //std::cout<<ceil(3/2)<<std::endl;
+        while(left<right-1)
+        {
+            int mid=(left+right)/2;
+            //std::cout<<mid<<std::endl;
+
+            if(target>nums[mid])
+            {
+                left=mid;
+            }
+            else{
+                if(target<nums[mid])
+                {
+                    right=mid;
+                }
+                else
+                {
+                    return mid;
+                    break;
+                }
+            }//else    
+        }//while
+        if(mid==-1)
+        {
+            if(target==nums[left])
+            {
+                mid=left;
+            }
+            if(target==nums[right])
+            {
+                mid=right;
+            }
+        }//if
+        }
+        return mid;
+    }    
+};
+*/
+//improve a bit
+class Solution {
+  public:
+  int search(vector<int>& nums, int target) {
+    int pivot, left = 0, right = nums.size() - 1;
+    while (left <= right) {
+      pivot = left + (right - left) / 2;
+      if (nums[pivot] == target) return pivot;
+      if (target < nums[pivot]) right = pivot - 1;
+      else left = pivot + 1;
+    }
+    return -1;
+  }
+};
