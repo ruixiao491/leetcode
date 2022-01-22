@@ -1,0 +1,206 @@
+ 方法二：二分查找
+
+思路与算法
+
+由于矩阵 matrix\textit{matrix}matrix 中每一行的元素都是升序排列的，因此我们可以对每一行都使用一次二分查找，判断 target\textit{target}target 是否在该行中，从而判断 target\textit{target}target 是否出现。
+
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        for (const auto& row: matrix) {
+            auto it = lower_bound(row.begin(), row.end(), target);
+            if (it != row.end() && *it == target) {
+                return true;
+            }
+        }
+        return false;
+    }
+};
+
+复杂度分析
+
+    时间复杂度：O(mlog⁡n)。对一行使用二分查找的时间复杂度为 O(log⁡n)，最多需要进行 m 次二分查找。
+
+    空间复杂度：O(1).
+    
+方法三：Z 字形查找
+
+思路与算法
+
+我们可以从矩阵 matrix\textit{matrix}matrix 的右上角 (0,n−1) 进行搜索。在每一步的搜索过程中，如果我们位于位置 (x,y)，那么我们希望在以 matrix\textit{matrix}matrix 的左下角为左下角、以 (x,y) 为右上角的矩阵中进行搜索，即行的范围为 [x,m−1]，列的范围为 [0,y]：
+
+    如果 matrix[x,y]=target\textit{matrix}[x, y] = \textit{target}matrix[x,y]=target，说明搜索完成；
+
+    如果 matrix[x,y]>target\textit{matrix}[x, y] > \textit{target}matrix[x,y]>target，由于每一列的元素都是升序排列的，那么在当前的搜索矩阵中，所有位于第 y 列的元素都是严格大于 target\textit{target}target 的，因此我们可以将它们全部忽略，即将 y 减少 1；
+
+    如果 matrix[x,y]<target\textit{matrix}[x, y] < \textit{target}matrix[x,y]<target，由于每一行的元素都是升序排列的，那么在当前的搜索矩阵中，所有位于第 x 行的元素都是严格小于 target\textit{target}target 的，因此我们可以将它们全部忽略，即将 x 增加 1。
+
+在搜索的过程中，如果我们超出了矩阵的边界，那么说明矩阵中不存在 target\textit{target}target。
+
+
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        int m = matrix.size(), n = matrix[0].size();
+        int x = 0, y = n - 1;
+        while (x < m && y >= 0) {
+            if (matrix[x][y] == target) {
+                return true;
+            }
+            if (matrix[x][y] > target) {
+                --y;
+            }
+            else {
+                ++x;
+            }
+        }
+        return false;
+    }
+};
+
+复杂度分析
+
+    时间复杂度：O(m+n)。在搜索的过程中，如果我们没有找到 target\textit{target}target，那么我们要么将 y 减少 1，要么将 x 增加 1。由于 (x,y) 的初始值分别为 (0,n−1)，因此 y 最多能被减少n 次，x 最多能被增加 m 次，总搜索次数为 m+nm + nm+n。在这之后，x 和 y 就会超出矩阵的边界。
+
+    空间复杂度：O(1)
+
+
+
+//solution brute Force  Time limit exceeded
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        for(int i=0;i<matrix.size();i++)
+        {
+            for(int j=0;j<matrix[0].size();j++)
+            {
+                if(matrix[i][j]==target)
+                {
+                    return 1;
+                }//if
+            }//for j
+        }//for i
+        return 0;
+    }
+};
+
+
+//some part is binary search and some part is Brure Force: time Limit exceeded.
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        int row=matrix.size();
+        int column=matrix[0].size();
+        if(row!=1||column!=1)
+        {
+            int left1=0;
+            int right1=row-1;
+            int left2=0;
+            int right2=column-1;
+            //std::cout<<right1<<std::endl;
+            while(left1<right1)
+            {
+                int mid = left1+(right1-left1)/2+((right1-left1)%2!=0);
+                //std::cout<<mid<<std::endl;
+                if(matrix[mid][0]<target)
+                {
+                    left1=mid;
+                }
+                if(matrix[mid][0]>target)
+                {
+                    right1=mid-1;
+                }
+                if(matrix[mid][0]==target)
+                {
+                    return 1;
+                }
+            }//while matrix[mid][0] left1
+        //left1 is the iteration index
+        //std::cout<<"left1: "<<left1<<"  "<<right1<<std::endl;
+            while(left2<right2)
+            {
+                int mid=left2+(right2-left2)/2+((right2-left2)%2!=0);
+            //std::cout<<mid<<std::endl;
+                if(matrix[0][mid]<target)
+                {
+                    left2=mid;
+                }
+                if(matrix[0][mid]>target)
+                {
+                    right2=mid-1;
+                }
+                if(matrix[0][mid]==target)
+                {
+                    return 1;
+                }           
+            }//while left2
+            for(int i=0; i<=left1;i++)
+            {
+                for(int j=0;j<=left2;j++)
+                {
+                    if(matrix[i][j]==target)
+                    {
+                        return 1;
+                    }
+                }
+            }//for
+        }//if row !=1 and column !=1
+        if(row==1&&column!=1)
+        {
+            int left=0, right=matrix[0].size()-1;
+            while(left<right)
+            {
+                int mid =left+(right-left)/2+((right-left)%2!=0);
+                if (matrix[0][mid]>target)
+                {
+                    right=mid-1;
+                }
+                if(matrix[0][mid]<target)
+                {
+                    left=mid+1;
+                }
+                if(matrix[0][mid]==target)
+                {
+                    return 1;
+                }
+            }//while left< right
+        }//row==1
+        if(column==1&&row!=1)
+        {
+            int left=0, right=matrix.size()-1;
+            while(left<right)
+            {
+                int mid =left+(right-left)/2+((right-left)%2!=0);
+                {
+                    if(matrix[mid][0]>target)
+                    {
+                        right=mid-1;
+                    }
+                    if(matrix[mid][0]<target)
+                    {
+                        left=mid+1;
+                    }
+                    if(matrix[mid][0]==target)
+                    {
+                        return 1;
+                    }
+                }
+            }//while
+        }//column==1
+        if(row==1&&column==1)
+        {
+            if(matrix[0][0]==target)
+            {
+                return 1;
+            }
+            
+        }
+        
+        return 0;
+        
+        
+        
+    }
+};
+
+
