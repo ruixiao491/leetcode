@@ -1,0 +1,37 @@
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        int row=matrix.size();
+        int column=matrix[0].size();
+        //std::cout<<"row:  "<<row<<"   "<<"column:  "<<column<<std::endl;
+        int left=0; 
+        int right=row*column-1;
+        //std::cout<<right<<endl;
+        while(left<=right)
+        {
+            int mid=left+(right-left)/2;
+            //mid row is (left+(right-left)/2)/(column+1)
+            //mid column is (left+(right-left)/2)%(column+1)
+            int mid_row=(left+(right-left)/2)/column;
+            int mid_column=(left+(right-left)/2)%column;
+            std::cout<<"mid_row:  "<<mid_row<<"   "<<"mid_column:  "<<mid_column<<"   "<<matrix[mid_row][mid_column]<<std::endl;
+            if(matrix[mid_row][mid_column]>target)
+            {
+                right=mid-1;
+            }
+            if(matrix[mid_row][mid_column]<target)
+            {
+                left=mid+1;
+            }
+            if(matrix[mid_row][mid_column]==target)
+            {
+                return 1;
+            }
+        }//while
+        return 0;
+        
+        
+        
+        
+    }
+};
