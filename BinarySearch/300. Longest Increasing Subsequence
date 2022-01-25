@@ -1,0 +1,139 @@
+/*
+//Solution 1
+//Dynamic Programming based on java
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        int n = nums.size();
+        if(n==0)
+        {
+            return 0;
+        }
+        vector<int> dp(n,1);
+        for(int i=1; i<nums.size();i++)
+        {
+            for(int j=0;j<i;j++)
+            {
+                if(nums[i]>nums[j])
+                {
+                    dp[i]=std::max(dp[i],dp[j]+1);
+                }//if
+            }//for j
+        }//for i
+        int longest =0;
+        for(int i=0;i<n;i++)
+        {
+            longest=std::max(longest,dp[i]);
+        }
+        return longest;
+    }
+};
+*/
+/*
+//solution 2 Greedy algorithm.
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        int len=0, n=nums.size();
+        if (n==0)
+        {
+            return 0;
+        }
+        vector<int>d(n,nums[0]);
+        for(int i=1;i<n;i++)
+        {
+            //std::cout<<"len:   "<<len<<"  "<<d[len]<<"  nums: "<<nums[i]<<std::endl;
+            if(nums[i]>d[len])
+            {
+                d[++len]=nums[i];
+            }//if
+            
+            else
+            {
+              //find the first element in sub that is greater than or equal to nums
+                for(int j=0;j<=len;j++)
+                {
+                    if(nums[i]<=d[j])
+                    {
+                       d[j]= nums[i];
+                        break;
+                    }
+                }
+            }//else
+            
+        }//for i
+         return len+1;   
+    }
+};
+*/
+/*
+//solution 3: greedy algorithm + binary search
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        int len=0, n=nums.size();
+        if (n==0)
+        {
+            return 0;
+        }
+        vector<int>d(n,nums[0]);
+        for(int i=1;i<n;i++)
+        {
+            //std::cout<<"len:   "<<len<<"  "<<d[len]<<"  nums: "<<nums[i]<<std::endl;
+            if(nums[i]>d[len])
+            {
+                d[++len]=nums[i];
+            }//if
+            
+            else
+            {
+              //find the first element in sub that is greater than or equal to nums
+                int left=0, right=len;
+                while(left<right)
+                {
+                    int mid=left+(right-left)/2;
+                    //std::cout<<"left:  "<<left<<"   "<<"right:  "<<right<<"mid:  "<<mid<<"  "<<nums[i]<<"   "<<d[mid]<<std::endl;
+                    if(nums[i]>d[mid])
+                    {
+                        left=mid+1;
+                    }
+                    else
+                    {
+                        right=mid;
+                    }
+                }//while
+                d[left]=nums[i];
+                
+            }//else
+            
+        }//for i
+         return len+1;   
+    }
+};
+*/
+//same as solution 3, but change the mannually binary search to lower_bound.
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        int n=nums.size();
+        if(n==0)
+        {
+            return 0;
+        }
+        vector<int>d;
+        d.push_back(nums[0]);
+        for(int i=1;i<n;i++)
+        {
+            auto index = lower_bound(d.begin(),d.end(),nums[i]);
+            if(index==d.end())
+            {
+                d.push_back(nums[i]);
+            }
+            else
+            {
+                *index=nums[i];
+            }
+        }//for i
+        return d.size();
+    }
+};
