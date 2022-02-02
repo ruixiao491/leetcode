@@ -1,0 +1,81 @@
+/*
+//Solution 1: Brute Force: time limit exceeded
+class Solution {
+public:
+    int fourSumCount(vector<int>& nums1, vector<int>& nums2, vector<int>& nums3, vector<int>& nums4) {
+        int n = nums1.size();
+        int ans=0;
+        for (int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                for(int k=0;k<n;k++)
+                {
+                    for(int l=0;l<n;l++)
+                    {
+                        if(nums1[i]+nums2[j]+nums3[k]+nums4[l]==0)
+                        {
+                            ans++;
+                        }//if
+                        
+                        
+                    }//for l
+                }//for k
+            }//for j
+        }//for i
+        return ans;
+    }
+};
+*/
+
+#################################################
+The following solutions are from solution part:
+###################
+Approach 1: Hashmap
+###################
+int fourSumCount(vector<int>& A, vector<int>& B, vector<int>& C, vector<int>& D) {
+    int cnt = 0;
+    unordered_map<int, int> m;
+    for (int a : A)
+        for (int b : B)
+            ++m[a + b];
+    for (int c : C)
+        for (int d : D) {
+            auto it = m.find(-(c + d));
+            if (it != end(m))
+                cnt += it->second;
+        }
+    return cnt;
+}
+
+####################
+Approach 2: kSum II
+####################
+int fourSumCount(vector<int>& A, vector<int>& B, vector<int>& C, vector<int>& D) {
+    return kSumCount(vector<vector<int>>() = {A, B, C, D});
+}
+int kSumCount(vector<vector<int>> &lists) {
+    unordered_map<int, int> m;
+    addToHash(lists, m, 0, 0);
+    return countComplements(lists, m, lists.size() / 2, 0);
+}
+void addToHash(vector<vector<int>> &lists, unordered_map<int, int> &m, int i, int sum) {
+    if (i == lists.size() / 2)
+        ++m[sum];
+    else
+        for (int a : lists[i])
+            addToHash(lists, m, i + 1, sum + a);
+}
+int countComplements(vector<vector<int>> &lists, unordered_map<int, int> &m, int i, int complement) {
+    if (i == lists.size()) {
+        auto it = m.find(complement);
+        return it == end(m) ? 0 : it->second;
+    }
+    int cnt = 0;
+    for (int a : lists[i])
+        cnt += countComplements(lists, m, i + 1, complement - a);
+    return cnt;
+}
+
+
+
