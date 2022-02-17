@@ -1,0 +1,90 @@
+//My solution: which is similar to 86 2 pointers method.
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        //find the length
+        int length=0;
+        if(head==nullptr)
+        {
+            return head;
+        }
+        ListNode *cur=head;
+        while(cur!=nullptr)
+        {
+            length++;
+            cur=cur->next;
+        }//while
+        if(length==1)
+        {
+            return head;
+        }
+        k=k%length;
+        if(k==0)
+        {
+            return head;
+        }
+        ListNode *dummyHead= new ListNode(0,head);
+        ListNode *dummyHead2=new ListNode(0);
+        int remain_length=length-k;
+        ListNode *prev=dummyHead->next;
+        while(remain_length!=1)
+        {
+            prev=prev->next;
+            remain_length--;
+        }//while
+        dummyHead2->next=prev->next;
+        //std::cout<<"check1: "<<dummyHead2->next->val<<std::endl;
+        prev->next=nullptr;
+        cur=dummyHead2->next;
+        while(cur->next!=nullptr)
+        {
+            cur=cur->next;
+        }
+        //std::cout<<"check: "<<cur->val<<std::endl;
+        cur->next=dummyHead->next;
+        return dummyHead2->next;
+        
+        
+        
+    }
+};
+
+
+
+################################
+The solution in the solution part: generate the ring, and then break, which is faster than my solution, since it generate the ring and calcualte the length of the list at the same time.
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        if (k == 0 || head == nullptr || head->next == nullptr) {
+            return head;
+        }
+        int n = 1;
+        ListNode* iter = head;
+        while (iter->next != nullptr) {
+            iter = iter->next;
+            n++;
+        }
+        int add = n - k % n;
+        if (add == n) {
+            return head;
+        }
+        iter->next = head;
+        while (add--) {
+            iter = iter->next;
+        }
+        ListNode* ret = iter->next;
+        iter->next = nullptr;
+        return ret;
+    }
+};
