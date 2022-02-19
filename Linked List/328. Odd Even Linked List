@@ -1,0 +1,73 @@
+My solution: two pointers
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* oddEvenList(ListNode* head) {
+        ListNode *dummyodd=new ListNode(0);
+        ListNode *dummyeven = new ListNode(0);
+        ListNode *odd = dummyodd;
+        ListNode *even = dummyeven;
+        ListNode *cur=head;
+        int count=1;
+        while(cur!=nullptr)
+        {
+            //std::cout<<count^0<<std::endl;
+            if(count%2==1)
+            {
+                //std::cout<<"test"<<std::endl;
+                odd->next=cur;
+                odd=odd->next;
+                cur=cur->next;
+                count++;
+            }
+            else
+            {
+                even->next=cur;
+                even=even->next;
+                cur=cur->next;
+                count++;
+            }
+            
+        }//while cur
+        even->next=nullptr;
+        odd->next=dummyeven->next;
+        return dummyodd->next;
+        
+        
+        
+    }
+};
+
+
+
+#########################################
+//The solution in the solution part: one pointer solution:
+class Solution {
+public:
+    ListNode* oddEvenList(ListNode* head) {
+        if (head == nullptr) {
+            return head;
+        }
+        ListNode* evenHead = head->next;
+        ListNode* odd = head;
+        ListNode* even = evenHead;
+        while (even != nullptr && even->next != nullptr) {
+            odd->next = even->next;
+            odd = odd->next;
+            even->next = odd->next;
+            even = even->next;
+        }
+        odd->next = evenHead;
+        return head;
+    }
+};
+
