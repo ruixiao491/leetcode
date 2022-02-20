@@ -1,0 +1,107 @@
+//My solutions:
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+#########################
+//solution1: 2 pointers
+#########################
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        if(head==nullptr||head->next==nullptr)
+        {
+            return head;
+        }
+        ListNode* dummyodd = new ListNode(-1);
+        ListNode* dummyeven = new ListNode(-1);
+        ListNode* odd=dummyodd;
+        ListNode* even=dummyeven;
+        ListNode* cur=head;
+        int counts=1;
+        while(cur!=nullptr)
+        {
+            if(counts%2==1)
+            {
+                odd->next=cur;
+                odd=odd->next;
+                cur=cur->next;
+                counts++;
+            }
+            else
+            {
+                even->next=cur;
+                even=even->next;
+                cur=cur->next;
+                counts++;
+            }        
+        }//while
+        //merge together
+        ListNode* head1=dummyodd->next;
+        ListNode* head2=dummyeven->next;
+        while(head1!=nullptr&&head2!=nullptr)
+        {
+            ListNode *third_odd=head1->next;
+            ListNode *third_even=head2->next;
+            head2->next=head1;
+            head1->next=third_even;
+            head1=third_odd;
+            head2=third_even;
+        }//while
+        if(head1!=nullptr)
+        {
+            head2=head1;
+        }
+        return dummyeven->next;
+    }
+};
+
+###########################
+Solution2: iterative method:
+###########################
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        ListNode* dummyHead= new ListNode(0,head);
+        ListNode* cur=dummyHead;
+        while(cur->next!=nullptr&&cur->next->next!=nullptr)
+        {
+            ListNode* odd=cur->next;
+            ListNode* even=cur->next->next;
+            ListNode* odd2=even->next;
+            ///swap
+            cur->next=even;
+            cur->next->next=odd;
+            cur->next->next->next=odd2;
+            cur=cur->next->next;
+            
+        }
+        return dummyHead->next;
+        
+    }
+};
+
+
+#########################################
+The method in the solution part: recursion:
+#########################################
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        if (head == nullptr || head->next == nullptr) {
+            return head;
+        }
+        ListNode* newHead = head->next;
+        head->next = swapPairs(newHead->next);
+        newHead->next = head;
+        return newHead;
+    }
+};
+
+
