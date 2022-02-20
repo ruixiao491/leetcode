@@ -1,0 +1,63 @@
+My method:
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        ListNode* slow=head;
+        ListNode* fast=head;
+        while(fast!=nullptr)
+        {
+            slow=slow->next;
+            if(fast->next==nullptr)
+            {
+                return nullptr;
+            }
+            fast=fast->next->next;
+            if(fast==slow)
+            {
+                //std::cout<<fast->val<<std::endl;
+                slow=head;
+                while(slow!=fast)
+                {
+                    slow=slow->next;
+                    fast=fast->next;
+                }//while slow!=fast
+                return fast;
+            }//if 
+            
+        }
+        return fast;
+        
+    }
+};
+
+
+
+
+##################################
+The Solution in the solution part:
+Hash Table:
+##################################
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        unordered_set<ListNode *> visited;
+        while (head != nullptr) {
+            if (visited.count(head)) {
+                return head;
+            }
+            visited.insert(head);
+            head = head->next;
+        }
+        return nullptr;
+    }
+};
+
