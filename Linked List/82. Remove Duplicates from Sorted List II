@@ -1,0 +1,150 @@
+#################
+///My solution1: 
+#################
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        ListNode* dummyHead= new ListNode(0);
+        ListNode* cur=head;
+        ListNode* temp=dummyHead;
+        while(cur!=nullptr)
+        {
+            if(cur->next!=nullptr&&cur->val!=cur->next->val)
+            {
+                temp->next=cur;
+                //std::cout<<temp->next->val<<std::endl;
+                temp=temp->next;
+                cur=cur->next;
+            }//if
+            else
+            {
+                //cur->val=cur->next->val
+                if(cur->next!=nullptr)
+                {
+                    int value=cur->val;
+                    while(cur!=nullptr&&cur->val==value)
+                    {
+                        std::cout<<cur->val<<std::endl;
+                        cur=cur->next;
+                    }
+                    if(cur==nullptr)
+                    {
+                        temp->next=nullptr;
+                    }
+                    //std::cout<<cur->val<<std::endl;
+                }//if
+                else
+                {
+                    if(cur->next==nullptr)
+                    {
+                        //std::cout<<cur->val<<std::endl;
+                        temp->next=cur;
+                        cur=cur->next;
+                    }
+                    
+                }//else if
+                
+                
+            }//else
+            
+
+        }//while
+        return dummyHead->next;
+    }
+};
+
+############################
+///My solution2 to with map:
+############################
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        ListNode* dummyHead= new ListNode(0);
+        ListNode* cur=head;
+        ListNode* temp=dummyHead;
+        unordered_map <int, int> seen;
+        ListNode* prev=nullptr;
+        while(cur!=nullptr)
+        {
+            if(!seen.count(cur->val))
+            {
+                //std::cout<<cur->val<<std::endl;
+                seen.insert({cur->val,1});
+                prev=temp;
+                //std::cout<<prev->val<<"  "<<cur->val<<std::endl;
+                temp->next=cur;
+                //std::cout<<temp->next->val<<std::endl;
+                temp=temp->next;
+                cur=cur->next;
+            }//if
+            else
+            {
+                //std::cout<<"check: "<<cur->val<<std::endl;
+                ++seen[cur->val];
+                if(seen[cur->val]==2)
+                {
+                    //std::cout<<"check: "<<temp->val<<std::endl;
+                    //temp=prev; 
+                    if(prev==nullptr)
+                    {
+                        dummyHead->next=nullptr;
+                        temp=dummyHead;
+                    }
+                    else
+                    {
+                        std::cout<<prev->next->val<<std::endl;
+                        prev->next=nullptr;
+                        temp=prev;
+                    }
+                }//if ==2
+                cur=cur->next;
+            }//else
+            
+        }//while
+        return dummyHead->next;
+        
+    }
+};
+
+
+
+#####################################################################
+The solution in the solution part, which is similar to my solution 1
+#####################################################################
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        if (!head) {
+            return head;
+        }
+        
+        ListNode* dummy = new ListNode(0, head);
+
+        ListNode* cur = dummy;
+        while (cur->next && cur->next->next) {
+            if (cur->next->val == cur->next->next->val) {
+                int x = cur->next->val;
+                while (cur->next && cur->next->val == x) {
+                    cur->next = cur->next->next;
+                }
+            }
+            else {
+                cur = cur->next;
+            }
+        }
+
+        return dummy->next;
+    }
+};
+
