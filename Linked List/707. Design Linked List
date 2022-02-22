@@ -1,0 +1,158 @@
+///My solution after modifying several times
+class LinkedList {
+public:
+    int val;
+    LinkedList* next;
+};  
+LinkedList* head;
+
+
+class MyLinkedList {
+public:
+    MyLinkedList() {
+        head=nullptr;
+        
+        
+    }
+    
+    
+    int get(int index) {
+        int res=-1;
+        int counts=0;
+        LinkedList* cur=head;
+        while(cur!=nullptr)
+        {
+            if(counts==index)
+            {
+                //std::cout<<"check: "<<std::endl;
+                res=cur->val;
+                break;
+            }
+            else
+            {
+                counts++;
+                cur=cur->next;
+            }
+        }//while cur!-nullptr
+        return res;        
+    }//get(int index)
+    
+    void addAtHead(int val) {
+        LinkedList *node = new LinkedList();
+        node->val=val;
+        node->next=head;
+        head=node;
+        
+    }//addAtHead
+    
+    void addAtTail(int val) {
+        if(head==nullptr)
+        {
+            LinkedList *third= new LinkedList();   
+            third->val=val;
+            third->next=nullptr;
+            head=third;
+        }
+        else
+        {
+            LinkedList* cur=head;
+            while(cur->next!=nullptr)
+            {
+                cur=cur->next;
+            }
+            LinkedList* node = new LinkedList();
+            node->val=val;
+            node->next=nullptr;
+            cur->next=node;
+            //std::cout<<"test tail"<<std::endl;
+        }//else
+        
+        
+    }//addAtTail
+    
+    void addAtIndex(int index, int val) {
+        int counts=0;
+        LinkedList *cur=head;
+        if(index==0)
+        {
+            LinkedList *third = new LinkedList();
+            third->val=val;
+            third->next=head;
+            head=third;
+        }
+        else
+        {
+            while(cur!=nullptr)
+            {
+                if(counts==index-1)
+                {
+                    LinkedList *prev=cur;
+                    LinkedList *post=cur->next;
+                    LinkedList* node=new LinkedList();
+                    node->val=val;
+                    node->next=post;
+                    prev->next=node;
+                    break;
+                }//if=index-1
+                else
+                {
+                    cur=cur->next;
+                    counts++;
+                }//else
+                
+            }//while
+            //std::cout<<"counts: "<<counts<<std::endl;
+            if(counts<index)
+            {
+                return;
+            }
+            if(counts==index)
+            {
+                addAtTail(val);
+                return;
+            }
+        }//else 
+    }//addAtIndex
+    
+    
+    
+    void deleteAtIndex(int index) {
+        int counts=0;
+        LinkedList *cur=head;
+        if(index==0)
+        {
+            head=head->next;
+        }
+        else
+        {
+            while(cur!=nullptr)
+            {
+                if(counts==index-1&&cur->next!=nullptr)
+                {
+                    //std::cout<<index<<std::endl;
+                    cur->next=cur->next->next;   
+                    break;
+                }//if=index-1
+                else
+                {
+                    cur=cur->next;
+                    counts++;
+                }//else
+            }//while 
+            if(counts<=index)
+            {
+                return;
+            }
+        }//else
+    }//deleteAtIndex
+};
+
+/**
+ * Your MyLinkedList object will be instantiated and called as such:
+ * MyLinkedList* obj = new MyLinkedList();
+ * int param_1 = obj->get(index);
+ * obj->addAtHead(val);
+ * obj->addAtTail(val);
+ * obj->addAtIndex(index,val);
+ * obj->deleteAtIndex(index);
+ */
