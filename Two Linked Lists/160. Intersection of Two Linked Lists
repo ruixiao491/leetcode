@@ -1,0 +1,105 @@
+//My solutions.
+###############################################################
+Solution1: two pointers with a cycle and change the lists back
+###############################################################
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ 
+/// slow and fast pointer
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        ////linked the tail of listA to its head
+        ListNode *cur=headA;
+        while(cur->next!=nullptr)
+        {
+            cur=cur->next;
+        }//while
+        ListNode *tailA=cur;
+        cur->next=headA;
+        //two pointers approach
+        ListNode* slow=headB;
+        ListNode* fast=headB;
+        //std::cout<<"test"<<std::endl;
+        while(fast!=nullptr)
+        {
+            slow=slow->next;
+            if(fast->next==nullptr)
+            {
+                tailA->next=nullptr;
+                return nullptr;
+            }
+            fast=fast->next->next;
+            if(slow==fast)
+            {
+                //std::cout<<slow->val<<std::endl;
+                slow=headB;
+                while(slow!=fast)
+                { 
+                    slow=slow->next;
+                    std::cout<<slow->val<<std::endl;
+                    fast=fast->next;
+                }
+                tailA->next=nullptr;
+                return fast;
+            }//if
+        }//while
+        tailA->next=nullptr;
+        return nullptr;
+        
+    }
+};
+*/
+
+#################
+//solution2: set
+#################
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        set<ListNode*> seen;
+        ListNode* cur=headA;
+        while(cur!=nullptr)
+        {
+            seen.insert(cur);
+            cur=cur->next;
+        }//while
+        cur=headB;
+        while(cur!=nullptr)
+        {
+            if(!seen.count(cur))
+            {
+                seen.insert(cur);
+                cur=cur->next;
+            }
+            else
+            {
+                return cur;
+            }
+        }//while
+        return nullptr;
+    }
+};
+
+#########################################
+The solution in the solution part
+#########################################
+Two pointers
+##############
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        ListNode *pA = headA;
+        ListNode *pB = headB;
+        while (pA != pB) {
+            pA = pA == nullptr ? headB : pA->next;
+            pB = pB == nullptr ? headA : pB->next;
+        }
+        return pA;
+    }
+};
