@@ -1,0 +1,290 @@
+///My solutions:
+########################
+Reverse the inputs
+########################
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+
+class Solution {
+private:
+    ListNode* reverselist(ListNode* head)
+    {
+        ListNode* pre=nullptr;
+        ListNode* cur=head;
+        while(cur!=nullptr)
+        {
+            ListNode* next=cur->next;
+            cur->next=pre;
+            pre=cur;
+            cur=next;
+        }//while
+        return pre;
+    }//reverselist
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode* list1=reverselist(l1);
+        //std::cout<<list1->next->val<<std::endl;
+        ListNode* list2=reverselist(l2);
+        //std::cout<<list2->val<<std::endl;
+        ListNode* head=nullptr;
+        ListNode* tail=nullptr;
+        int carry=0;
+        while(list1!=nullptr||list2!=nullptr)
+        {
+            int n1= list1!=nullptr ? list1->val: 0;
+            int n2= list2!=nullptr ? list2->val: 0;
+            //std::cout<<"n1: "<<n1<<"  "<<"n2:  "<<n2<<std::endl;
+            int sum=n1+n2+carry;
+            //std::cout<<sum<<std::endl;
+            if(head==nullptr)
+            {
+                head=new ListNode(sum%10);
+                //std::cout<<head->val<<std::endl;
+                tail=head;
+            }
+            else
+            {
+                tail->next=new ListNode(sum%10);
+                //std::cout<<tail->val<<std::endl;
+                tail=tail->next;
+            }
+            carry=sum/10;
+            if(list1!=nullptr)
+            {
+                list1=list1->next;
+                //std::cout<<list1->val<<std::endl;
+            }
+            if(list2!=nullptr)
+            {
+                list2=list2->next;
+            }
+        
+        
+        
+        }//while
+        if(carry>0)
+        {
+            tail->next=new ListNode(1);
+            
+        }
+        ListNode* ans=reverselist(head);
+        return ans;
+        
+        
+    }
+};
+
+
+########################################################################
+Modify my first solution a bit based on the solution in the solution part
+########################################################################
+////do not need to reverse the output with the reverse function
+class Solution {
+private:
+    ListNode* reverselist(ListNode* head)
+    {
+        ListNode* pre=nullptr;
+        ListNode* cur=head;
+        while(cur!=nullptr)
+        {
+            ListNode* next=cur->next;
+            cur->next=pre;
+            pre=cur;
+            cur=next;
+        }//while
+        return pre;
+    }//reverselist
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode* list1=reverselist(l1);
+        //std::cout<<list1->next->val<<std::endl;
+        ListNode* list2=reverselist(l2);
+        //std::cout<<list2->val<<std::endl;
+        ListNode* head=nullptr;
+        //ListNode* tail=nullptr;
+        int carry=0;
+        while(list1!=nullptr||list2!=nullptr)
+        {
+            int n1= list1!=nullptr ? list1->val: 0;
+            int n2= list2!=nullptr ? list2->val: 0;
+            //std::cout<<"n1: "<<n1<<"  "<<"n2:  "<<n2<<std::endl;
+            int sum=n1+n2+carry;
+            //std::cout<<sum<<std::endl;
+            ListNode* cur = new ListNode(sum%10);
+            cur->next=head;
+            head=cur;           
+            carry=sum/10;
+            if(list1!=nullptr)
+            {
+                list1=list1->next;
+                //std::cout<<list1->val<<std::endl;
+            }
+            if(list2!=nullptr)
+            {
+                list2=list2->next;
+            }        
+        }//while
+        if(carry>0)
+        {
+            ListNode *cur= new ListNode(carry);
+            cur->next=head;
+            head=cur;
+            
+        }
+        return head;        
+    }
+};
+
+#######################################################
+My solution2: reverse the ouput 
+#######################################################
+class Solution {
+private:
+    ListNode* reverselist(ListNode* head)
+    {
+        ListNode* pre=nullptr;
+        ListNode* cur=head;
+        while(cur!=nullptr)
+        {
+            ListNode* next=cur->next;
+            cur->next=pre;
+            pre=cur;
+            cur=next;
+        }//while
+        return pre;
+    }//reverselist
+    
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        //calculate the length
+        ListNode* cur=l1;
+        ListNode* dummyHead=new ListNode(0);
+        int length1=0;
+        int length2=0;
+        while(cur!=nullptr)
+        {
+            length1++;
+            cur=cur->next;
+            
+        }//while for list1
+        cur=l2;
+        while(cur!=nullptr)
+        {
+            length2++;
+            cur=cur->next;
+        }//while for list2
+        if(length1>=length2)
+        { 
+            ListNode* list1=l1;
+            ListNode* list2=l2;
+            ListNode* temp=dummyHead;
+            while(length1!=length2)
+            {
+                temp->next=list1;
+                list1=list1->next;
+                length1--;
+                temp=temp->next;
+            }//while
+            temp->next=nullptr;
+            while(list1!=nullptr)
+            {
+                int n1= list1->val;
+                int n2= list2->val;
+                int sum=n1+n2;
+                temp->next=new ListNode(sum);
+                temp=temp->next;
+                list1=list1->next;
+                list2=list2->next;                
+            }//list1!=nullptr           
+        }//if list1>list2
+        else
+        {
+            ListNode* list1=l1;
+            ListNode* list2=l2;
+            ListNode* temp=dummyHead;
+            while(length1!=length2)
+            {
+                temp->next=list2;
+                list2=list2->next;
+                length2--; 
+                temp=temp->next;
+            }//while
+            temp->next=nullptr;
+            while(list1!=nullptr)
+            {
+                int n1= list1->val;
+                int n2= list2->val;
+                int sum=n1+n2;
+                temp->next=new ListNode(sum);
+                temp=temp->next;
+                list1=list1->next;
+                list2=list2->next;                
+            }//list1!=nullptr            
+        }//else
+        ListNode* res_ans=reverselist(dummyHead->next);
+        ListNode* temp=res_ans;
+        while(temp!=nullptr)
+        {
+            if(temp->val>9)
+            {
+                temp->val=temp->val%10;
+                if(temp->next!=nullptr)
+                {
+                    temp->next->val=temp->next->val+1;
+                }//if
+                else
+                {
+                    temp->next=new ListNode(1);
+                }
+                
+            }//if temp->val >9
+            temp=temp->next;
+        }//while temp
+        return reverselist(res_ans);       
+    }
+};
+
+
+
+#########################################################
+#########################################################
+The solution the solution part in the Chinese version
+#########################################################
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        stack<int> s1, s2;
+        while (l1) {
+            s1.push(l1 -> val);
+            l1 = l1 -> next;
+        }
+        while (l2) {
+            s2.push(l2 -> val);
+            l2 = l2 -> next;
+        }
+        int carry = 0;
+        ListNode* ans = nullptr;
+        while (!s1.empty() or !s2.empty() or carry != 0) {
+            int a = s1.empty() ? 0 : s1.top();
+            int b = s2.empty() ? 0 : s2.top();
+            if (!s1.empty()) s1.pop();
+            if (!s2.empty()) s2.pop();
+            int cur = a + b + carry;
+            carry = cur / 10;
+            cur %= 10;
+            auto curnode = new ListNode(cur);
+            curnode -> next = ans;
+            ans = curnode;
+        }
+        return ans;
+    }
+};
+
