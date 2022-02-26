@@ -1,0 +1,136 @@
+///My solution:
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+#################################
+My Solution: compare each list
+#################################
+class Solution {
+public:
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        if(lists.size()==0)
+        {
+            return nullptr;
+        }
+        ListNode* list1=lists[0];
+        int size=lists.size();
+        //std::cout<<"size:  "<<size<<std::endl;
+        ListNode* dummyHead= new ListNode(0,list1);
+        for(int i=1;i<size;i++)
+        {
+            ListNode* head1=dummyHead->next;
+            ListNode* listi=lists[i];
+            ListNode* head2=listi;
+            ListNode* temp=dummyHead;
+            if(listi==nullptr)
+            {
+                continue;
+            }
+            if(head1==nullptr)
+            {
+                temp->next=listi;
+                continue;
+            }
+            
+            
+            while(head1!=nullptr&&head2!=nullptr)
+            {
+                if(head1->val<=head2->val)
+                {
+                    temp->next=head1;
+                    head1=head1->next;
+                    temp=temp->next;
+                }
+                else
+                {
+                    temp->next=head2;
+                    head2=head2->next;
+                    temp=temp->next;
+                }
+                if(head1!=nullptr)
+                {
+                    temp->next=head1;
+                }
+                if(head2!=nullptr)
+                {
+                    temp->next=head2;
+                }
+            }//while
+            
+        }//for
+                            
+        return dummyHead->next;
+        
+    }
+};
+
+###########################################################
+The solutions in the solution part in the Chinese version
+###########################################################
+1) Improve my solution a bit by "分治合并“
+
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode *a, ListNode *b) {
+        if ((!a) || (!b)) return a ? a : b;
+        ListNode head, *tail = &head, *aPtr = a, *bPtr = b;
+        while (aPtr && bPtr) {
+            if (aPtr->val < bPtr->val) {
+                tail->next = aPtr; aPtr = aPtr->next;
+            } else {
+                tail->next = bPtr; bPtr = bPtr->next;
+            }
+            tail = tail->next;
+        }
+        tail->next = (aPtr ? aPtr : bPtr);
+        return head.next;
+    }
+
+    ListNode* merge(vector <ListNode*> &lists, int l, int r) {
+        if (l == r) return lists[l];
+        if (l > r) return nullptr;
+        int mid = (l + r) >> 1;
+        return mergeTwoLists(merge(lists, l, mid), merge(lists, mid + 1, r));
+    }
+
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        return merge(lists, 0, lists.size() - 1);
+    }
+};
+
+#######################################################################################################
+Solution2: with priority_queue (actually, I do not like this method, more or less like the brute Froce)
+#######################################################################################################
+class Solution {
+public:
+    struct Status {
+        int val;
+        ListNode *ptr;
+        bool operator < (const Status &rhs) const {
+            return val > rhs.val;
+        }
+    };
+
+    //priority_queue<Status,vector<Status>,greater<Status>> q;
+    priority_queue<Status> q;
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        for (auto node: lists) {
+            if (node) q.push({node->val, node});
+        }
+        ListNode head, *tail = &head;
+        while (!q.empty()) {
+            auto f = q.top(); q.pop();
+            tail->next = f.ptr; 
+            tail = tail->next;
+            if (f.ptr->next) q.push({f.ptr->next->val, f.ptr->next});
+        }
+        return head.next;
+    }
+};
