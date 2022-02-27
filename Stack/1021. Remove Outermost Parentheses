@@ -1,0 +1,70 @@
+////My solution:class Solution {
+public:
+    string removeOuterParentheses(string s) {
+        //similar to Prob. 20 use stack to store the left parentheses
+        //std::cout<<s.size()<<std::endl;
+        stack<char> stk;
+        string ans;
+        stk.push(s[0]);
+        for(int i=1;i<s.size();i++)
+        {
+            //std::cout<<"first test  "<<i<<std::endl;
+            if(s[i]==')')
+            {
+                stk.pop();
+                if(stk.empty())
+                {
+                    if(i!=s.size()-1)
+                    {
+                        //std::cout<<i<<std::endl;
+                        stk.push(s[i+1]);
+                        i=i+1;
+                      //std::cout<<"second check: "<<i<<std::endl;  
+                    }
+                    //std::cout<<i<<" "<<stk.top()<<std::endl;
+                    continue;
+                }
+            }//if
+            else
+            {
+                //std::cout<<i<<std::endl;
+                stk.push(s[i]);
+            }
+            ans.push_back(s[i]); 
+            
+            
+        }//for
+        return ans;
+        
+    }
+};
+
+
+
+////The others' splution in the forum
+class Solution {
+public:
+    string removeOuterParentheses(string S) {
+        int n = S.size();
+        stack<int> s;
+        string res = "";
+        for (int i = 0; i < n; ++i)
+        {
+            if (S[i] == '(')
+            {
+                s.push(i);
+            }
+            else
+            {
+                int start = s.top();
+                s.pop();
+                if (s.empty())
+                {
+                    res += S.substr(start+1, i-start-1);
+                }
+            }
+        }
+
+        return res;
+    }
+};
