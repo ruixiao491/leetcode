@@ -1,0 +1,60 @@
+////My solution (not good)
+class Solution {
+public:
+    string removeDuplicates(string s) {
+        string ans;
+        stack<char> stack;
+        stack.push(s[0]);
+        //std::cout<<stack.top()<<std::endl;
+        for(int i=1;i<s.size();i++)
+        {
+            if(!stack.empty()&&stack.top()==s[i])
+            {
+                std::cout<<s[i]<<std::endl;
+                stack.pop();
+                continue;
+            }
+            else
+            {
+                //std::cout<<"filling: "<<s[i]<<std::endl;
+                stack.push(s[i]);
+            }
+            
+        }//for
+        
+        while(!stack.empty())
+        {
+            //std::cout<<stack.top()<<std::endl;
+            ans.push_back(stack.top());
+            stack.pop();
+        }//while
+        
+        reverse(ans.begin(),ans.end());
+       return ans; 
+       
+    }
+};
+
+
+
+
+
+
+############################################################################
+The solution in the solution part. String perfoms more or less like a stack
+############################################################################
+class Solution {
+public:
+    string removeDuplicates(string s) {
+        string stk;
+        for (char ch : s) {
+            if (!stk.empty() && stk.back() == ch) {
+                stk.pop_back();
+            } else {
+                stk.push_back(ch);
+            }
+        }
+        return stk;
+    }
+};
+
