@@ -1,0 +1,49 @@
+My solution:
+class Solution {
+public:
+    int calPoints(vector<string>& ops) {
+        vector<int> ans;
+        int size=ops.size();
+        if(size==1)
+        {
+            return stoi(ops[0]);
+        }//if
+        for(int i=0;i<size;i++)
+        {
+            if(ops[i]=="C")
+            {
+                ans.pop_back();
+            }
+            else 
+            {
+                if(ops[i]=="D")
+                {
+                int prev=ans.back();
+                ans.push_back(prev*2);
+                }
+                else
+                {
+                    if(ops[i]=="+")
+                    {
+                        int prev1=ans.back();
+                        ans.pop_back();
+                        int prev2=ans.back();
+                        ans.push_back(prev1);
+                        ans.push_back(prev1+prev2);
+                    }
+                    else{
+                        ans.push_back(stoi(ops[i]));
+                    }
+                    
+                }//else
+            }//else         
+        }//for
+        int sum=0;
+        for(int i=0;i<ans.size();i++)
+        {
+            sum=sum+ans[i];
+        }
+        return sum;
+        
+    }
+};
