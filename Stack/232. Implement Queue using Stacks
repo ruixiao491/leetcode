@@ -1,0 +1,65 @@
+My solution, which is sams as the approach 2 in the solution part:
+
+class MyQueue {
+public:
+    stack<int> stk1, stk2;
+    MyQueue() {
+        
+    }
+    
+    void push(int x) {
+        stk1.push(x);
+        
+    }
+    
+    int pop() {
+        while(!stk1.empty())
+        {
+            int value=stk1.top();
+            stk2.push(value);
+            stk1.pop();
+        }
+        int ans=stk2.top();
+        stk2.pop();
+        while(!stk2.empty())
+        {
+            int value=stk2.top();
+            stk1.push(value);
+            stk2.pop();
+        }
+        return ans;
+        
+    }
+    
+    int peek() {
+        while(!stk1.empty())
+        {
+            int value=stk1.top();
+            stk2.push(value);
+            stk1.pop();
+        }
+        int ans=stk2.top();
+        while(!stk2.empty())
+        {
+            int value=stk2.top();
+            stk1.push(value);
+            stk2.pop();
+        }
+        return ans;
+        
+    }
+    
+    bool empty() {
+        return stk1.empty();
+        
+    }
+};
+
+/**
+ * Your MyQueue object will be instantiated and called as such:
+ * MyQueue* obj = new MyQueue();
+ * obj->push(x);
+ * int param_2 = obj->pop();
+ * int param_3 = obj->peek();
+ * bool param_4 = obj->empty();
+ */
