@@ -1,0 +1,38 @@
+My solution:
+
+class Solution {
+public:
+    vector<int> findKDistantIndices(vector<int>& nums, int key, int k) {
+        vector<int> ans;
+        set<int> check;
+        vector<int> result;
+        int n=nums.size();
+        for(int i=0;i<nums.size();i++)
+        {
+            if(nums[i]==key)
+            {
+                ans.push_back(i);
+            }
+            
+        }//for
+        for(int i=0;i<ans.size();i++)
+        {
+            int value=k;
+            while(value>=0)
+            {
+                check.insert((ans[i]-value)<0 ? 0: ans[i]-value);
+                check.insert((ans[i]+value)>n-1 ? n-1: ans[i]+value);
+                value--;
+                
+            }//while           
+        }//for
+        auto it = check.begin();
+        while(it!=check.end())
+        {
+            result.push_back(*it);
+            it++;
+        }
+        return result;
+        
+    }
+};
