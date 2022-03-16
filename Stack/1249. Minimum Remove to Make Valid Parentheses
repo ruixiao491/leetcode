@@ -1,0 +1,132 @@
+/////My solution
+class Solution {
+public:
+    string minRemoveToMakeValid(string s) {
+        stack<int> stk;
+        //int left, right;
+        for(int i=0;i<s.size();i++)
+        {
+            if(s[i]=='(')
+            {
+                stk.push(i);
+            }
+            if(s[i]==')')
+            {
+               if(!stk.empty())
+               {
+                   stk.pop();
+               }
+                else
+                {
+                    s.erase(i,1);
+                    i--;
+                }//else
+            }//if right
+        }//for
+        //remove the lefts
+        while(!stk.empty())
+        {
+            int position=stk.top();
+            s.erase(position,1);
+            stk.pop();            
+        }
+        return s;        
+    }
+};
+
+############################################
+///The second solution in the solution part
+############################################
+class Solution {
+public:
+    string minRemoveToMakeValid(string s) {
+        int balance=0;
+        for(int i=0;i<s.size();i++)
+        {
+            if(s[i]=='(')
+            {
+                balance++;
+            }
+            if(s[i]==')')
+            {
+                if(balance==0)
+                {
+                    s.erase(i,1);
+                    i--;
+                }
+                else
+                {
+                    balance--;
+                }
+            }//for right
+        }//for i
+        reverse(s.begin(),s.end());
+        balance=0;
+        for(int i=0;i<s.size();i++)
+        {
+            if(s[i]==')')
+            {
+                balance++;
+            }
+            if(s[i]=='(')
+            {
+                if(balance==0)
+                {
+                    s.erase(i,1);
+                    i--;
+                }
+                else
+                {
+                    balance--;
+                }
+            }//for left
+            
+        }//for i
+        reverse(s.begin(),s.end());
+        return s;
+    }
+};
+
+##########################################
+//The third solution in the solution part:
+##########################################
+class Solution {
+public:
+    string minRemoveToMakeValid(string s) {
+        int balance=0;
+        for(int i=0;i<s.size();i++)
+        {
+            if(s[i]=='(')
+            {
+                balance++;
+            }
+            if(s[i]==')')
+            {
+                if(balance==0)
+                {
+                    s.erase(i,1);
+                    i--;
+                }
+                else
+                {
+                    balance--;
+                }
+            }//for right
+        }//for i
+        int i=s.size();
+        while(balance!=0)
+        {
+            if(s[i]=='(')
+            {
+                s.erase(i,1);
+                i++;
+                balance--;
+            }
+            else
+            {
+                i--;
+            }
+        }//while
+        return s;
+    }
+};
