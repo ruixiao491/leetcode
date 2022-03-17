@@ -1,0 +1,117 @@
+//My solution: Time limit exceeded
+class Solution {
+public:
+    int sumSubarrayMins(vector<int>& arr) {
+        long long ans=0;
+        for(int i=0;i<arr.size();i++)
+        {
+            stack<int> stk;
+            stk.push(arr[i]);
+            ans=ans+stk.top();
+            for(int j=i+1;j<arr.size();j++)
+            {
+                if(!stk.empty()&&arr[j]<stk.top())
+                {
+                    stk.pop();
+                    stk.push(arr[j]);                    
+                }//if !empty
+                ans=ans+stk.top();             
+            }//for j
+            
+        }//for i
+        std::cout<<"first ans: "<<ans<<std::endl;
+        int mod = 1e9+7;
+        return ans%mod;
+    }
+};
+
+##############################################
+//the first solution in the Chinese version.
+##############################################
+class Solution {
+public:
+    int sumSubarrayMins(vector<int>& arr) {
+        long long ans=0;
+        int mod=1e9+7;
+        vector<int> left;
+        vector<int> right;
+        stack<int> stk1;
+        stack<int> stk2;
+        for(int i=0;i<arr.size();i++)
+        {
+            while(!stk1.empty()&&arr[i]<arr[stk1.top()])
+            {
+                stk1.pop();              
+            }//while
+            if(stk1.empty())
+            {
+                left.push_back(-1);
+            }//if
+            else
+            {
+                left.push_back(stk1.top());
+            }
+            stk1.push(i);            
+        }//for i left
+        for(int i=arr.size()-1;i>=0;i--)
+        {
+            //std::cout<<i<<std::endl;
+            while(!stk2.empty()&&arr[i]<=arr[stk2.top()])
+            {
+                stk2.pop();                
+            }
+            //int b=stk2.empty() ? arr.size()-1: stk2.top();
+            if(stk2.empty())
+            {
+                right.push_back(arr.size());
+            }
+            else
+            {
+                right.push_back(stk2.top());
+            }
+            //std::cout<<"right"<<right[i]<<std::endl;
+            
+            stk2.push(i);           
+        }//for i right
+        reverse(right.begin(),right.end());
+        //calculate the counts
+        for(int i=0;i<arr.size();i++)
+        {
+            ans+=(long long)(i-left[i])*(right[i]-i)*arr[i]; 
+            //std::cout<<ans<<std::endl;
+            //std::cout<<i<<"    "<<(i-left[i])*(right[i]-i)*arr[i]<<std::endl;
+        }
+        //std::cout<<ans<<std::endl;
+        return ans%mod;
+        
+        
+    }
+};
+
+###########################################
+//The second solution in the solution part
+###########################################
+class Solution {
+public:
+    int sumSubarrayMins(vector<int>& arr) {
+        int mod=1e9+7;
+        int ans=0, dot=0;
+        stack<pair<int,int>> stk;
+        for(int i=0;i<arr.size();i++)
+        {
+            int count=1;
+            while(!stk.empty()&&stk.top().first>=arr[i])
+            {
+                count+=stk.top().second;
+                dot-=stk.top().first*stk.top().second;
+                //std::cout<<arr[i]<<"    "<<dot<<"  "<<count<<endl;
+                stk.pop();
+            }//while
+            stk.push({arr[i],count});
+            dot+=arr[i]*count;
+            ans+=dot;
+            ans%=mod;
+        }//for
+        return ans;
+    }
+};
