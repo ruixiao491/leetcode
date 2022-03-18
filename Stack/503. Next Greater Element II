@@ -1,0 +1,74 @@
+//My solution
+class Solution {
+public:
+    vector<int> nextGreaterElements(vector<int>& nums) {
+        stack<pair<int,int>> stk;
+        stack<pair<int,int>> stk_copy;
+        vector<int>ans(nums.size(),-1);
+        for(int i=0;i<nums.size();i++)
+        {
+           while(!stk.empty()&&nums[i]>stk.top().first)
+           {
+               int index=stk.top().second;
+               ans[index]=nums[i];
+               //std::cout<<index<<"   "<<nums[i]<<std::endl;
+               stk.pop();
+           }
+            stk.push({nums[i],i});
+            
+        }//for first turn
+        //std::cout<<stk.size()<<std::endl;
+        while(!stk.empty())
+        {
+            stk_copy.push({stk.top().first,stk.top().second});
+            stk.pop();
+        }
+        int index=stk_copy.top().second;
+        //std::cout<<index<<std::endl;
+        while(!stk_copy.empty())
+        {
+            stk.push({stk_copy.top().first,stk_copy.top().second});
+            stk_copy.pop();
+        }
+        //std::cout<<stk.size()<<std::endl;
+        for(int i=0;i<=index;i++)
+        {
+            //std::cout<<i<<"  "<<stk.top().first<<std::endl;
+            while(!stk.empty()&&nums[i]>stk.top().first)
+            {
+                int index2=stk.top().second;
+                ans[index2]=nums[i];
+                stk.pop();
+            }
+        }//for
+        while(!stk.empty())
+        {
+            int index2=stk.top().second;
+            ans[index2]=-1;
+            stk.pop();
+        }//while
+        return ans;
+        
+        
+    }
+};
+
+#############################################################
+////The solution in the solution part in the Chinese version
+#############################################################
+class Solution {
+public:
+    vector<int> nextGreaterElements(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> ret(n, -1);
+        stack<int> stk;
+        for (int i = 0; i < n * 2 - 1; i++) {
+            while (!stk.empty() && nums[stk.top()] < nums[i % n]) {
+                ret[stk.top()] = nums[i % n];
+                stk.pop();
+            }
+            stk.push(i % n);
+        }
+        return ret;
+    }
+};
