@@ -1,0 +1,53 @@
+///My solution
+class Solution {
+public:
+    vector<int> exclusiveTime(int n, vector<string>& logs) {
+        stack<pair<int, int>> stk;//for start time log
+        vector<int> timecount(n,0);
+        for(int i=0; i<logs.size();i++)
+        {
+            string ID="";
+            string option="";
+            string time="";
+            int end=0;
+            for(int j=0;j<logs[i].size();j++)
+            {
+                while(logs[i][j]!=':')
+                {
+                    ID+=logs[i][j];
+                    j++;
+                }
+                j=j+1;//skip the :
+                while(logs[i][j]!=':')
+                {
+                    option+=logs[i][j];
+                    j++;
+                }
+                j=j+1;//skip the second :
+                while(j!=logs[i].size())
+                {
+                    time+=logs[i][j];
+                    j++;
+                }
+                if(option=="start")
+                {
+                    stk.push({stoi(ID),stoi(time)});
+                }//if start
+                else
+                {
+                    end=stoi(time);
+                    int execute=end-stk.top().second+1;
+                    stk.pop();
+                    timecount[stoi(ID)]+=execute;
+                    if(!stk.empty())
+                    {
+                        //std::cout<<stk.top().first<<"   "<<execute<<std::endl;
+                        timecount[stk.top().first]-=execute;
+                    }        
+                }//else end
+            }//for j
+        }//for i
+        return timecount;
+        
+    }
+};
