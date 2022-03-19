@@ -1,0 +1,56 @@
+//The solution in the Chinese version
+///I modify a bit
+class Solution {
+public:
+    vector<string> split(string s, char delim)
+    {
+            vector<string> ans;
+            string cur;
+            for (char ch: s) 
+            {
+                if (ch == delim) 
+                {
+                    ans.push_back(cur);
+                    cur="";
+                }
+                else 
+                {
+                    cur += ch;
+                }
+            }//for
+            ans.push_back(cur);//this is for the last part cur may still have some chars.
+            return ans;
+    }//split
+    
+    
+    string simplifyPath(string path) {
+        vector<string> names = split(path, '/');
+        vector<string> stack;
+        for (string& name: names) 
+        {
+            if (name == "..") 
+            {
+                if (!stack.empty()) {
+                    stack.pop_back();
+                }
+            }
+            else if (!name.empty() && name != ".") 
+            {
+                stack.push_back(name);
+            }
+        }//for name
+        string ans;
+        if (stack.empty()) 
+        {
+            ans = "/";
+        }
+        else 
+        {
+            for (string& name: stack) 
+            {
+                ans += "/" + name;
+            }
+        }
+        return ans;
+    }
+};
