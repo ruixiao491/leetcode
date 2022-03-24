@@ -1,0 +1,74 @@
+class Solution {
+public:
+    string countOfAtoms(string formula) {
+        reverse(formula.begin(),formula.end());
+        stack<int> stk;
+        map<string,int> seen;
+        int count=1;
+        string output="";
+        stk.push(1);
+        for(int i=0;i<formula.size();i++)
+        {
+            if(formula[i]==')')
+            {
+                stk.push(count);              
+            }//if left
+            else if(formula[i]=='(')
+            {
+                stk.pop();
+                count=1;
+            }//if right
+            else
+            {
+                count=0;
+                string name="";
+                int bit=1;
+                while(isdigit(formula[i]))
+                {
+                    count=count+bit*(formula[i]-'0');
+                    i++;
+                    bit=bit*10;
+                }//while
+                count=count==0? stk.top():count*stk.top();
+                if(formula[i]!=')')
+                {
+                    //name is lowercase first and then upper case;
+                    while(islower(formula[i]))
+                    {
+                        name=formula[i]+name;
+                        i++;
+                    }//while lower
+                    name=formula[i]+name;
+                    if(seen.find(name)!=seen.end())
+                    {
+                        seen[name]=seen[name]+count;
+                    }
+                    else
+                    {
+                        seen[name]=count;
+                    }
+                }//if next !=(
+                else
+                {
+                    i--;      
+                }
+                                
+            }
+        }//for i
+        auto it = seen.begin();
+        while(it!=seen.end())
+        {
+            if(it->second==1)
+            {
+                output=output+it->first;
+            }
+            else
+            {
+                output=output+it->first+to_string(it->second);
+            }
+            it++;
+            
+        }//while
+        return output;
+    }
+};
