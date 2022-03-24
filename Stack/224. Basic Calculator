@@ -1,0 +1,154 @@
+///My solution:
+class Solution {
+public:
+    int calculate(string s) {
+        string s1="("+s+")";
+        stack<string> stk;
+        string test="";
+        long long val=0;
+        //std::cout<<s.size()<<"  "<<s1.size()<<std::endl;
+        for(int i=0;i<s1.size();i++)
+        {
+            //std::cout<<i<<std::endl;
+            if(s1[i]=='(')
+            {
+                //std::cout<<"left: "<<i<<std::endl;
+               stk.push(test);
+               test=""; 
+            }//if left
+            else if(s1[i]==')')
+            {
+                val=0;
+                for(int j=0;j<test.size();j++)
+                {
+                    while(isdigit(test[j]))
+                    { 
+                        val=val*10+test[j]-'0';
+                        j++;
+                    }//while digit
+                    //std::cout<<"first: "<<val<<std::endl;
+                    if(test[j]=='+')
+                    {
+                        long long second=0;
+                        j=j+1;
+                        while(isdigit(test[j]))
+                        {
+                            second=second*10+test[j]-'0';
+                            j++;
+                        }//while
+                        j--;
+                        //std::cout<<"second: "<<second<<std::endl;
+                        val=val+second;
+                    }//+
+                    else if(test[j]=='-')
+                    {
+                        long long third=0;
+                        j=j+1;
+                        if(test[j]!='-')
+                        {
+                          while(isdigit(test[j]))
+                          {
+                            third=third*10+test[j]-'0';
+                            j++;
+                          }
+                        //std::cout<<"third: "<<third<<std::endl;
+                            val-=third;
+                            j--;  
+                        }//if !-
+                        else
+                        {
+                            j=j+1;
+                            while(isdigit(test[j]))
+                            {
+                                third=third*10+test[j]-'0';
+                                j++;
+                            }
+                            val+=third;
+                            j--;     
+                        }//else
+                        
+                    }//-
+                                       
+                }//for j
+                //std::cout<<"middle:  "<<val<<std::endl;
+                if(!stk.empty())
+                {
+                    test=stk.top()+to_string(val);     
+                }
+                else
+                {
+                    test=to_string(val);
+                }
+                //string pre=stk.top()+to_string(val);
+                stk.pop();
+                
+                
+            }//else if right
+            else
+            {
+                if(s1[i]!=' ')
+                {
+                  test=test+s1[i];  
+                }//not empty.       
+            }
+        }//for i
+        //int value=stoi(stk.top());
+        return val;
+        
+    }
+};
+
+
+############################################################
+///The solution in the solution part in the Chinese version
+#####################################################################################
+Using stack to store the sign before the parantheses (after open all the parantheses)
+#####################################################################################
+class Solution {
+public:
+    int calculate(string s) {
+        stack<int> ops;
+        ops.push(1);
+        int sign = 1;
+
+        int ret = 0;
+        int n = s.length();
+        int i = 0;
+        while (i < n) {
+            if (s[i] == ' ') 
+            {
+                i++;
+            }//skip the space
+            else if (s[i] == '+') 
+            {
+                sign = ops.top();
+                i++;
+            } 
+            else if (s[i] == '-') 
+            {
+                sign = -ops.top();
+                i++;
+            } 
+            else if (s[i] == '(') 
+            {
+                ops.push(sign);
+                i++;
+            } 
+            else if (s[i] == ')') 
+            {
+                ops.pop();
+                i++;
+            } 
+            else 
+            {
+                long num = 0;
+                while (i < n && s[i] >= '0' && s[i] <= '9') {
+                    num = num * 10 + s[i] - '0';
+                    i++;
+                }
+                ret += sign * num;
+            }//else digits
+        }
+        return ret;
+    }
+};
