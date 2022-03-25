@@ -1,0 +1,235 @@
+///My solution
+
+class Solution {
+public:
+    int calculate(string s) {
+        stack<char> stk1;
+        stack<char> stk2;
+        long long ans=0;
+        for(int i=0;i<s.size();i++)
+        {
+            if(s[i]=='*')
+            {
+                long long val=0;
+                long long val2=0;
+                long long bit=1;
+                if(!stk1.empty())
+                { 
+                    while(!stk1.empty()&&isdigit(stk1.top()))
+                   {
+                       val=val+(stk1.top()-'0')*bit;
+                       bit=bit*10;
+                       stk1.pop();
+                   }//while digit 
+                   
+                }//stk1! empty
+                i=i+1;
+                while(s[i]==' ')
+                {
+                    i++;
+                }
+                while(isdigit(s[i]))
+                {
+                    val2=val2*10+s[i]-'0';
+                    i++;
+                }//while i
+                i--;
+                long long final=val*val2;
+                //std::cout<<"multiply: "<<val<<"   "<<val2<<"   "<<final<<std::endl;
+                stack<char> list2;
+                while(final>0)
+                {
+                    //std::cout<<char('0'+4)<<std::endl;
+                    list2.push(char(final%10+'0'));
+                    final=final/10;
+                }
+                while(!list2.empty())
+                {
+                    stk1.push(list2.top());
+                    list2.pop();
+                }//list2 not empty
+                //std::cout<<stk1.top()<<std::endl;
+            }//if *
+            else if(s[i]=='/')
+            {
+                long long val=0;
+                long long val2=0;
+                long long bit=1;
+                if(!stk1.empty())
+                { 
+                   while(!stk1.empty()&&isdigit(stk1.top()))
+                   {
+                       val=val+(stk1.top()-'0')*bit;
+                       bit=bit*10;
+                       stk1.pop();
+                   }//while digit  
+                }//stk1! empty
+                //std::cout<<val<<std::endl;
+                i=i+1;
+                while(s[i]==' ')
+                {
+                    i++;
+                }
+                while(isdigit(s[i]))
+                {
+                    val2=val2*10+s[i]-'0';
+                    i++;
+                }//while i
+                i--;
+                int final=val/val2;
+                stack<char> list2;
+                while(final>0)
+                {
+                    list2.push(char(final%10+'0'));
+                    final=final/10;
+                }
+                while(!list2.empty())
+                {
+                    stk1.push(list2.top());
+                    list2.pop();
+                }//list2 not empty
+            }// divide
+            else
+            {
+                if(s[i]!=' ')
+                {
+                    stk1.push(s[i]);
+                }
+            }//else
+        }//for i
+        while(!stk1.empty())
+        {
+            stk2.push(stk1.top());
+            stk1.pop();           
+        }//while
+        //std::cout<<"test:  "<<stk2.top()<<std::endl;
+        while(!stk2.empty())
+        {
+            //std::cout<<stk2.top()<<std::endl;
+            long long val=0;
+            while(!stk2.empty()&&isdigit(stk2.top()))
+            {
+                val=val*10+stk2.top()-'0';
+                stk2.pop();
+            }//while digit;
+            ans+=val;
+            //std::cout<<"ans:  "<<ans<<std::endl;
+            //std::cout<<stk2.top()<<std::endl;
+            if(!stk2.empty()&&stk2.top()=='+')
+            {
+                stk2.pop();
+            }//+
+        
+            if(!stk2.empty()&&stk2.top()=='-')
+            {
+                long long val=0;
+                stk2.pop();
+                while(!stk2.empty()&&isdigit(stk2.top()))
+                {
+                   val=val*10+stk2.top()-'0';
+                    stk2.pop();
+                }
+                ans-=val;
+            }//-
+        }//while stk2
+        //std::cout<<"final:  "<<ans<<std::endl;
+        return ans;       
+    }
+};
+
+############################################
+///The first solution in the solution part.
+############################################
+class Solution {
+public:
+    int calculate(string s) {
+        int len = s.length();
+        if (len == 0) return 0;
+        stack<int> stack;
+        int currentNumber = 0;
+        char operation = '+';
+        for (int i = 0; i < len; i++) 
+        {
+            char currentChar = s[i];
+            if (isdigit(currentChar)) 
+            {
+                currentNumber = (currentNumber * 10) + (currentChar - '0');
+            }//if isdigit
+            if (!isdigit(currentChar) && !isspace(currentChar) || i == len - 1) 
+            {
+                if (operation == '-') 
+                {
+                    stack.push(-currentNumber);
+                }//if - 
+                else if (operation == '+') 
+                {
+                    stack.push(currentNumber);
+                }//if + 
+                else if (operation == '*') 
+                {
+                    int stackTop = stack.top();
+                    stack.pop();
+                    stack.push(stackTop * currentNumber);
+                }//if *
+                else if (operation == '/') 
+                {
+                    int stackTop = stack.top();
+                    stack.pop();
+                    stack.push(stackTop / currentNumber);
+                }// if /
+                operation = currentChar;
+                currentNumber = 0;
+            }//! isdigit(currentChar)
+        }//for
+        int result = 0;
+        while (stack.size() != 0) 
+        {
+            result += stack.top();
+            stack.pop();
+        }
+        return result;
+    }
+};
+
+#########################################
+The second solution in the solution part
+#########################################
+
+class Solution {
+public:
+    int calculate(string s) {
+        int length = s.length();
+        if (length == 0) return 0;
+        int currentNumber = 0, lastNumber = 0, result = 0;
+        char sign = '+';
+        for (int i = 0; i < length; i++) 
+        {
+            char currentChar = s[i];
+            if (isdigit(currentChar)) 
+            {
+                currentNumber = (currentNumber * 10) + (currentChar - '0');
+            }//isdigit
+            if (!isdigit(currentChar) && !iswspace(currentChar) || i == length - 1) 
+            {
+                if (sign == '+' || sign == '-') 
+                {
+                    result += lastNumber;
+                    lastNumber = (sign == '+') ? currentNumber : -currentNumber;
+                }//+-
+                else if (sign == '*') 
+                {
+                    lastNumber = lastNumber * currentNumber;
+                }//* 
+                else if (sign == '/') 
+                {
+                    lastNumber = lastNumber / currentNumber;
+                }// /
+                sign = currentChar;
+                //std::cout<<i<<"   "<<s[i]<<"   "<<sign<<"   "<<lastNumber<<std::endl;
+                currentNumber = 0;
+            }//!isdigit(currentChar)
+        }//for i
+        result += lastNumber;
+        return result;  
+    }
+};
