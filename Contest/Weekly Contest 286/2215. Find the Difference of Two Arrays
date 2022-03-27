@@ -1,0 +1,30 @@
+///My solution:
+class Solution {
+public:
+    vector<vector<int>> findDifference(vector<int>& nums1, vector<int>& nums2) {
+        vector<vector<int>> ans(2);
+        set<int> seen1;
+        set<int> seen2;
+        seen1.insert(nums1.cbegin(),nums1.cend());
+        seen2.insert(nums2.cbegin(),nums2.cend());
+        auto it1=seen1.begin();
+        while(it1!=seen1.end())
+        {
+            if(seen2.find(*it1)==seen2.end())
+            {
+                ans[0].push_back(*it1);
+            }
+            it1++;
+        }//while it1
+        auto it2 = seen2.begin();
+        while(it2!=seen2.end())
+        {
+            if(seen1.find(*it2)==seen1.end())
+            {
+                ans[1].push_back(*it2);
+            }
+            it2++;
+        }//while it2
+        return ans;
+    }
+};
