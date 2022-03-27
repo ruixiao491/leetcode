@@ -1,0 +1,96 @@
+############################
+//My solution
+############################
+class Solution {
+public:
+    int minDeletion(vector<int>& nums) {
+        int ans=0;
+        if(nums.size()==1)
+        {
+            return 1;
+        }
+        for(int i=0;i<2;i++)
+        {
+            int copy=0;
+            int j=0;
+            if(i+1<nums.size()&&nums[i]!=nums[i+1])
+            {
+                j=i+2;
+            }
+            else
+            {
+                int p=i+1;
+                while(p<nums.size()&&nums[p]==nums[i])
+                {
+                    p++;
+                }
+                
+                if(p<nums.size())
+                {
+                    copy=copy+p-i-1;
+                    j=p+1;
+                }
+                else
+                {
+                    copy=copy+p-i;
+                    j=p;
+                }
+            }//else
+                while(j+1<nums.size())
+                {
+                    if(nums[j]!=nums[j+1])
+                    {
+                        j=j+2;
+                    }
+                    else
+                    {
+                        int k=j+1;
+                        while(k<nums.size()&&nums[k]==nums[j])
+                        {
+                            k++;
+                        }
+                        if(k<nums.size())
+                        {
+                            copy=copy+k-j-1;
+                            j=k+1;
+                        }
+                        else
+                        {
+                            copy=copy+k-j;
+                            j=k;
+                        }
+                        
+                    }//else
+                }//while j
+                ans=max(ans,j-i-copy);
+            
+        }//for i
+        return nums.size()-ans;
+        
+    }
+};
+
+
+##################################
+//The other's method
+##################################
+class Solution {
+public:
+    int minDeletion(vector<int>& nums) {
+        int ans = 0;
+        int cur = 0;
+        int last = -1;
+        for (auto x : nums) {
+            if (x == last && cur % 2 == 1) {
+                ans++;
+            } else {
+                cur++;
+                last = x;
+            }
+        }
+        if (cur % 2 == 1) {
+            ans++;
+        }
+        return ans;
+    }
+};
