@@ -1,0 +1,110 @@
+################
+//my solution
+################
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        string s1="";
+        s1=s1+s[0];
+        vector<int> counts(s.size(),1);
+        for(int i=1;i<s.size();i++)
+        {
+            int isadd=0;
+            int index=0;
+            for(int j=0;j<s1.size();j++)
+            {
+                if(s[i]==s1[j])
+                {
+                    isadd=1;
+                    break;
+                }
+                index++;
+            }//for j
+            if(isadd==0)
+            {
+                s1=s1+s[i];
+                counts[i]=counts[i-1]+1;
+            }
+            else
+            {
+                s1=s1.erase(0,index+1);
+                s1=s1+s[i];
+                counts[i]=counts[i-1]-index;
+                //std::cout<<s1<<"  "<<counts[i]<<std::endl;
+            }
+        }//for i
+        int maxlength=0;
+        for(int i=0;i<counts.size();i++)
+        {
+            maxlength=max(maxlength, counts[i]);
+        }
+        return maxlength;
+        
+    }
+};
+
+#########################################################
+////Brute Force in the solution part (hit the time limit)
+#########################################################
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int n = s.length();
+
+        int res = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+                if (checkRepetition(s, i, j)) {
+                    res = max(res, j - i + 1);
+                }
+            }
+        }
+
+        return res;
+    }
+
+    bool checkRepetition(string& s, int start, int end) {
+        vector<int> chars(128);
+
+        for (int i = start; i <= end; i++) {
+            int c = s[i];//or char c, also makes sense
+            //std::cout<<c<<std::endl;
+            chars[c]++;
+            if (chars[c] > 1) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+};
+
+######################################################################
+Sliding windows: the solution in the solution part in Chinese version
+######################################################################
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        // 哈希集合，记录每个字符是否出现过
+        unordered_set<char> occ;
+        int n = s.size();
+        // 右指针，初始值为 -1，相当于我们在字符串的左边界的左侧，还没有开始移动
+        int rk = -1, ans = 0;
+        // 枚举左指针的位置，初始值隐性地表示为 -1
+        for (int i = 0; i < n; ++i) {
+            if (i != 0) {
+                // 左指针向右移动一格，移除一个字符
+                occ.erase(s[i - 1]);
+            }
+            while (rk + 1 < n && !occ.count(s[rk + 1])) {
+                // 不断地移动右指针
+                occ.insert(s[rk + 1]);
+                ++rk;
+            }
+            // 第 i 到 rk 个字符是一个极长的无重复字符子串
+            ans = max(ans, rk - i + 1);
+        }
+        return ans;
+    }
+};
+
