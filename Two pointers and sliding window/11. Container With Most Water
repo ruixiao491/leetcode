@@ -1,0 +1,55 @@
+#########################################
+//Brute Force, should hit the time limit
+#########################################
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int amount=0;
+        for(int i=0;i<height.size()-1;i++)
+        {
+            for(int j=i+1;j<height.size();j++)
+            {
+                int tall=min(height[i],height[j]);
+                amount=max(amount, tall*(j-i));
+            }
+        }//for i
+        return amount;
+    }
+};
+
+############################################################################################
+The solution in the solution part of Chinese version (two pointers + 2 optimized conditions)
+############################################################################################
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int amount=0, left=0, right=height.size()-1;
+        while(left<right)
+        {
+            amount=max(amount,min(height[left],height[right])*(right-left));
+            if(height[left]<height[right])
+            {
+                if(height[left+1]<height[left])
+                {
+                    left++;      
+                }
+                left++;
+                
+            }//if
+            else if(height[left]>height[right])
+            {
+                if(height[right-1]<height[right])
+                {
+                    right--;
+                }
+                right--;
+            }
+            else
+            {
+                left++;
+                right--;
+            }
+        }//while
+        return amount;
+    }
+};
