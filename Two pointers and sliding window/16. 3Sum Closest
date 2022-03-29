@@ -1,0 +1,67 @@
+///My solution: two pointers
+class Solution {
+public:
+    int threeSumClosest(vector<int>& nums, int target) {
+        sort(nums.begin(),nums.end());
+        int difference=abs(nums[nums.size()-1]+nums[nums.size()-2]+nums[nums.size()-3]-target);
+        int sum=nums[nums.size()-1]+nums[nums.size()-2]+nums[nums.size()-3];
+        for(int i=0; i<nums.size()-3;i++)
+        {
+            int left=i+1, right=nums.size()-1;
+            while(left<right)
+            {
+                if(nums[i]+nums[left]+nums[right]<target)
+                {
+                    if(abs(nums[i]+nums[left]+nums[right]-target)<difference)
+                    {
+                        sum=nums[i]+nums[left]+nums[right];
+                        difference=abs(sum-target);
+                    }
+                    left++;
+                }
+                else if(nums[i]+nums[left]+nums[right]>target)
+                {
+                    if(abs(nums[i]+nums[left]+nums[right]-target)<difference)
+                    {
+                        sum=nums[i]+nums[left]+nums[right];
+                        difference=abs(sum-target);
+                    }
+                    right--;
+                }
+                else
+                {
+                    return target;
+                }
+                
+            }//while
+        }//for 
+        return sum;
+    }
+};
+
+#####################################################
+The solution in the solution part of English version:
+Binary Search
+#####################################################
+class Solution {
+public:
+    int threeSumClosest(vector<int>& nums, int target) {
+        int diff = INT_MAX;
+        int sz = nums.size();
+        sort(begin(nums), end(nums));
+        for (int i = 0; i < sz && diff != 0; ++i) {
+            for (int j = i + 1; j < sz - 1; ++j) {
+                int complement = target - nums[i] - nums[j];
+                auto it = upper_bound(begin(nums) + j + 1, end(nums), complement);
+                int hi = it - begin(nums), lo = hi - 1;
+                if (hi < sz && abs(complement - nums[hi]) < abs(diff)) {
+                    diff = complement - nums[hi];
+                }
+                if (lo > j && abs(complement - nums[lo]) < abs(diff)) {
+                    diff = complement - nums[lo];
+                }
+            }
+        }
+        return target - diff;
+    }
+};
