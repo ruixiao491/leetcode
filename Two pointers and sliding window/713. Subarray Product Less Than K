@@ -1,0 +1,73 @@
+///My solution: sliding window.
+class Solution {
+public:
+    int numSubarrayProductLessThanK(vector<int>& nums, int k) {
+        if(k==0)
+        {
+            return 0;
+        }
+        int left=0, right=0;
+        int count=0;
+        long long prev=1;
+        while(right!=nums.size()&&left<=right)
+        {
+            if(prev*nums[right]<k)
+            {
+                prev=prev*nums[right];
+                count=count+right-left+1;
+                right++;
+            }
+            else
+            {
+                prev=prev/nums[left];
+                if(left==right)
+                {
+                    prev=1;
+                    right++;
+                }
+                left++;
+                //std::cout<<prev<<"  "<<left<<"  "<<right<<nums[right]<<std::endl;
+            }
+            //std::cout<<right<<"  "<<count<<std::endl;
+
+            
+        }//while right
+        return count;
+        
+    }
+};
+
+
+
+############################################################################################################################################################################################
+//The solution in the solution part. Logarithms and Binary search. When we use this kind mehtod, we need to build the prefix[0]. In other words, the size of prefix will be that of nums+1.
+############################################################################################################################################################################################
+class Solution {
+public:
+    int numSubarrayProductLessThanK(vector<int>& nums, int k) {
+        if(k==0)
+        {
+            return 0;
+        }
+        int count=0;
+        vector<double> prefix(nums.size()+1);
+        prefix[0]=log10(1);
+        for(int i=0;i<nums.size();i++)
+        {
+            prefix[i+1]=prefix[i]+log10(nums[i]);
+            
+        }//for i
+        for(int i=0;i<prefix.size();i++)
+        {
+            double val=prefix[i]+log10(k);
+            auto it=lower_bound(prefix.begin(),prefix.end(),val);
+            it--;
+            if((it-prefix.begin()-i)>=0)
+            {
+                count=count+(it-prefix.begin())-i;         
+            }
+            
+        }//for i
+        return count;
+    }
+};
