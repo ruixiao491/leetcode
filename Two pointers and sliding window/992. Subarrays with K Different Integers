@@ -1,0 +1,52 @@
+///inspired by the solution in the solution part of Chinese version
+class Solution {
+public:
+    int atmostWithKDistinct(vector<int>&nums, int k)
+    {
+        if(k==0)
+        {
+            return 0;
+        }
+        int count=0;
+        int left=0, right=0;
+        map<int,int> seen;
+        while(right<nums.size())
+        { 
+            if(seen.size()<k)
+            {
+                //std::cout<<"add from <k:  "<<right<<"  "<<nums[right]<<std::endl;
+                seen[nums[right]]++;
+                right++;
+            }
+            else if(seen.size()==k)
+            {
+                while(right<nums.size()&&seen.find(nums[right])!=seen.end())
+                {
+                    seen[nums[right]]++;
+                    right++;
+                }//while
+                count=count+right-left;
+                //std::cout<<"loop count: "<<count<<" "<<right<<" "<<left<<std::endl;
+                seen[nums[left]]--;
+                if(seen[nums[left]]==0)
+                {
+                    seen.erase(nums[left]);
+                }
+                left++;
+            }//else if
+        
+        }//while
+        //std::cout<<"out of the loop: "<<right<<"  "<<left<<std::endl;
+        int rest=(right-left+1)*(right-left)/2;
+        //std::cout<<"rest: "<<rest<<std::endl;
+        count=count+rest;
+        return count;
+    }
+    
+    
+public:
+    int subarraysWithKDistinct(vector<int>& nums, int k) {
+        return atmostWithKDistinct(nums,k)-atmostWithKDistinct(nums,k-1);
+                
+    }
+};
