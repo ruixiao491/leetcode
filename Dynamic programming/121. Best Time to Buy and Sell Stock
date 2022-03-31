@@ -1,0 +1,35 @@
+//My solution:
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int profit=0;
+        set<int> seen;
+        seen.insert(prices[0]);
+        for(int i=1;i<prices.size();i++)
+        {
+            auto it=seen.begin();
+            profit=max(profit,prices[i]-*it);
+            seen.insert(prices[i]);
+            
+            
+        }//for i
+        return profit;
+        
+    }
+};
+
+###################
+////Similar method
+###################
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int inf = 1e9;
+        int minprice = inf, maxprofit = 0;
+        for (int price: prices) {
+            maxprofit = max(maxprofit, price - minprice);
+            minprice = min(price, minprice);
+        }
+        return maxprofit;
+    }
+};
