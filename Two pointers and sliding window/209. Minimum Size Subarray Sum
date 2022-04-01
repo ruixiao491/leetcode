@@ -1,0 +1,83 @@
+##################################
+///My solution: map binary search
+##################################
+class Solution {
+public:
+    int minSubArrayLen(int target, vector<int>& nums) {
+        map<int,int> seen;
+        seen.insert({0,-1});
+        int sum=0;
+        int length=nums.size();
+        for(int i=0;i<nums.size();i++)
+        {
+            sum=sum+nums[i];
+            seen.insert({sum,i});
+            
+        }//for
+        if(sum<target)
+        {
+            return 0;
+        }
+        auto it=seen.begin();
+        
+        while(it!=seen.end())
+        {
+            int val=it->first+target;
+            auto it2=seen.lower_bound(val);
+            if(it2!=seen.end())
+            {
+                //std::cout<<it2->second<<"   "<<it->second<<std::endl;
+                length=min(length,it2->second -it->second);
+                it++;
+            }
+            else
+            {
+                break;
+            }
+            
+        }//while
+        
+        return length;
+        
+        
+    }
+};
+
+#################
+///Two pointers:
+#################
+class Solution {
+public:
+    int minSubArrayLen(int target, vector<int>& nums) {
+        int left=0, right=0;
+        int prev=0;
+        int length=nums.size()+3;
+        while(right<nums.size())
+        {
+            prev=prev+nums[right];
+            if(prev<target)
+            {
+                right++;
+            }
+            else
+            {
+                //std::cout<<"first: "<<prev<<"  "<<right<<"  "<<left<<std::endl;
+                length=min(length,right-left+1);
+                prev=prev-nums[left];
+                left++;
+                prev=prev-nums[right];
+                //std::cout<<"second: "<<prev<<"  "<<right<<"  "<<left<<std::endl;
+            }//else
+            
+        }//while
+        if(prev>=target)
+        {
+            length=min(length,right-left);   
+        }
+        if(length>nums.size())
+        {
+            return 0;
+        }
+        return length;
+    }
+};
