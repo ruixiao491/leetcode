@@ -1,0 +1,61 @@
+#############################################################
+//The first solution in the solution part of Chinese version
+#############################################################
+class Solution {
+public:
+    int minCostClimbingStairs(vector<int>& cost) {
+        int n = cost.size();
+        vector<int> dp(n + 1);
+        dp[0] = dp[1] = 0;
+        for (int i = 2; i <= n; i++) {
+            dp[i] = min(dp[i - 1] + cost[i - 1], dp[i - 2] + cost[i - 2]);
+        }
+        return dp[n];
+    }
+};
+
+#############################################################
+//The second solution in the solution part of Chinese version
+#############################################################
+class Solution {
+public:
+    int minCostClimbingStairs(vector<int>& cost) {
+        int n = cost.size();
+        int prev = 0, curr = 0;
+        for (int i = 2; i <= n; i++) {
+            int next = min(curr + cost[i - 1], prev + cost[i - 2]);
+            prev = curr;
+            curr = next;
+        }
+        return curr;
+    }
+};
+
+###########################################
+///Top-Down Dynamic Programming (recursion)
+###########################################
+class Solution {
+public:
+    map<int,int> seen;
+public:
+    int minCostClimbingStairs(vector<int>& cost) {
+        return minimumCost(cost.size(),cost);
+        
+    }
+    int minimumCost(int i, vector<int> cost)
+    {
+        if(i<=1)
+        {
+            return 0;
+        }
+        if(seen.find(i)!=seen.end())
+        {
+            return seen[i];
+        }
+        int downOne=cost[i-1]+minimumCost(i-1,cost);
+        int downTwo=cost[i-2]+minimumCost(i-2,cost);
+        seen.insert({i,min(downOne,downTwo)});
+        return seen[i];
+        
+    }//miniCost
+};
