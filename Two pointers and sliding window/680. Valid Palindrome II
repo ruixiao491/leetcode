@@ -1,0 +1,50 @@
+///My solution after inspiration.
+class Solution {
+public:
+    bool checkPalindrome(string s){
+        int left=0, right=s.size()-1;
+        while(left<right)
+        {
+            if(s[left]==s[right])
+            {
+                left++;
+                right--;
+            }
+            else
+            {
+                return false;
+            }
+        }//while
+        return true;        
+    }
+public:
+    bool validPalindrome(string s){
+        int left=0, right=s.size()-1;
+        while(left<right)
+        {
+            if(s[left]==s[right])
+            {
+                left++;
+                right--;
+            }//if
+            else
+            {
+                int case1=checkPalindrome(s.substr(left+1, right-left));
+                int case2=checkPalindrome(s.substr(left, right-left));
+                //std::cout<<case1<<"  "<<case2<<std::endl;
+                if(!case1&&!case2)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+                
+            }
+        }//while
+        return true;
+        
+        
+    }
+};
