@@ -1,0 +1,46 @@
+///My solution:
+
+class Solution {
+public:
+    int maximumCandies(vector<int>& candies, long long k) {
+        long long average=0;
+        int minval=INT_MAX;
+        for(int i=0;i<candies.size();i++)
+        {
+            average+=candies[i];
+            minval=min(minval,candies[i]);
+        }
+        average=average/k+(average%k!=0);//max
+        minval=minval/k;//min
+        
+        while(minval<average)
+        {
+            long long mid=minval+(average-minval)/2+((average-minval)%2==1);
+            long long count=0;
+            for(int i=0;i<candies.size();i++)
+            {
+                count=count+candies[i]/mid;
+                
+            }//for
+
+            if(count>=k)
+            {
+                minval=mid;
+                
+            }
+            else
+            {
+                if(average==mid)
+                {
+                    return minval;
+                }
+                average=mid;
+            }
+            
+        }
+        return minval;
+        
+        
+        
+    }
+};
