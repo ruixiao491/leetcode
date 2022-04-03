@@ -1,0 +1,56 @@
+///My solution: hit the time limit
+
+class Solution {
+public:
+    long long numberOfWays(string s) {
+        vector<int> count;
+        count.push_back(1);
+        long long numbers=0;
+        for(int i=1;i<s.size();i++)
+        {
+            if(s[i]==s[i-1])
+            {
+                count.back()++;
+            }
+            else
+            {
+                count.push_back(1);
+            }
+            
+        }//for
+        for(int i=0;i<count.size()-2;i++)
+        {
+            for(int j=i+1;j<count.size()-1;j=j+2)
+            {
+                for(int k=j+1;k<count.size();k=k+2)
+                {
+                    numbers=numbers+(long long) count[i]*count[j]*count[k];
+                }//for k
+            }//j
+            
+        }//for i
+        return numbers;
+        
+    }
+};
+
+
+
+##############################################
+The other's method
+##############################################
+class Solution {
+public:
+    long long f(string s, string t) {
+        long long a = 0, b = 0, c = 0;
+        for (char x : s) {
+            if (x == t[2]) c += b;
+            if (x == t[1]) b += a;
+            if (x == t[0]) a += 1;
+        }
+        return c;
+    }
+    long long numberOfWays(string s) {
+        return f(s, "101") + f(s, "010");
+    }
+};
