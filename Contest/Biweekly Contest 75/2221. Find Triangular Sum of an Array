@@ -1,0 +1,24 @@
+///My solution
+class Solution {
+public:
+    vector<int> formarray(vector<int>& nums)
+    {
+        vector<int> newarray(nums.size()-1);
+        for(int i=0;i<nums.size()-1;i++)
+        {
+            newarray[i]=(nums[i]+nums[i+1])%10;
+        }//for
+        return newarray;
+    }//newarray
+public:
+    int triangularSum(vector<int>& nums) {
+        while(nums.size()>1)
+        {
+            vector<int> test=formarray(nums);
+            nums.resize(nums.size()-1);
+            nums=test;
+        }
+        return nums[0];
+        
+    }
+};
