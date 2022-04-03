@@ -1,0 +1,18 @@
+///My solution
+class Solution {
+public:
+    int minBitFlips(int start, int goal) {
+        int ans=0;
+        while(goal>0||start>0)
+        {
+            int rightg=goal&1;
+            int rights=start&1;
+            int XOR=rightg^rights;
+            ans=ans+XOR;
+            
+            goal=goal>>1;
+            start=start>>1;
+        }
+        return ans;
+    }
+};
