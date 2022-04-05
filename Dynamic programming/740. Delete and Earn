@@ -1,0 +1,112 @@
+###################################################################################################
+//The solution in the solution part of Chinese version, which is the best (I think it is the best)
+###################################################################################################
+class Solution {
+public: int robhouse(vector<int>& nums)
+{
+    if(nums.size()==0)
+    {
+        return 0;
+    }
+    if(nums.size()==1)
+    {
+        return nums[0];
+    }
+    vector<int> amount(nums.size());
+    amount[0]=nums[0];
+    amount[1]=max(nums[0],nums[1]);
+    for(int i=2;i<nums.size();i++)
+    {
+        amount[i]=max(amount[i-1],amount[i-2]+nums[i]);
+    }//for
+    return amount[nums.size()-1];
+    
+}//robhouse
+public:
+    int deleteAndEarn(vector<int>& nums) {
+        int maxval=INT_MIN;
+        for(int i=0;i<nums.size();i++)
+        {
+            maxval=max(maxval,nums[i]);
+            
+        }
+        vector<int> sums(maxval+1,0);
+        for(int i=0;i<nums.size();i++)
+        {
+            sums[nums[i]]+=nums[i];
+        }//for i
+        return robhouse(sums);
+        
+        
+    }//deleteAndEarn
+};
+
+######################
+///Top down method
+######################
+class Solution {
+public:
+    map<int,int> sums;
+    map<int,int> seen;
+    int maxPoints(int val)
+    {
+        if(val==0)
+        {
+            return 0;
+        }
+        else if(val==1)
+        {
+            return sums.find(1)->second;
+        }
+        else if(seen.find(val)!=seen.end())
+        {
+            return seen[val];
+        }
+        else
+        {
+            int gain=sums[val];
+            seen.insert({val,max(maxPoints(val-1),maxPoints(val-2)+gain)});
+            return seen[val];
+        }
+        
+        
+    }//maxPoints
+public:
+    int deleteAndEarn(vector<int>& nums) {
+        int maxNumber=INT_MIN; 
+        for(int i=0;i<nums.size();i++)
+        {
+            maxNumber=max(maxNumber,nums[i]);
+            sums[nums[i]]+=nums[i];
+        }//for
+        //std::cout<<maxNumber<<std::endl;
+        return maxPoints(maxNumber);
+        
+    }
+};
+
+####################
+///Bottom Up method
+####################
+class Solution {
+public:
+    int deleteAndEarn(vector<int>& nums) {
+        int maxNumber=INT_MIN;
+        map<int,int> sums;
+        for(int i=0;i<nums.size();i++)
+        {
+            maxNumber=max(maxNumber,nums[i]);
+            sums[nums[i]]+=nums[i];
+        }//for
+        //std::cout<<maxNumber<<std::endl;
+        vector<int>amount(maxNumber+1,0);
+        amount[0]=0;
+        amount[1]=max(amount[0],sums[1]);
+        for(int i=2;i<amount.size();i++)
+        {
+            amount[i]=max(amount[i-1],amount[i-2]+sums[i]);
+            //std::cout<<amount[i]<<std::endl;
+        }//for
+        return amount[maxNumber];
+    }
+};
