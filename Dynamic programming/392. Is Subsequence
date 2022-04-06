@@ -1,0 +1,51 @@
+////My solution:
+class Solution {
+public:
+    bool isSubsequence(string s, string t) {
+        int decision=true;
+        int left=0;
+        for(int i=0;i<s.size();i++)
+        {
+            int flip=0;
+            while(left<t.size())
+            {
+                if(t[left]==s[i])
+                {
+                    decision=true;
+                    flip=1;
+                    left++;
+                    break;
+                }
+                left++;
+            }//while tsize
+            if(flip==0)
+            {
+                decision=false;
+                return false;
+            }
+            
+        }//for i
+        return true;
+        
+    }
+};
+
+
+#############################################################################
+The solution in the solution part: two pointers solutions of Chinese version
+##############################################################################
+class Solution {
+public:
+    bool isSubsequence(string s, string t) {
+        int n = s.length(), m = t.length();
+        int i = 0, j = 0;
+        while (i < n && j < m) {
+            if (s[i] == t[j]) {
+                i++;
+            }
+            j++;
+        }
+        return i == n;
+    }
+};
+
