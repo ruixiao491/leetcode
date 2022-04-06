@@ -1,0 +1,69 @@
+class Solution {
+public:
+    int threeSumMulti(vector<int>& arr, int target) {
+        long long ans=0;
+        int mod=1E9+7;
+        sort(arr.begin(),arr.end());
+        for(int i=0;i<arr.size()-2;i++)
+        {
+            int left=i+1, right=arr.size()-1;
+            while(left<right)
+            {
+                if(arr[i]+arr[left]+arr[right]>target)
+                {
+                    while(right-1>0&&arr[right-1]==arr[right])
+                    {
+                        right--;
+                    }
+                    right--;
+                }//if
+                else if(arr[i]+arr[left]+arr[right]<target)
+                {
+                    while(left+1<arr.size()&&arr[left]==arr[left+1])
+                    {
+                        left++;
+                    }
+                    left++;
+                }
+                else
+                {
+                    if(arr[left]!=arr[right])
+                    {
+                        long long countl=1, countr=1;
+                        while(left+1<arr.size()&&arr[left+1]==arr[left])
+                        {
+                            countl++;
+                            left++;      
+                        }//while left
+                        left++;
+                        while(right-1>0&&arr[right-1]==arr[right])
+                        {
+                            countr++;
+                            right--;
+                        }//while right
+                        right--;
+                        ans+=countl*countr;      
+                    }//if arr[left]!=arr[right]
+                    else
+                    {
+                        int countl=1;
+                        while(left+1<arr.size()&&arr[left+1]==arr[left])
+                        {
+                            countl++;
+                            left++;      
+                        }//while left
+                        left++;
+                        ans=ans+countl*(countl-1)/2;
+                        break;
+                        
+                        
+                    }//else arr[left]!=arr[right]
+                    
+                    
+                }//else =
+            }//while
+            
+        }//for i
+        return ans%mod;
+    }
+};
