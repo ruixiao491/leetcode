@@ -1,0 +1,34 @@
+#######################################################
+The solution 1 in the solution part of Chinese version
+#######################################################
+class Solution {
+public:
+    bool divisorGame(int n) {
+        return n%2==0;
+        
+    }
+};
+
+
+#####################################################################
+Dynamic programming solution in the solution part of Chinese version
+#####################################################################
+class Solution {
+public:
+    bool divisorGame(int n) {
+        vector<int> f(n+2 , false);
+
+        f[1] = false;
+        f[2] = true;
+        for (int i = 3; i <= n; ++i) {
+            for (int j = 1; j < i; ++j) {
+                if (i % j == 0 && !f[i - j]) {
+                    f[i] = true;
+                    break;
+                }
+            }
+        }
+
+        return f[n];
+    }
+};
