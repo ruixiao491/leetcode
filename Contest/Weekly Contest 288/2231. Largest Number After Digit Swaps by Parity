@@ -1,0 +1,49 @@
+class Solution {
+public:
+    int largestInteger(int num) {
+        int ans=0;
+        priority_queue<int> queue_even;
+        priority_queue<int> queue_odd;
+        int test=num;
+        stack<int> stk;
+        while(test>0)
+        {
+            int a=test%10;
+            if(a%2==0)
+            {
+                queue_even.push(a);
+                stk.push(0);
+            }
+            else
+            {
+                queue_odd.push(a);
+                stk.push(1);
+            }
+            test=test/10;        
+            
+        }//while
+        
+        while(!stk.empty())
+        {
+            int parity=stk.top();
+            stk.pop();
+            if(parity==0)
+            {
+                ans=ans*10+queue_even.top();
+                queue_even.pop();
+            }
+            else
+            {
+                ans=ans*10+queue_odd.top();
+                queue_odd.pop();
+            }
+        }//while
+        
+        
+        return ans;
+
+
+        
+        
+    }
+};
