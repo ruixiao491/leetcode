@@ -1,0 +1,69 @@
+class Solution {
+public:
+    string minimizeResult(string expression) {
+        string ans=expression;
+        int x=expression.find('+');
+        int result=0;
+        int I=0,J=0;
+        int minval=INT_MAX;
+        for(int i=0;i<x;i++)
+        {
+            for(int j=x+2;j<=expression.size();j++)
+            {
+                if(i==0)
+                {
+                    //a=stoi(expression.substr(0,x));
+                    if(j==expression.size())
+                    {
+                        result=stoi(expression.substr(0,x))+stoi(expression.substr(x+1,expression.size()-1-x));
+                        //std::cout<<result<<std::endl;
+                    }//if j=size
+                    else
+                    {
+                        int middle=stoi(expression.substr(0,x))+stoi(expression.substr(x+1,j-1-x));
+                        std::cout<<"test:  "<<stoi(expression.substr(x+1,j-1-x))<<"  "<<j<<std::endl;
+                        int final_mul=stoi(expression.substr(j,expression.size()-j));
+                        result=middle*final_mul;
+                        
+                        
+                    }
+                    
+                }//if i==0
+                else
+                {
+                    int first_mul=stoi(expression.substr(0,i));
+                    if(j!=expression.size())
+                    {
+                        int middle=stoi(expression.substr(i,x-i+1))+stoi(expression.substr(x+1,j-x-1));
+                        int final_mul=stoi(expression.substr(j,expression.size()-j));
+                        result=first_mul*middle*final_mul;
+                        
+                    }
+                    else
+                    {
+                        int middle=stoi(expression.substr(i,x-i+1))+stoi(expression.substr(x+1,expression.size()-1-x));
+                        result=first_mul*middle;
+                        
+                    }
+                    
+                    
+                }//else i!=0
+                if(result<minval)
+                {
+                    minval=result;
+                    I=i;
+                    J=j;
+                    //std::cout<<"test: "<<result<<"  "<<I<<"  "<<J<<std::endl;
+                    
+                }//if result<minval
+                
+            }//for j
+        }//for i
+              
+        ans.insert(ans.begin()+J,')');
+        ans.insert(ans.begin()+I,'(');
+        return ans;
+
+        
+    }
+};
