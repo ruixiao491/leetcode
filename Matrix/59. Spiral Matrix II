@@ -1,0 +1,64 @@
+#########################################################
+The solution in the solution part: transverse the layers
+#########################################################
+class Solution {
+public:
+    vector<vector<int>> generateMatrix(int n) {
+        vector<vector<int>> ans(n,vector<int>(n,0));
+        int start=1;
+        for(int layer=0;layer<(n+1)/2;layer++)
+        {
+            for(int i=layer;i<n-layer;i++)
+            {
+                ans[layer][i]=start;
+                start++;
+            }//left
+            for(int i=layer+1;i<n-layer;i++)
+            {
+                ans[i][n-layer-1]=start;
+                start++;
+            }//down
+            for(int i=n-layer-2;i>=layer;i--)
+            {
+                ans[n-layer-1][i]=start;
+                start++;
+            }//right
+            for(int i=n-layer-2;i>layer;i--)
+            {
+                ans[i][layer]=start;
+                start++;
+            }
+            
+        }//for layer
+        return ans;
+        
+    }
+};
+
+
+#######################################################
+Save the directions (the solution in the solution part)
+#######################################################
+class Solution {
+public:
+    vector<vector<int>> generateMatrix(int n) {
+        int maxNum = n * n;
+        int curNum = 1;
+        vector<vector<int>> matrix(n, vector<int>(n));
+        int row = 0, column = 0;
+        vector<vector<int>> directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};  // 右下左上
+        int directionIndex = 0;
+        while (curNum <= maxNum) {
+            matrix[row][column] = curNum;
+            curNum++;
+            int nextRow = row + directions[directionIndex][0], nextColumn = column + directions[directionIndex][1];
+            if (nextRow < 0 || nextRow >= n || nextColumn < 0 || nextColumn >= n || matrix[nextRow][nextColumn] != 0) {
+                directionIndex = (directionIndex + 1) % 4;  // 顺时针旋转至下一个方向
+            }
+            row = row + directions[directionIndex][0];
+            column = column + directions[directionIndex][1];
+        }
+        return matrix;
+    }
+};
+
