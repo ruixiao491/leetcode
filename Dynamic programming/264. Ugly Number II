@@ -1,0 +1,58 @@
+////My solution, similar to the solution 1: priority_queue
+class Solution {
+public:
+    int nthUglyNumber(int n){
+        priority_queue<long long, vector<long long>, greater<long long>>que;
+        set<long long> seen;
+        que.push(1);
+        seen.insert(1);
+        vector<int> factors={2,3,5};
+        int ans=0;
+        for(int i=0;i<n;i++)
+        {
+            ans=que.top();
+            que.pop();
+            for(int j=0;j<factors.size();j++)
+            {
+                if(seen.find((long long)ans*factors[j])==seen.end())
+                {
+                    que.push((long long)ans*factors[j]);
+                    seen.insert((long long)ans*factors[j]);
+                }
+            }//for j
+        }//for i
+        
+        return ans;
+        
+        
+    }
+};
+
+
+######################################################
+The solution in the solution part: dynamic programming
+######################################################
+class Solution {
+public:
+    int nthUglyNumber(int n) {
+        vector<int> dp(n + 1);
+        dp[1] = 1;
+        int p2 = 1, p3 = 1, p5 = 1;
+        for (int i = 2; i <= n; i++) {
+            int num2 = dp[p2] * 2, num3 = dp[p3] * 3, num5 = dp[p5] * 5;
+            dp[i] = min(min(num2, num3), num5);
+            if (dp[i] == num2) {
+                p2++;
+            }
+            if (dp[i] == num3) {
+                p3++;
+            }
+            if (dp[i] == num5) {
+                p5++;
+            }
+        }
+        return dp[n];
+    }
+};
+
+
