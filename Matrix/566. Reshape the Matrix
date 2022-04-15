@@ -1,0 +1,93 @@
+///My solution:
+class Solution {
+public:
+    vector<vector<int>> matrixReshape(vector<vector<int>>& mat, int r, int c) {
+        int m=mat.size();
+        int n=mat[0].size();
+        if(m*n!=r*c)
+        {
+            return mat;
+        }
+        vector<vector<int>>ans(r,vector<int>(c));
+        int row=0, column=0;
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(row<r&&column<c-1)
+                {
+                    ans[row][column]=mat[i][j];
+                    column++;
+                }
+                else if(row<r&&column==c-1)
+                {
+                    ans[row][column]=mat[i][j];
+                    row++;
+                    column=0;
+                }
+                
+            }//for n
+        }//for m
+        return ans;        
+    }
+};
+
+###############################################
+//The first solution in the solution part:queue
+###############################################
+class Solution {
+public:
+    vector<vector<int>> matrixReshape(vector<vector<int>>& mat, int r, int c) {
+        queue<int> que;
+        int m=mat.size();
+        int n=mat[0].size();
+        if(m*n!=r*c)
+        {
+            return mat;
+        }
+        vector<vector<int>> ans(r,vector<int>(c));
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                que.push(mat[i][j]);
+                //std::cout<<que.front()<<std::endl;
+            }//for n
+        }//for m
+        
+        for(int i=0;i<r;i++)
+        {
+            for(int j=0;j<c;j++)
+            {
+                ans[i][j]=que.front();
+                que.pop();       
+            }//for j
+        }//for r
+        return ans;
+    }
+};
+
+#########################################################################
+//The second solution in the solution part:calculate row and column index
+#########################################################################
+class Solution {
+public:
+    vector<vector<int>> matrixReshape(vector<vector<int>>& mat, int r, int c) {
+        int m=mat.size();
+        int n=mat[0].size();
+        if(m*n!=r*c)
+        {
+            return mat;
+        }
+        vector<vector<int>> ans(r,vector<int>(c));
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                ans[(i*n+j)/c][(i*n+j)%c]=mat[i][j];
+                
+            }//for j
+        }//for i
+        return ans;
+    }
+};
