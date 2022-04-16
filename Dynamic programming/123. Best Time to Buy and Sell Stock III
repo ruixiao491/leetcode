@@ -1,0 +1,165 @@
+//////My solution, hit the time limit
+class Solution {
+public:
+    int OnetimeProfit(vector<int>& prices, int start, int end)
+    {
+        int ans=0;
+        int minval=INT_MAX;
+        for(int i=start;i<=end;i++)
+        {
+            ans=max(ans,prices[i]-minval);
+            minval=min(minval,prices[i]);
+        }//for i
+        return ans;
+    }//OnetimeProfit
+    
+    int maxProfit(vector<int>& prices) {
+        if(prices.size()==1)
+        {
+            return 0;
+        }
+        if(prices.size()==2)
+        {
+            if(prices[1]>prices[0])
+            {
+                return prices[1]-prices[0];
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        int ans=0;
+        for(int i=0;i<prices.size()-2;i++)
+        {
+            if(i==0)
+            {
+                ans=max(ans,OnetimeProfit(prices,0,prices.size()-1));
+            }//if
+            else
+            {
+                int first=OnetimeProfit(prices,0,i);
+                int second=OnetimeProfit(prices,i+1,prices.size()-1);
+                ans=max(ans,first+second);
+            }//else
+        }//for
+        return ans;
+        
+    }
+};
+
+#####################################################################################
+Similar to the first solution in the solution part: bidirectional dynamic programming
+#####################################################################################
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        if(prices.size()==1)
+        {
+            return 0;
+        }
+        int ans=0;
+        vector<int> leftdp(prices.size(),0);
+        vector<int> rightdp(prices.size()+1,0);
+        int leftmin=prices[0];
+        int rightmax=prices[prices.size()-1];
+        for(int i=1;i<prices.size();i++)
+        {
+            leftdp[i]=max(leftdp[i-1],prices[i]-leftmin);
+            leftmin=min(leftmin,prices[i]);
+        }//for i
+        for(int i=prices.size()-2;i>=0;i--)
+        {
+            rightdp[i]=max(rightdp[i+1],rightmax-prices[i]);
+            rightmax=max(rightmax,prices[i]);
+        }//for right
+        for(int i=0;i<prices.size();i++)
+        {
+            ans=max(ans,leftdp[i]+rightdp[i+1]);
+            
+        }
+        return ans;
+    }
+};
+
+#############################################################################################################
+The first solution in the solution part, a bit quicker than the above one: bidirectional dynamic programming
+#############################################################################################################
+class Solution {
+  public:
+  int maxProfit(vector<int>& prices) {
+    int length = prices.size();
+    if (length <= 1) return 0;
+
+    int leftMin = prices[0];
+    int rightMax = prices[length - 1];
+
+    vector<int> leftProfits(length, 0);
+    // pad the right DP array with an additional zero for convenience.
+    vector<int> rightProfits(length + 1, 0);
+
+    // construct the bidirectional DP array
+    for (int l = 1; l < length; ++l) {
+      leftProfits[l] = max(leftProfits[l - 1], prices[l] - leftMin);
+      leftMin = min(leftMin, prices[l]);
+
+      int r = length - 1 - l;
+      rightProfits[r] = max(rightProfits[r + 1], rightMax - prices[r]);
+      rightMax = max(rightMax, prices[r]);
+    }
+
+    int maxProfit = 0;
+    for (int i = 0; i < length; ++i) {
+      maxProfit = max(maxProfit, leftProfits[i] + rightProfits[i + 1]);
+    }
+    return maxProfit;
+  }
+};
+
+###################################################
+The second solution in the solution part: one pass
+###################################################
+class Solution {
+  public:
+  int maxProfit(vector<int>& prices) {
+    int t1Cost = INT_MAX, 
+        t2Cost = INT_MAX;
+    int t1Profit = 0,
+        t2Profit = 0;
+
+    for (int price : prices) {
+        // the maximum profit if only one transaction is allowed
+        t1Cost = min(t1Cost, price);
+        t1Profit = max(t1Profit, price - t1Cost);
+        // re-invest the gained profit in the second transaction
+        t2Cost = min(t2Cost, price - t1Profit);
+        t2Profit = max(t2Profit, price - t2Cost);
+    }
+
+    return t2Profit;
+  }
+};
+
+############################################
+The state vector method: dynamic programming
+############################################
+class Solution {
+  public:
+  int maxProfit(vector<int>& prices) {
+      vector<vector<int>> dp(prices.size(),vector<int>(4));
+      dp[0][0]=prices[0];//the cost of the 1st stock for the ith day
+      dp[0][1]=0;//the profit of the 1st stock for the ith day
+      dp[0][2]=prices[0];//the cost of the second one for the ith day(has take the profit of the 1st stock into account)
+      dp[0][3]=0;//the profit of the second stock for the ith day.
+      for(int i=1;i<prices.size();i++)
+      {
+          dp[i][0]=min(dp[i-1][0],prices[i]);
+          dp[i][1]=max(dp[i-1][1],prices[i]-dp[i][0]);
+          dp[i][2]=min(dp[i-1][2],prices[i]-dp[i][1]);
+          dp[i][3]=max(dp[i-1][3],prices[i]-dp[i][2]);
+      }
+      return dp[prices.size()-1][3];
+      
+      
+  }
+};
