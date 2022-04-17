@@ -1,0 +1,27 @@
+class Solution {
+public:
+    string digitSum(string s, int k) {
+        int sum=0;
+        string test="";
+        while(s.size()>k)
+        {
+            for(int i=0;i<s.size();i++)
+            {
+                if((i+1)%k==0||i==s.size()-1)
+                {
+                    sum=sum+s[i]-'0';
+                    test=test+to_string(sum);
+                    sum=0;     
+                }//if the end of k gruop
+                else
+                {
+                    sum=sum+s[i]-'0';
+                }
+            }//for
+            s=test;
+            test="";
+        }//while
+        return s;
+        
+    }
+};
