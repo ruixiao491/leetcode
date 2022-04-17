@@ -1,0 +1,77 @@
+///My solution： tranverse layers (similar to Problem 59)
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        vector<int> ans;
+        int m=matrix.size();
+        int n=matrix[0].size();
+        int layers=(m+1)/2;
+        int count=1;
+        for(int i=0;i<layers;i++)
+        {
+            //left direction
+            for(int j=i;j<n-i&&count<=m*n;j++)
+            {
+                ans.push_back(matrix[i][j]);
+                count++;
+            }
+            //down direction
+            for(int j=i+1;j<m-i&&count<=m*n;j++)
+            {
+                ans.push_back(matrix[j][n-i-1]);
+                count++;
+            }
+            //right direction
+            for(int j=n-i-2;j>=i&&count<=m*n;j--)
+            {
+                ans.push_back(matrix[m-i-1][j]);
+                count++;
+            }
+            //up direction
+            for(int j=m-i-2;j>i&&count<=m*n;j--)
+            {
+                ans.push_back(matrix[j][i]);
+                count++;
+            }
+        }//for layers
+        return ans;
+        
+    }
+};
+
+####################################################
+The solution in the solution part: set up boundaries
+####################################################
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        if (matrix.size() == 0 || matrix[0].size() == 0) {
+            return {};
+        }
+
+        int rows = matrix.size(), columns = matrix[0].size();
+        vector<int> order;
+        int left = 0, right = columns - 1, top = 0, bottom = rows - 1;
+        while (left <= right && top <= bottom) {
+            for (int column = left; column <= right; column++) {
+                order.push_back(matrix[top][column]);
+            }
+            for (int row = top + 1; row <= bottom; row++) {
+                order.push_back(matrix[row][right]);
+            }
+            if (left < right && top < bottom) {
+                for (int column = right - 1; column >= left; column--) {
+                    order.push_back(matrix[bottom][column]);
+                }
+                for (int row = bottom-1; row > top; row--) {
+                    order.push_back(matrix[row][left]);
+                }
+            }
+            left++;
+            right--;
+            top++;
+            bottom--;
+        }
+        return order;
+    }
+};
