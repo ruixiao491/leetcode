@@ -1,0 +1,89 @@
+#########################################
+The first solution in the solution part:
+#########################################
+
+class Solution {
+public:
+    void inorder(TreeNode* root, vector<int>& nums) {
+        if (root == nullptr) {
+            return;
+        }
+        inorder(root->left, nums);
+        nums.push_back(root->val);
+        inorder(root->right, nums);
+    }
+
+    pair<int,int> findTwoSwapped(vector<int>& nums) {
+        int n = nums.size();
+        int index1 = -1, index2 = -1;
+        for (int i = 0; i < n - 1; ++i) {
+            std::cout<<nums[i]<<std::endl;
+            if (nums[i + 1] < nums[i]) {
+                index2 = i + 1;
+                //std::cout<<"index2:  "<<index2<<std::endl;
+                if (index1 == -1) {
+                    index1 = i;
+                    //std::cout<<"index1:  "<<index1<<std::endl;
+                } else {
+                    break;
+                }
+            }
+        }
+        int x = nums[index1], y = nums[index2];
+        return {x, y};
+    }
+    
+    void recover(TreeNode* r, int count, int x, int y) {
+        if (r != nullptr) {
+            if (r->val == x || r->val == y) {
+                r->val = r->val == x ? y : x;
+                if (--count == 0) {
+                    return;
+                }
+            }
+            recover(r->left, count, x, y);
+            recover(r->right, count, x, y);
+        }
+    }
+
+    void recoverTree(TreeNode* root) {
+        vector<int> nums;
+        inorder(root, nums);
+        pair<int,int> swapped= findTwoSwapped(nums);
+        recover(root, 2, swapped.first, swapped.second);
+    }
+};
+
+#########################################
+The second solution in the solution part
+#########################################
+class Solution {
+public:
+    void recoverTree(TreeNode* root) {
+        stack<TreeNode*> stk;
+        TreeNode* x = nullptr;
+        TreeNode* y = nullptr;
+        TreeNode* pred = nullptr;
+
+        while (!stk.empty() || root != nullptr) {
+            while (root != nullptr) {
+                stk.push(root);
+                root = root->left;
+            }
+            root = stk.top();
+            stk.pop();
+            if (pred != nullptr && root->val < pred->val) {
+                y = root;
+                if (x == nullptr) {
+                    x = pred;
+                }
+                else break;
+            }
+            pred = root;
+            root = root->right;
+        }
+
+        swap(x->val, y->val);
+    }
+};
+
