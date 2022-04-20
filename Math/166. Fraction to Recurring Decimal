@@ -1,0 +1,62 @@
+class Solution {
+public:
+    string fractionToDecimal(int numerator, int denominator) {
+        long long numerator2=numerator;
+        //long long denominator2=denominator;
+        string ans="";
+        long long quotient=numerator2/denominator;
+        ans=ans+to_string(quotient);
+        map<int,int> remaining;
+        if(numerator2%denominator==0)
+        {
+            return ans;
+        }
+        else
+        {
+            ans=ans+".";
+        }
+        int sign=0;
+        if(numerator<0)
+        {
+            sign++;
+        }
+        if(denominator<0)
+        {
+            sign++;
+        }
+        if(sign==1)
+        {
+            numerator2=abs(numerator2);
+            denominator=abs(denominator);
+            if(quotient==0)
+            {
+                ans="-"+ans;
+            }
+        }//if
+        int index=1;
+        int start=0;
+        while(numerator2%denominator!=0)
+        {
+            if(remaining.find(numerator2%denominator)!=remaining.end())
+            {
+                start=remaining.find(numerator2%denominator)->second;
+                ans=ans+")"; 
+                break;
+            }//if
+            remaining.insert({numerator2%denominator,index});
+            numerator2=(long long) numerator2%denominator*10;
+            quotient=numerator2/denominator;
+            ans=ans+to_string(quotient);
+            index++;
+            
+        }//while
+        if(start!=0)
+        {
+            int second=ans.find(".");
+            ans.insert(second+start,"(");      
+        }
+        
+        
+        return ans;
+    }
+};
