@@ -1,0 +1,62 @@
+class MyHashMap {
+public:
+    static const int base = 769;
+    vector<vector<pair<int,int>>> seen=vector<vector<pair<int,int>>>(base);
+    static int hash(int key) {
+        return key % base;
+    }
+    
+    MyHashMap() {
+        
+    }
+    
+    void put(int key, int value) {
+        int h=hash(key);
+        for(auto it=seen[h].begin();it!=seen[h].end();it++)
+        {
+            if(it->first==key)
+            {
+                it->second=value;
+                return;
+            }
+        }//for
+        
+        seen[h].push_back(make_pair(key,value));      
+        
+    }
+    
+    int get(int key) {
+        int h=hash(key);
+        for(auto it=seen[h].begin();it!=seen[h].end();it++)
+        {
+            if(it->first==key)
+            {
+                return it->second;
+            }
+        }//for
+        return -1;
+        
+    }
+    
+    void remove(int key) {
+        int h=hash(key);
+        for(auto it=seen[h].begin();it!=seen[h].end();it++)
+        {
+            if(it->first==key)
+            {
+                seen[h].erase(it);
+                break;
+            }
+        }//for
+        
+        
+    }
+};
+
+/**
+ * Your MyHashMap object will be instantiated and called as such:
+ * MyHashMap* obj = new MyHashMap();
+ * obj->put(key,value);
+ * int param_2 = obj->get(key);
+ * obj->remove(key);
+ */
