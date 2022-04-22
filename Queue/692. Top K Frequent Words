@@ -1,0 +1,91 @@
+///////My solution
+class Solution {
+public:
+    vector<string> topKFrequent(vector<string>& words, int k) {
+        vector<string> ans;
+        map<string, int> seen;
+        multimap<int, string> counts;
+        for(int i=0;i<words.size();i++)
+        {
+            seen[words[i]]++;
+        }
+        auto it=seen.begin();
+        while(it!=seen.end())
+        {
+            counts.insert({it->second,it->first});
+            it++;
+        }//while
+        auto test=counts.begin();
+        
+        auto it2=counts.end();
+        it2--;
+        set<string> ans2;
+        while(k>0&&it2!=counts.begin())
+        {
+            if(counts.count(it2->first)==1)
+            {
+                ans.push_back(it2->second);
+                it2--;
+                k--;
+            }
+            else
+            {
+                int number=counts.count(it2->first);
+                while(number>0)
+                {
+                    ans2.insert(it2->second);
+                    it2--;
+                    number--;
+                }//while
+                auto it=ans2.begin();
+                while(k>0&&it!=ans2.end())
+                {
+                    ans.push_back(*it);
+                    ans2.erase(*it);
+                    k--;
+                    it++;
+                }//while
+                
+            }//else
+        }//while
+        if(k>0)
+        {
+            ans.push_back(counts.begin()->second);
+        }
+        
+        return ans;
+        
+        
+    }
+};
+
+
+##################################################
+The solution in the solution part: priority queue
+##################################################
+class Solution {
+public:
+    vector<string> topKFrequent(vector<string>& words, int k) {
+        unordered_map<string, int> cnt;
+        for (auto& word : words) {
+            cnt[word]++;
+        }
+        auto cmp = [](const pair<string, int>& a, const pair<string, int>& b) {
+            return a.second == b.second ? a.first < b.first : a.second > b.second;
+        };
+        priority_queue<pair<string, int>, vector<pair<string, int>>, decltype(cmp)> que(cmp);
+        for (auto& it : cnt) {
+            que.emplace(it);
+            if (que.size() > k) {
+                que.pop();
+            }
+        }
+        vector<string> ret(k);
+        for (int i = k - 1; i >= 0; i--) {
+            ret[i] = que.top().first;
+            que.pop();
+        }
+        return ret;
+    }
+};
+
