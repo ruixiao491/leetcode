@@ -1,0 +1,42 @@
+///My solution:
+class Solution {
+public:
+    int hammingDistance(int x, int y) {
+        int diff=x^y;
+        int ans=0;
+        while(diff!=0)
+        {
+            diff=diff&(diff-1);
+            ans++;
+        }
+        return ans;
+        
+    }
+};
+
+######################################################
+The solution in the solution part: (built in function)
+######################################################
+class Solution {
+public:
+    int hammingDistance(int x, int y) {
+        return __builtin_popcount(x ^ y);
+    }
+};
+
+
+##############################################
+The solution in the solution part (Bit shift)
+##############################################
+class Solution {
+public:
+    int hammingDistance(int x, int y) {
+        int s = x ^ y, ret = 0;
+        while (s) {
+            ret += s & 1;
+            s >>= 1;
+        }
+        return ret;
+    }
+};
+
