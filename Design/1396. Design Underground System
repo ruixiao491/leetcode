@@ -1,0 +1,46 @@
+class UndergroundSystem {
+public:
+    map<int,pair<string,int>> seen;
+    multimap<string,int> times;
+    UndergroundSystem() {
+        
+    }
+    
+    void checkIn(int id, string stationName, int t) {
+        seen.insert({id,make_pair(stationName,t)});
+        
+    }
+    
+    void checkOut(int id, string stationName, int t) {
+        auto it=seen.find(id);
+        times.insert({it->second.first+":"+stationName,t-it->second.second});
+        seen.erase(id);
+        
+    }
+    
+    double getAverageTime(string startStation, string endStation) {
+        string name=startStation+":"+endStation;
+        int counts=times.count(name);
+        int test=counts;
+        auto it=times.find(name);
+        double ans=0;
+        while(counts>0)
+        {
+            ans+=it->second;
+            it++;
+            counts--;
+        }//while
+        ans=ans/test;
+        return ans;
+        
+        
+    }
+};
+
+/**
+ * Your UndergroundSystem object will be instantiated and called as such:
+ * UndergroundSystem* obj = new UndergroundSystem();
+ * obj->checkIn(id,stationName,t);
+ * obj->checkOut(id,stationName,t);
+ * double param_3 = obj->getAverageTime(startStation,endStation);
+ */
