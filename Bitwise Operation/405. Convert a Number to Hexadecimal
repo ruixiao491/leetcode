@@ -1,0 +1,101 @@
+////My solution:
+class Solution {
+public:
+    string toHex(int num) {
+        string ans="";
+        if(num==0)
+        {
+            return "0";
+        }
+        map<int,char> seen;
+        char first='a';
+        int index=0;
+        for(int i=10;i<=15;i++)
+        {
+            seen.insert({i,first+index});
+            index++;
+        }
+        int sign=num>=0;
+        long num2=abs(num);
+        while(num2>0)
+        {
+            int a=num2%16;
+            num2=num2/16;
+            if(a>9)
+            {
+                auto it=seen.find(a);
+                ans.push_back(it->second);
+            }//a >9
+            else
+            {
+                ans.push_back(a+'0');
+            }
+            
+        }//while num>0
+        reverse(ans.begin(),ans.end());
+        int carry=1;
+        int convert=0;
+        if(sign==0)
+        {
+            for(int i=ans.size()-1;i>=0;i--)
+            {
+                if(isdigit(ans[i]))
+                {
+                    convert=15-(ans[i]-'0')+carry;
+                }
+                else
+                {
+                    convert=15-(ans[i]-'a'+10)+carry;
+                }
+                if(convert>9&&convert<=15)
+                {
+                    ans[i]=seen.find(convert)->second;
+                    carry=0;
+                }//if convert>9
+                else if(convert>15)
+                {
+                    ans[i]='0';
+                    carry=1;
+                }
+                else
+                {
+                    ans[i]=convert+'0';
+                    carry=0;
+                }                
+                
+            }//for
+            while(ans.size()<8)
+            {
+                ans='f'+ans;
+            }
+                
+            
+        }//sign==0
+        return ans;
+        
+    }
+};
+
+
+########################################################################
+The solution in the solution part of Chinese version: Bitwise Operation
+########################################################################
+class Solution {
+public:
+    string toHex(int num) {
+        if (num == 0) {
+            return "0";
+        }
+        string sb;
+        for (int i = 7; i >= 0; i --) {
+            int val = (num >> (4 * i)) & 15;
+            std::cout<<(num>>(4*i))<<std::endl;
+            //std::cout<<0xf<<std::endl;
+            if (sb.length() > 0 || val > 0) {
+                char digit = val < 10 ? (char) ('0' + val) : (char) ('a' + val - 10);
+                sb.push_back(digit);
+            }
+        }
+        return sb;
+    }
+};
