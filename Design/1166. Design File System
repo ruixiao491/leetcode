@@ -1,0 +1,141 @@
+///My solution:
+class FileSystem {
+public:
+    map<string,int> seen;
+    FileSystem() {
+        
+    }
+    
+    bool createPath(string path, int value) {
+        if(seen.find(path)!=seen.end())
+        {
+            return false;
+        }
+        int n=path.size();
+        int right=n-1;
+        int pos_parent_end=0;
+        while(right>=0)
+        {
+            if(path[right]=='/')
+            {
+                pos_parent_end=right-1;
+                break;
+            }//if
+            right--;
+        }//while
+        if(pos_parent_end<0)
+        {
+            seen.insert({path,value});
+            return true;
+        }//if
+        else
+        {
+            string parent=path.substr(0,pos_parent_end+1);
+            if(seen.count(parent)==0)
+            {
+                return false;
+            }
+            else
+            {
+                seen.insert({path,value});
+                return true;           
+            }
+        }//else pos_parent!<0;
+        
+        
+    }
+    
+    int get(string path) {
+        if(seen.count(path)!=0)
+        {
+            return seen.find(path)->second;  
+        }
+        else
+        {
+            return -1;
+        }
+        
+    }
+};
+
+
+
+
+
+##################################################
+Other's solution with Tier in the discussion part
+##################################################
+class TNode {
+public:
+    TNode(int val) {
+        val_ = val;
+    }
+    unordered_map<string, TNode *> next;
+    string name_;
+    int val_;
+};
+
+class FileSystem {
+public:
+    TNode *root;
+    FileSystem() {
+        root = new TNode(0);
+    }
+    
+	// time: `O(n)`
+    bool createPath(string path, int value) {
+        if (path == "" || path == "/") {
+            return false;
+        }
+        auto arr = pathArr(path);
+        auto now = root;
+        int n = arr.size();
+        for (int i = 0; i < n-1; ++i) {
+		    // if any parent node is empty, then return false
+            if (now->next.find(arr[i]) == now->next.end()) {
+                return false;
+            }
+            now = now->next[arr[i]];
+        }
+		// if the path already exists, return false
+        if (now->next.find(arr.back()) != now->next.end()) {
+            return false;
+        } else {
+            now->next[arr.back()] = new TNode(value);
+        }
+        return true;
+    }
+    
+	// time: `O(n)`, check if current path exists by making sure all its parent nodes exist.
+    int get(string path) {
+        if (path == "" || path == "/") {
+            return false;
+        }
+        auto arr = pathArr(path);
+        auto now = root;
+        for (auto &name: arr) {
+            if (now->next.find(name) == now->next.end()) {
+                return -1;
+            }
+            now = now->next[name];
+        }
+        return now->val_;
+    }
+    
+	// time: `O(n)`, split path into an array
+    vector<string> pathArr(string &path) {
+        vector<string> arr;
+        string name = "";
+        for (int i = 0; i <= path.size(); ++i) {
+            if (i == path.size() || path[i] == '/') {
+                if (name.size()) {
+                    arr.push_back(name);
+                }
+                name = "";
+            } else {
+                name += path[i];
+            }
+        }
+        return arr;
+    }
+};
