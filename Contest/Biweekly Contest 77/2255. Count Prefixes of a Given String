@@ -1,0 +1,24 @@
+class Solution {
+public:
+    int countPrefixes(vector<string>& words, string s) {
+        int ans=0;
+        for(int i=0;i<words.size();i++)
+        {
+            int test=1;
+            for(int j=0;j<words[i].size();j++)
+            {
+                if(words[i][j]!=s[j])
+                {
+                    test=0;
+                    break;
+                }//if
+            }//for j
+            if(test==1)
+            {
+                ans++;
+            }
+        }//for i
+        return ans;
+        
+    }
+};
