@@ -1,0 +1,35 @@
+class Solution {
+public:
+    int countLatticePoints(vector<vector<int>>& circles) {
+        int xsmall=INT_MAX, xbig=INT_MIN;
+        int ysmall=INT_MAX, ybig=INT_MIN;
+        int ans=0;
+        for(int i=0;i<circles.size();i++)
+        {
+            xsmall=min(xsmall,circles[i][0]-circles[i][2]);
+            xbig=max(xbig,circles[i][0]+circles[i][2]);
+            ybig=max(ybig,circles[i][1]+circles[i][2]);
+            ysmall=min(ysmall,circles[i][1]-circles[i][2]);
+        }//for
+        for(int i=xsmall;i<=xbig;i++)
+        {
+            for(int j=ysmall;j<=ybig;j++)
+            {
+                for(int m=0;m<circles.size();m++)
+                {
+                    int index1=circles[m][0];
+                    int index2=circles[m][1];
+                    int rad=circles[m][2];
+                    if((i-index1)*(i-index1)+(j-index2)*(j-index2)<=rad*rad)
+                    {
+                        ans++;
+                        break;
+                    }
+                }//for m
+                
+            }//for j
+        }//for i
+        return ans;
+        
+    }
+};
