@@ -1,0 +1,36 @@
+class Solution {
+public:
+    vector<int> countRectangles(vector<vector<int>>& rectangles, vector<vector<int>>& points) {
+        vector<int> ans(points.size(),0);
+        int maxval=0;
+        for(int i=0;i<rectangles.size();i++)
+        {
+            maxval=max(maxval,rectangles[i][1]);
+        }//for
+        vector<vector<int>> coordinates(maxval+1);
+        for(int i=0;i<rectangles.size();i++)
+        {
+            coordinates[rectangles[i][1]].push_back(rectangles[i][0]);
+        }
+        for(int i=0;i<coordinates.size();i++)
+        {
+            sort(coordinates[i].begin(),coordinates[i].end());
+        }
+        for(int i=0;i<points.size();i++)
+        {
+            int index=points[i][1];
+            for(int j=index;j<=maxval;j++)
+            {
+                auto it=lower_bound(coordinates[j].begin(),coordinates[j].end(),points[i][0]);
+                auto it2=coordinates[j].end();
+                ans[i]+=it2-it;
+                
+                
+            }//for index
+        }//for points
+
+        
+        return ans;
+        
+    }
+};
