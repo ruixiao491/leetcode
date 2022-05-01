@@ -1,0 +1,60 @@
+class Solution {
+public:
+    int countDistinct(vector<int>& nums, int k, int p) {
+        set<int> pos;
+        set<string> seen;
+        string test="";
+        int count=0;
+        for(int i=0;i<nums.size();i++)
+        {
+            if(nums[i]%p==0)
+            {
+                pos.insert(i);
+            }
+        }//for
+        int left=0,right=0;
+        while(right<nums.size()&&left<nums.size())
+        {
+            if(pos.find(right)==pos.end())
+            {
+                test=test+to_string(nums[right]);
+                seen.insert(test);
+                right++;
+            }//if
+            
+            else
+            {
+                count++;
+                if(right<nums.size()-1&&count<=k)
+                {
+                    test=test+to_string(nums[right]);
+                    seen.insert(test);
+                    right++;
+                    
+                }//if
+                
+                //else if(count>k||right==nums.size()-1)
+                if(count>k)
+                {
+                    left++;
+                    right=left;
+                    test="";
+                    count=0;
+                }//if
+                else if(right==nums.size()-1)
+                {
+                    left++;
+                    right=left;
+                    test="";
+                    count=0;
+                }
+                
+                
+            }//else
+            
+        }//while
+        return seen.size();
+
+        
+    }
+};
