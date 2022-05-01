@@ -1,0 +1,32 @@
+class Solution {
+public:
+    vector<int> intersection(vector<vector<int>>& nums) {
+        if(nums.size()==1)
+        {
+            sort(nums[0].begin(),nums[0].end());
+            return nums[0];
+        }
+        vector<int> ans;
+        map<int,int> seen;
+        for(int i=0;i<nums.size();i++)
+        {
+            for(int j=0;j<nums[i].size();j++)
+            {
+                seen[nums[i][j]]++;
+            }//for j
+        }//for
+
+        auto it=seen.begin();
+        while(it!=seen.end())
+        {
+            if(it->second==nums.size())
+            {
+                ans.push_back(it->first);
+            }//if
+            it++;
+        }
+        
+        return ans;
+        
+    }
+};
