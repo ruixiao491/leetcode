@@ -1,0 +1,132 @@
+///My solution: BFS
+class Solution {
+public:
+    int countComponents(int n, vector<vector<int>>& edges) {
+        vector<vector<int>> connection(n,vector<int>(n,0));
+        vector<int> visited(n,0);
+        queue<int> que;
+        int ans=0;
+        for(int i=0;i<edges.size();i++)
+        {
+            connection[edges[i][0]][edges[i][1]]=1;
+            connection[edges[i][1]][edges[i][0]]=1;
+        }//for i
+        
+        for(int i=0;i<n;i++)
+        {
+            if(visited[i]==0)
+            {
+                que.push(i);
+                while(!que.empty())
+                {
+                    int s=que.front();
+                    //std::cout<<s<<std::endl;
+                    que.pop();
+                    visited[s]=1;
+                    for(int j=0;j<n;j++)
+                    {
+                        if(connection[s][j]==1&&visited[j]==0)
+                        {
+                            que.push(j);
+                        }//if
+                    }//for j
+                    
+                }//while !que.empty()
+                ans++;
+            }//if
+            
+        }//for n
+        return ans;
+        
+    }
+};
+
+
+///My solution: DFS
+class Solution {
+public:
+    void dfs(vector<vector<int>>& connection,int& start,vector<int>& visited)
+    {
+        for(int i=0;i<connection.size();i++)
+        {
+            if(connection[start][i]==1&&visited[i]==0)
+            {
+                visited[i]=1;
+                dfs(connection,i,visited);
+            }
+            
+        }//for
+        
+    }//void
+    
+    int countComponents(int n, vector<vector<int>>& edges) {
+        vector<vector<int>> connection(n,vector<int>(n,0));
+        vector<int> visited(n,0);
+        int ans=0;
+        for(int i=0;i<edges.size();i++)
+        {
+            connection[edges[i][0]][edges[i][1]]=1;
+            connection[edges[i][1]][edges[i][0]]=1;
+        }//for i
+        for(int i=0;i<n;i++)
+        {
+            if(visited[i]==0)
+            {
+                visited[i]=1;
+                dfs(connection,i,visited);
+                ans++;  
+            }//if
+        }//for i
+        return ans;   
+        
+    }
+};
+
+###############################################
+The solution in the solution part: disjoint set
+###############################################
+class Solution {
+public:
+    int find(vector<int> &representative, int vertex) {
+        if (vertex == representative[vertex]) {
+            return vertex;
+        }
+        
+        return representative[vertex] = find(representative, representative[vertex]);
+    }
+    
+    int combine(vector<int> &representative, vector<int> &size, int vertex1, int vertex2) {
+        vertex1 = find(representative, vertex1);
+        vertex2 = find(representative, vertex2);
+        
+        if (vertex1 == vertex2) {
+            return 0;
+        } else {
+            
+            if (size[vertex1] > size[vertex2]) {
+                size[vertex1] += size[vertex2];
+                representative[vertex2] = vertex1;
+            } else {
+                size[vertex2] += size[vertex1];
+                representative[vertex1] = vertex2;
+            }
+            return 1;
+        }
+    }
+
+    int countComponents(int n, vector<vector<int>>& edges) {
+        vector<int> representative(n), size(n);
+        
+        for (int i = 0; i < n; i++) {
+            representative[i] = i;
+            size[i] = 1;
+        }
+        
+        int components = n;
+        for (int i = 0; i < edges.size(); i++) {
+            components -= combine(representative, size, edges[i][0], edges[i][1]);
+        }
+
+        return components;
+    }
+};
