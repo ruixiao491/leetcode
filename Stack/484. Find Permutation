@@ -1,0 +1,68 @@
+///My solution
+class Solution {
+public:
+    vector<int> findPermutation(string s) {
+        int n=s.size();
+        vector<int> nums(n+1);
+        for(int i=0;i<n+1;i++)
+        {
+            nums[i]=i+1;
+        }//for
+        for(int i=0;i<n;i++)
+        {
+            if(s[i]=='D')
+            {
+                swap(nums[i],nums[i+1]);
+                int start=i;
+                while(start-1>=0&&s[start-1]=='D')
+                {
+                    swap(nums[start],nums[start-1]);
+                    start--;
+                }//while
+            }
+        }//for
+        return nums;
+        
+        
+    }
+};
+
+
+############################################################################
+The solution inspired by the java solution in the solution part: using stack
+############################################################################
+class Solution {
+public:
+    vector<int> findPermutation(string s) {
+        int n=s.size();
+        vector<int> nums(n+1);
+        stack<int> stk;
+        int start=0;
+        for(int i=1;i<=n;i++)
+        {
+            if(s[i-1]=='I')
+            {
+                stk.push(i);
+                while(!stk.empty())
+                {
+                    nums[start]=stk.top();
+                    stk.pop();
+                    start++;
+                }//while
+            }//if i
+            else
+            {
+                stk.push(i);
+            }
+            
+        }//for i
+        stk.push(n+1);
+        while(!stk.empty())
+        {
+            nums[start]=stk.top();
+            stk.pop();
+            start++;
+        }//while
+        return nums;
+    }
+};
