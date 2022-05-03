@@ -1,0 +1,80 @@
+class Solution {
+public:
+    vector<int> root;
+    vector<int> rank;
+    int find(int x)
+    {
+        if(x==root[x])
+        {
+            return x;
+        }
+        return root[x]=find(root[x]);
+    }//find
+    void unionbyrank(int x, int y)
+    {
+        int rootX=find(x);
+        int rootY=find(y);
+        if(rootX!=rootY)
+        {
+            if(rank[rootX]>rank[rootY])
+            {
+                root[rootY]=rootX;
+            }
+            else if(rank[rootX]<rank[rootY])
+            {
+                root[rootX]=rootY;
+            }//else if
+            else
+            {
+                root[rootY]=rootX;
+                rank[rootX]++;
+            }
+        }//if
+    }//union
+    
+    int separatenode(int& n)
+    {
+        int count=0;
+        for(int i=0;i<n;i++)
+        {
+            if(root[i]==i)
+            {
+                count++;
+            }
+        }//for
+        return count;
+    }//separaenode
+    
+    int earliestAcq(vector<vector<int>>& logs, int n) {
+        root=vector<int>(n);
+        rank=vector<int>(n,1);
+        int ans=0;
+        for(int i=0;i<n;i++)
+        {
+            root[i]=i;
+        }
+        ///sort the timestamp
+        auto cmp=[](vector<int> a, vector<int> b)
+        {
+            return a[0]<b[0];
+        };
+        sort(logs.begin(),logs.end(),cmp);
+        
+        
+        for(int i=0;i<logs.size();i++)
+        {
+            int a=logs[i][1];
+            int b=logs[i][2];
+            if(root[a]==root[b]) continue;
+            unionbyrank(a,b);
+            if(separatenode(n)==1)
+            {
+                return logs[i][0];
+            }
+            
+        }//for i
+        return -1;
+        
+        
+    }
+};
