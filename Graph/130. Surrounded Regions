@@ -1,0 +1,208 @@
+//My solution: disjoint set
+class Solution {
+public:
+    vector<int> root;
+    vector<int> rank;
+    int find(int x)
+    {
+        if(x==root[x])
+        {
+            return x;
+        }
+        return root[x]=find(root[x]);
+    }//int find
+    void unionbyrank(int x, int y)
+    {
+        int rootX=find(x);
+        int rootY=find(y);
+        if(rootX!=rootY)
+        {
+            if(rank[rootX]>rank[rootY])
+            {
+                root[rootY]=rootX;
+            }
+            else if(rank[rootX]<rank[rootY])
+            {
+                root[rootX]=rootY;
+            }
+            else
+            {
+                root[rootY]=rootX;
+                rank[rootX]++;
+            }
+        }//if
+    }//unionbyrank
+    
+    void solve(vector<vector<char>>& board) {
+        vector<int> border;
+        vector<int> inside;
+        int m=board.size();
+        int n=board[0].size();
+        vector<vector<int>> dir={{-1,0},{1,0},{0,-1},{0,1}};
+        root=vector<int>(m*n);
+        rank=vector<int>(m*n,1);
+        for(int i=0;i<m*n;i++)
+        {
+            root[i]=i;
+        }
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(board[i][j]=='O')
+                {
+                    board[i][j]='1';
+                    if(i==0||i==m-1||j==0||j==n-1)
+                    {
+                        border.push_back(i*n+j);
+                    }//if
+                    else
+                    {
+                        inside.push_back(i*n+j);
+                    }
+                    for(int k=0;k<4;k++)
+                    {
+                        int x=i+dir[k][0];
+                        int y=j+dir[k][1];
+                        if(x>=0&&x<m&&y>=0&&y<n&&board[x][y]=='O')
+                        {
+                            //std::cout<<i*n+j<<"   "<<x*n+y<<std::endl;
+                            unionbyrank(i*n+j,x*n+y);
+                        }
+                    }//for k
+                }//if board==0            
+            }//for j
+        }//for i
+        set<int> seen;
+        
+        for(int i=0;i<border.size();i++)
+        {
+            int x=border[i]/n;
+            int y=border[i]%n;
+            board[x][y]='O';
+            seen.insert(find(border[i]));
+        }
+        for(int i=0;i<inside.size();i++)
+        {
+            int val=find(inside[i]);
+            int x=inside[i]/n;
+            int y=inside[i]%n;
+            if(seen.count(val)!=0)
+            {
+                board[x][y]='O';
+            }
+            else
+            {
+                board[x][y]='X';
+            }
+        }//for        
+    }
+};
+
+
+//BFS
+class Solution {
+public:
+    void solve(vector<vector<char>>& board) {
+        int m=board.size();
+        int n=board[0].size();
+        queue<int> que;
+        vector<vector<int>> dir={{-1,0},{1,0},{0,-1},{0,1}};
+        //two rows
+        if(m==1)
+        {
+            return;
+        }
+        for(int i=0;i<m;i=i+m-1)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(board[i][j]=='O')
+                {
+                    board[i][j]='A';
+                    que.push(i*n+j);
+                    while(!que.empty())
+                    {
+                        int cur=que.front();
+                        que.pop();
+                        for(int k=0;k<4;k++)
+                        {
+                            int x=cur/n+dir[k][0];
+                            int y=cur%n+dir[k][1];
+                            if(x>=0&&x<m&&y>=0&&y<n&&board[x][y]=='O')
+                            {
+                                que.push(x*n+y);
+                                board[x][y]='A';
+                            }//if
+                        }//for k
+                        
+                        
+                    }//while
+                    
+                }//if board=0;
+            }//for j
+        }//for i
+        //two columns
+        for(int i=1;i<m-1;i++)
+        {
+            //the first column
+            if(board[i][0]=='O')
+            {
+                board[i][0]='A';
+                que.push(i*n);
+                while(!que.empty())
+                {
+                    int cur=que.front();
+                    que.pop();
+                    for(int k=0;k<4;k++)
+                    {
+                        int x=cur/n+dir[k][0];
+                        int y=cur%n+dir[k][1];
+                        if(x>=0&&x<m&&y>=0&&y<n&&board[x][y]=='O')
+                        {
+                            que.push(x*n+y);
+                            board[x][y]='A';
+                        }//if
+                    }//for k
+                }//while
+            }//if board[i][0]
+            ///the last column
+            if(board[i][n-1]=='O')
+            {
+                board[i][n-1]='A';
+                que.push(i*n+n-1);
+                while(!que.empty())
+                {
+                    int cur=que.front();
+                    que.pop();
+                    for(int k=0;k<4;k++)
+                    {
+                        int x=cur/n+dir[k][0];
+                        int y=cur%n+dir[k][1];
+                        if(x>=0&&x<m&&y>=0&&y<n&&board[x][y]=='O')
+                        {
+                            que.push(x*n+y);
+                            board[x][y]='A';
+                        }//if
+                    }//for k
+                }//while
+            }//if board[i][0]
+            
+        }//for i
+        
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(board[i][j]=='O')
+                {
+                    board[i][j]='X';
+                }
+                if(board[i][j]=='A')
+                {
+                    board[i][j]='O';
+                }
+            }
+        }//for i      
+    }
+};
