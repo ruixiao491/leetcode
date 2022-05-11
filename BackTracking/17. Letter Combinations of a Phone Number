@@ -1,0 +1,82 @@
+///My solution:
+class Solution {
+public:
+    vector<string> letterCombinations(string digits) {
+        vector<string> ans;
+        vector<vector<string>> mapping(10);
+        mapping[2]={"a","b","c"};
+        mapping[3]={"d","e","f"};
+        mapping[4]={"g","h","i"};
+        mapping[5]={"j","k","l"};
+        mapping[6]={"m","n","o"};
+        mapping[7]={"p","q","r","s"};
+        mapping[8]={"t","u","v"};
+        mapping[9]={"w","x","y","z"};
+        if(digits.size()==0)
+        {
+            return ans;
+        }
+        int index0=digits[0]-'0';
+        ans=mapping[index0];
+        for(int i=1;i<digits.size();i++)
+        {
+            int index=digits[i]-'0';
+            int n=ans.size();
+            for(int j=0;j<n;j++)
+            {
+                string test=ans[j];
+                for(int k=0;k<mapping[index].size();k++)
+                {
+                    ans.push_back(test+mapping[index][k]);
+                }//for k
+                //ans.erase(ans.begin()+j);
+                //std::cout<<ans[j]<<"  "<<i<<std::endl;
+            }//for j
+            ans.erase(ans.begin(),ans.begin()+n);
+        }//for i
+        return ans;
+        
+    }
+};
+
+
+#############################################
+The solution in the solution part
+#############################################
+class Solution {
+public:
+    vector<string> letterCombinations(string digits) {
+        vector<string> combinations;
+        if (digits.empty()) {
+            return combinations;
+        }
+        unordered_map<char, string> phoneMap{
+            {'2', "abc"},
+            {'3', "def"},
+            {'4', "ghi"},
+            {'5', "jkl"},
+            {'6', "mno"},
+            {'7', "pqrs"},
+            {'8', "tuv"},
+            {'9', "wxyz"}
+        };
+        string combination;
+        backtrack(combinations, phoneMap, digits, 0, combination);
+        return combinations;
+    }
+
+    void backtrack(vector<string>& combinations, const unordered_map<char, string>& phoneMap, const string& digits, int index, string& combination) {
+        if (index == digits.length()) {
+            combinations.push_back(combination);
+        } else {
+            char digit = digits[index];
+            const string& letters = phoneMap.at(digit);
+            for (const char& letter: letters) {
+                combination.push_back(letter);
+                backtrack(combinations, phoneMap, digits, index + 1, combination);
+                combination.pop_back();
+            }
+        }
+    }
+};
+
