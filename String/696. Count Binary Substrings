@@ -1,0 +1,86 @@
+///My solution:
+class Solution {
+public:
+    int countBinarySubstrings(string s) {
+        int n=s.size();
+        vector<int> counts(n,1);
+        for(int i=1;i<s.size();i++)
+        {
+            if(s[i]==s[i-1])
+            {
+                counts[i]=counts[i-1]+1;
+            }
+            
+        }//for
+        int ans=0;
+        int right=n-1;
+        int prev=counts[right];
+        while(right>0)
+        {
+            if(counts[right]==1)
+            {
+                if(right==n-1)
+                {
+                    ans++;
+                    prev=counts[right-1];
+                }
+                else
+                {
+                    ans+=min(counts[right-1],prev);
+                    prev=counts[right-1];
+                }
+            }//if
+            
+            right--;
+        }//while
+        return ans;
+    }
+};
+
+
+###########################################################
+The first solution in the solution part: Group by character
+###########################################################
+class Solution {
+public:
+    int countBinarySubstrings(string s) {
+        vector<int> counts;
+        int ptr = 0, n = s.size();
+        while (ptr < n) {
+            char c = s[ptr];
+            int count = 0;
+            while (ptr < n && s[ptr] == c) {
+                ++ptr;
+                ++count;
+            }
+            counts.push_back(count);
+        }
+        int ans = 0;
+        for (int i = 1; i < counts.size(); ++i) {
+            ans += min(counts[i], counts[i - 1]);
+        }
+        return ans;
+    }
+};
+
+##############################################
+The second solution: optimized the above one
+##############################################
+class Solution {
+public:
+    int countBinarySubstrings(string s) {
+        int ptr = 0, n = s.size(), last = 0, ans = 0;
+        while (ptr < n) {
+            char c = s[ptr];
+            int count = 0;
+            while (ptr < n && s[ptr] == c) {
+                ++ptr;
+                ++count;
+            }
+            ans += min(count, last);
+            last = count;
+        }
+        return ans;
+    }
+};
+
