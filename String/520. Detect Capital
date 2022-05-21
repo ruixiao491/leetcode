@@ -1,0 +1,60 @@
+///My solution:
+class Solution {
+public:
+    bool detectCapitalUse(string word) {
+        bool first=isupper(word[0]);
+        //std::cout<<"first: "<<first<<std::endl;
+        if(first==1)
+        {
+            if(word.size()>1)
+            {
+                bool second=isupper(word[1]);
+                for(int i=2;i<word.size();i++)
+                {
+                    bool test=isupper(word[i]);
+                    if((second^test)==1)
+                    {
+                        return false;
+                    }//if
+                }//for i
+            }//if size>1
+            return true;
+        }//if first=1
+        else
+        {
+            for(int i=1;i<word.size();i++)
+            {
+                bool test=isupper(word[i]);
+                if((first^test)==1)
+                {
+                    return false;
+                }
+            }//for
+            return true;
+        }//else
+        return true;
+    }
+};
+
+
+##################################################
+The solution in the solution part: optimized a bit
+##################################################
+class Solution {
+public:
+    bool detectCapitalUse(string word) {
+        // 若第 1 个字母为小写，则需额外判断第 2 个字母是否为小写
+        if (word.size() >= 2 && islower(word[0]) && isupper(word[1])) {
+            return false;
+        }
+        
+        // 无论第 1 个字母是否大写，其他字母必须与第 2 个字母的大小写相同
+        for (int i = 2; i < word.size(); ++i) {
+            if (islower(word[i]) ^ islower(word[1])) {
+                return false;
+            }
+        }
+        return true;
+    }
+};
+
