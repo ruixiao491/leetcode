@@ -1,0 +1,112 @@
+///My solution:
+class Solution {
+public:
+    bool checkPalindromic(string s)
+    {
+        int n=s.size();
+        int left=0, right=n-1;
+        while(left<right)
+        {
+            if(s[left]!=s[right])
+            {
+                return false;
+            }//if
+            else
+            {
+                left++;
+                right--;
+            }//else
+        }//while
+        return true;
+    }//bool
+    int countSubstrings(string s) {
+        int n=s.size();
+        int ans=0;
+        for(int i=0;i<n;i++)
+        {
+            for(int j=i;j<n;j++)
+            {
+                int length=j-i+1;
+                ans+=checkPalindromic(s.substr(i,length));
+                
+            }//for j
+        }//for i
+        return ans;
+    }
+};
+
+
+################################################
+The solution from the solution part:
+////dynamic programming
+################################################
+class Solution {
+ public:
+    int countSubstrings(string s) {
+        int n = s.size(), ans = 0;
+
+        if (n <= 0)
+            return 0;
+
+        bool dp[n][n];
+        fill_n(*dp, n * n, false);
+
+        // Base case: single letter substrings
+        for (int i = 0; i < n; ++i, ++ans)
+            dp[i][i] = true;
+
+        // Base case: double letter substrings
+        for (int i = 0; i < n - 1; ++i) {
+            dp[i][i + 1] = (s[i] == s[i + 1]);
+            ans += dp[i][i + 1];
+        }
+
+        // All other cases: substrings of length 3 to n
+        for (int len = 3; len <= n; ++len)
+            for (int i = 0, j = i + len - 1; j < n; ++i, ++j) {
+                dp[i][j] = dp[i + 1][j - 1] && (s[i] == s[j]);
+                ans += dp[i][j];
+            }
+            
+
+        return ans;
+    }
+};
+
+####################################################################
+The solution from the solution part: Expand Around Possible Centers
+####################################################################
+
+class Solution {
+ public:
+    int countSubstrings(string s) {
+        int ans = 0;
+
+        for (int i = 0; i < s.size(); ++i) {
+            // odd-length palindromes, single character center
+            ans += countPalindromesAroundCenter(s, i, i);
+
+            // even-length palindromes, consecutive characters center
+            ans += countPalindromesAroundCenter(s, i, i + 1);
+        }
+
+        return ans;
+    }
+
+    int countPalindromesAroundCenter(const string& ss, int lo, int hi) {
+        int ans = 0;
+
+        while (lo >= 0 and hi < ss.size()) {
+            if (ss[lo] != ss[hi])
+                break;      // the first and last characters don't match!
+
+            // expand around the center
+            lo--;
+            hi++;
+
+            ans++;
+        }
+
+        return ans;
+    }
+};
