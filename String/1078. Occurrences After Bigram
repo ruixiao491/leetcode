@@ -1,0 +1,79 @@
+///My soluton: with string::find
+class Solution {
+public:
+    vector<string> findOcurrences(string text, string first, string second) {
+        string combine=first+" "+second;
+        int n=combine.size();
+        vector<string> ans;
+        //std::cout<<isspace(text[text.find(combine)-1])<<std::endl;
+        while(text.find(combine)<text.size())
+        {
+            if((text.find(combine)>0&&isspace(text[text.find(combine)-1]))||text.find(combine)==0)
+            {
+                //std::cout<<text.find(combine)<<std::endl;
+                int index=text.find(combine)+n+1;
+                string test="";
+                for(int i=index;i<text.size();i++)
+                {
+                    if(isspace(text[i]))
+                    {
+                        ans.push_back(test);
+                        break;
+                    }
+                    else if(i==text.size()-1)
+                    {
+                        test=test+text[i];
+                        ans.push_back(test);
+                    }
+                    test=test+text[i];
+                }//for
+            }//if
+            if(first==second)
+            {
+                text.erase(0,text.find(combine)+first.size());
+            }
+            else
+            {
+                text.erase(0,text.find(combine)+n);    
+            }
+            
+
+        }//while
+        return ans;
+        
+    }
+};
+
+
+#######################################
+The solution in the solution part:
+#######################################
+class Solution {
+public:
+    vector<string> findOcurrences(string text, string first, string second) {
+        vector<string> words;
+        int s = 0, e = 0, len = text.length();
+        while (true) {
+            while (s < len && text[s] == ' ') {
+                s++;
+            }
+            if (s >= len) {
+                break;
+            }
+            e = s + 1;
+            while (e < len && text[e] != ' ') {
+                e++;
+            }
+            words.push_back(text.substr(s, e - s));
+            s = e + 1;
+        }
+        vector<string> ret;
+        for (int i = 2; i < words.size(); i++) {
+            if (words[i - 2] == first && words[i - 1] == second) {
+                ret.push_back(words[i]);
+            }
+        }
+        return ret;
+    }
+};
+
