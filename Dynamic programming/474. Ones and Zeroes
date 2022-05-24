@@ -1,0 +1,44 @@
+class Solution {
+public:
+    pair<int,int> count0and1(string s)
+    {
+        int n=s.size();
+        int num1=0;
+        int num0=0;
+        for(int i=0;i<n;i++)
+        {
+            if(s[i]=='0')
+            {
+                num0++;
+            }
+            else
+            {
+                num1++;
+            }
+        }//for
+        return make_pair(num0,num1);
+    }//count
+    int findMaxForm(vector<string>& strs, int m, int n) {
+        int k=strs.size();
+        vector<vector<vector<int>>> dp(k+1,vector<vector<int>>(m+1,vector<int>(n+1,0)));
+        for(int i=1;i<=k;i++)
+        {
+            auto it=count0and1(strs[i-1]);
+            int num0=it.first;
+            int num1=it.second;
+            //std::cout<<num0<<"  "<<num1<<std::endl;
+            for(int j=0;j<=m;j++)
+            {
+                for(int k=0;k<=n;k++)
+                {
+                    dp[i][j][k]=dp[i-1][j][k];
+                    if(j>=num0&&k>=num1)
+                    {
+                        dp[i][j][k]=max(dp[i][j][k],dp[i-1][j-num0][k-num1]+1);
+                    }
+                }//for k
+            }//for j
+        }//for i
+      return dp[k][m][n];  
+    }
+};
