@@ -1,0 +1,63 @@
+///My solution
+class Solution {
+public:
+    string kthDistinct(vector<string>& arr, int k) {
+        map<string,pair<int,int>> seen;
+        map<int,string> counts;
+        for(int i=0;i<arr.size();i++)
+        {
+            if(seen.find(arr[i])==seen.end())
+            {
+                seen.insert({arr[i],make_pair(i,1)});
+            }
+            else
+            {
+                seen[arr[i]].second++;
+            }
+            
+        }//for i
+        auto it=seen.begin();
+        //std::cout<<seen.size();
+        while(it!=seen.end())
+        {
+            if(it->second.second>1)
+            {
+                it++;
+                continue;
+            }
+            counts.insert({it->second.first,it->first});
+            it++;
+        }//while
+        auto it2=counts.begin();
+        k--;
+        while(k>=1)
+        {
+            if(it2!=counts.end())
+            {
+                k--;
+                it2++;
+            }
+            else
+            {
+                return "";
+            }
+        }//while
+        
+        return it2->second;      
+    }
+};
+
+###############################
+The solution in the discussion
+###############################
+class Solution {
+public:
+string kthDistinct(vector<string>& arr, int k) {
+        std::unordered_map<std::string, int> m;
+        for(std::string& s : arr) m[s]++;
+        for(std::string& s : arr) {
+            if(m[s] == 1 && --k == 0) return s;
+        }
+        return std::string{};
+    }
+};
