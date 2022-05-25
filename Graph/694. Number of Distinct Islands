@@ -1,0 +1,179 @@
+///My solution:
+class Solution {
+public:
+    int numDistinctIslands(vector<vector<int>>& grid) {
+        int m=grid.size();
+        int n=grid[0].size();
+        vector<vector<int>> dir={{1,0},{-1,0},{0,1},{0,-1}};
+        vector<vector<int>> visited(m,vector(n,0));
+        queue<pair<int,int>> que;
+        vector<vector<int>> island;
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(grid[i][j]==1&&visited[i][j]==0)
+                {
+                    vector<int> land;
+                    que.push({i,j});
+                    visited[i][j]=1;
+                    std::cout<<i<<"  "<<j<<std::endl;
+                    while(!que.empty())
+                    {
+                        int row=que.front().first;
+                        int col=que.front().second;
+                        land.push_back(row*n+col);
+                        que.pop();
+                        for(int i=0;i<4;i++)
+                        {
+                            int new_row=row+dir[i][0];
+                            int new_col=col+dir[i][1];
+                            if(new_row>=0&&new_row<m&&new_col>=0&&new_col<n&&grid[new_row][new_col]==1&&visited[new_row][new_col]==0)
+                            {
+                                que.push({new_row,new_col});
+                                visited[new_row][new_col]=1;
+                            }//if
+                        }//for
+                    }//while
+                    sort(land.begin(),land.end());
+                    island.push_back(land);
+                    
+                }//if
+                
+            }//for j
+        }//for i
+        
+        int ans=0;
+        //std::cout<<island.size()<<std::endl;
+        for(int i=0;i<island.size();i++)
+        {
+            vector<int> first=island[i];
+            ans++;
+            for(int j=i+1;j<island.size();j++)
+            {
+                vector<int> second=island[j];
+                if(second.size()!=first.size()) continue;
+                int diff_row=second[0]/n-first[0]/n;
+                int diff_col=second[0]%n-first[0]%n;
+                for(int k=0;k<second.size();k++)
+                {
+                    int new_row=second[k]/n-diff_row;
+                    int new_col=second[k]%n-diff_col;
+                    if(new_row>=0&&new_row<m&&new_col>=0&&new_col<n)
+                    {
+                        second[k]=new_row*n+new_col;
+                    }
+                }//for k
+                if(second==first)
+                {
+                    island.erase(island.begin()+j);
+                    j--;
+                }//if
+            }//for j
+        }//for i
+        return ans;
+    }
+};
+
+#####################################
+////Inspired by the solution: BFS+set
+#####################################
+class Solution {
+public:
+    int numDistinctIslands(vector<vector<int>>& grid) {
+        int m=grid.size();
+        int n=grid[0].size();
+        vector<vector<int>> dir={{1,0},{-1,0},{0,1},{0,-1}};
+        vector<vector<int>> visited(m,vector(n,0));
+        queue<pair<int,int>> que;
+        set<set<pair<int,int>>> island;
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(grid[i][j]==1&&visited[i][j]==0)
+                {
+                    set<pair<int,int>> land;
+                    que.push({i,j});
+                    visited[i][j]=1;
+                    int common_row=i;
+                    int common_col=j;
+                    //std::cout<<i<<"  "<<j<<std::endl;
+                    //std::cout<<common_row<<"  "<<common_col<<std::endl;
+                    while(!que.empty())
+                    {
+                        int row=que.front().first;
+                        int col=que.front().second;
+                        land.insert({row-common_row,col-common_col});
+                        que.pop();
+                        for(int i=0;i<4;i++)
+                        {
+                            int new_row=row+dir[i][0];
+                            int new_col=col+dir[i][1];
+                            if(new_row>=0&&new_row<m&&new_col>=0&&new_col<n&&grid[new_row][new_col]==1&&visited[new_row][new_col]==0)
+                            {
+                                que.push({new_row,new_col});
+                                visited[new_row][new_col]=1;
+                            }//if
+                        }//for
+                    }//while
+                    island.insert(land);
+                    
+                }//if
+                
+            }//for j
+        }//for i
+        
+        
+        return island.size();
+    }
+};
+
+####################################
+Modified based on the solution part:
+//DFS + set
+#####################################
+class Solution {
+public:
+    vector<vector<int>> dir={{1,0},{-1,0},{0,1},{0,-1}};
+    int m;
+    int n;
+    vector<vector<int>> visited;
+    set<pair<int,int>> land;
+    void dfs(vector<vector<int>>& grid,int row, int col,int common_row,int common_col)
+    {
+        if(row<0||row>=m||col<0||col>=n) return;
+        if(grid[row][col]==0||visited[row][col]==1) return;
+        visited[row][col]=1;
+        land.insert({row-common_row,col-common_col});
+        for(int i=0;i<4;i++)
+        {
+            dfs(grid,row+dir[i][0],col+dir[i][1],common_row,common_col);
+        }       
+        
+    }//dfs
+    int numDistinctIslands(vector<vector<int>>& grid) {
+        m=grid.size();
+        n=grid[0].size();      
+        visited=vector<vector<int>>(m,vector(n,0));
+        set<set<pair<int,int>>> island;
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(grid[i][j]==1&&visited[i][j]==0)
+                {
+                    land.clear();
+                    int common_row=i;
+                    int common_col=j;
+                    dfs(grid,i,j,common_row,common_col);
+                    island.insert(land);     
+                }//if
+                
+            }//for j
+        }//for i
+        
+        
+        return island.size();
+    }
+};
