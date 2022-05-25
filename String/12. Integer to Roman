@@ -1,0 +1,48 @@
+///My solution:
+class Solution {
+public:
+    string intToRoman(int num) {  
+        vector<int> val={1,4,5,9,10,40,50,90,100,400,500,900,1000};//13
+        vector<string> symbol={"I","IV","V","IX","X","XL","L","XC","C","CD","D","CM","M"};//13
+        string ans="";
+        for(int i=12;i>=0;i--)
+        {
+            if(num<val[i]) continue;
+            else
+            {
+                int count=num/val[i];
+                while(count>0)
+                {
+                    ans=ans+symbol[i];
+                    count--;
+                }
+                num=num%val[i];
+                if(num==0)
+                {
+                    break;
+                }
+            }//else
+        }//for i
+        
+        return ans;
+        
+        
+    }
+};
+
+
+#############################################
+The solution in the solution part: hardcoding
+#############################################
+const string thousands[] = {"", "M", "MM", "MMM"};
+const string hundreds[]  = {"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
+const string tens[]      = {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
+const string ones[]      = {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
+
+class Solution {
+public:
+    string intToRoman(int num) {
+        return thousands[num / 1000] + hundreds[num % 1000 / 100] + tens[num % 100 / 10] + ones[num % 10];
+    }
+};
+
