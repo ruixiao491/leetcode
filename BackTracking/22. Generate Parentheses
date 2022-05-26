@@ -1,0 +1,79 @@
+///My solution: inspried by the hint: backtracking
+class Solution {
+public:
+    vector<string> generateParenthesis(int n) {
+        vector<string> ans;
+        string perm="";
+        backtrack(n,perm,ans,0,0);
+        return ans;
+        
+    }//generateParenthesis
+    void backtrack(int n,string& perm, vector<string>& ans,int left,int right)
+    {
+        if(perm.size()==2*n)
+        {
+            ans.push_back(perm);
+            return;
+        }
+        else
+        {
+            if(left<n)
+            {
+                perm.push_back('(');
+                backtrack(n,perm,ans,left+1,right);
+                perm.pop_back();
+            }//left<n
+            if(right<left)
+            {
+                perm.push_back(')');
+                backtrack(n,perm,ans,left,right+1);
+                perm.pop_back();
+            }        
+        }//else
+        
+    }//backtrack
+};
+
+
+###############################################
+The solution in the solution part: Brute Force
+###############################################
+class Solution {
+    bool valid(const string& str) {
+        int balance = 0;
+        for (char c : str) {
+            if (c == '(') {
+                ++balance;
+            } else {
+                --balance;
+            }
+            if (balance < 0) {
+                return false;
+            }
+        }
+        return balance == 0;
+    }
+
+    void generate_all(string& current, int n, vector<string>& result) {
+        if (n == current.size()) {
+            if (valid(current)) {
+                result.push_back(current);
+            }
+            return;
+        }
+        current += '(';
+        generate_all(current, n, result);
+        current.pop_back();
+        current += ')';
+        generate_all(current, n, result);
+        current.pop_back();
+    }
+public:
+    vector<string> generateParenthesis(int n) {
+        vector<string> result;
+        string current;
+        generate_all(current, n * 2, result);
+        return result;
+    }
+};
+
