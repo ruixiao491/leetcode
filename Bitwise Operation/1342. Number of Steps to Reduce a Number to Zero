@@ -1,0 +1,49 @@
+///My solution using simulation:
+class Solution {
+public:
+    int numberOfSteps(int num) {
+        int ans=0;
+        while(num>0)
+        {
+            if(num%2==0)
+            {
+                num=num/2;
+            }
+            else
+            {
+                num=num-1;
+            }
+            ans++;
+        }//while
+        return ans;
+        
+    }
+};
+
+
+##################################################################################
+It can be solved by bit operation, the time complexity is the same as my solution
+##################################################################################
+class Solution {
+public:
+    int numberOfSteps(int num) {
+        if(num==0)
+        {
+            return 0;
+        }
+        int ans=0;
+        while(num>0)
+        {
+            if(num&1==1)
+            {
+               ans=ans+2; 
+            }
+            else
+            {
+                ans++;
+            }
+            num=num>>1;
+        }//while
+        return ans-1;
+    }
+};
