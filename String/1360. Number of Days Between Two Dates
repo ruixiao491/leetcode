@@ -1,0 +1,89 @@
+///My solution:
+class Solution {
+public:
+    bool leapyear(int i)
+    {
+        return (i%4==0&&i%100!=0)||(i%400==0);
+    }
+    int daysBetweenDates(string date1, string date2) {
+        int ans=0;
+        vector<int> month={31,28,31,30,31,30,31,31,30,31,30,31};
+        if(date2>date1)
+        {
+            string temp=date2;
+            date2=date1;
+            date1=temp;
+        }//if
+        int day1=stoi(date1.substr(8,2));
+        int day2=stoi(date2.substr(8,2));
+        int month1=stoi(date1.substr(5,2));
+        int month2=stoi(date2.substr(5,2));
+        int year1=stoi(date1.substr(0,4));
+        int year2=stoi(date2.substr(0,4));
+        //change to YY-01-DD
+        while(month1>1)
+        {
+            month1--;
+            if(month1==2&&leapyear(year1))
+            {
+                day1++;
+            }
+            day1+=month[month1-1];
+        }
+        while(month2>1)
+        {
+            month2--;
+            if(month2==2&&leapyear(year2))
+            {
+                day2++;
+            }
+            day2+=month[month2-1];
+        }
+        if(day1<day2)
+        {
+            year1--;
+            day1+=365+leapyear(year1);
+        }
+        ans=day1-day2;
+        for(int i=year1-1;i>=year2;i--)
+        {
+            ans+=365+leapyear(i);
+        }
+        return ans;
+               
+        
+    }
+};
+
+
+###########################################################
+The solution in the solution part: compared with 1971/01/01
+###########################################################
+class Solution {
+    bool leap_year(int year) {
+         return ((year % 400 == 0) || (year % 100 != 0 && year % 4 == 0));
+    }
+    int date_to_int(string date) {
+        int year, month, day;
+        sscanf(date.c_str(), "%d-%d-%d", &year, &month, &day);
+        int month_length[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        int ans = day - 1;
+        while (month != 0) {
+            --month;
+            ans += month_length[month];
+            if (month == 2 && leap_year(year))
+                ans += 1;
+        }
+        ans += 365 * (year - 1971);
+        ans += (year - 1) / 4 - 1971 / 4;
+        ans -= (year - 1) / 100 - 1971 / 100;
+        ans += (year - 1) / 400 - 1971 / 400;
+        return ans;
+    }
+public:
+    int daysBetweenDates(string date1, string date2) {
+        return abs(date_to_int(date1) - date_to_int(date2));
+    }
+};
+
+
