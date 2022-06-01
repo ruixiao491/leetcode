@@ -1,0 +1,129 @@
+///My solution: normal BFS
+class Solution {
+public:
+    vector<vector<int>> dir={{1,2},{2,1},{2,-1},{1,-2},{-1,-2},{-2,-1},{-2,1},{-1,2}};
+    vector<vector<int>> visited=vector(601,vector<int>(601,0));
+    int minKnightMoves(int x, int y) { 
+        queue<pair<int,int>> que;
+        que.push({300,300});
+        visited[300][300]=1;
+        int step=0;
+        while(!que.empty())
+        {
+            int counts=que.size();
+            for(int i=0;i<counts;i++)
+            {
+                auto it=que.front();
+                que.pop();
+                int row=it.first;
+                int col=it.second;
+                if(row==x+300&&col==y+300)
+                {
+                    return step;
+                }//if
+                for(int j=0;j<8;j++)
+                {
+                    int new_row=row+dir[j][0];
+                    int new_col=col+dir[j][1];
+                    if(new_row>=0&&new_row<601&&new_col>=0&&new_col<601&&visited[new_row][new_col]==0)
+                    {
+                        visited[new_row][new_col]=1;
+                        que.push({new_row,new_col});
+                    }//if
+                }
+            }//for
+            step++;
+        }//while
+        return step;
+    }
+};
+
+######################################################################################################
+///Try didirectional BFS based on the java solution (actually this is not quicker than the normal BFS)
+######################################################################################################
+class Solution {
+public:
+    vector<vector<int>> dir={{1,2},{2,1},{2,-1},{1,-2},{-1,-2},{-2,-1},{-2,1},{-1,2}};
+    int minKnightMoves(int x, int y) {
+        map<pair<int,int>,int> seen_origin;
+        map<pair<int,int>,int> seen_target;
+        queue<pair<int,int>> que_origin;
+        queue<pair<int,int>> que_target;
+        que_target.push({x,y});
+        que_origin.push({0,0});
+        seen_origin.insert({{0,0},0});
+        seen_target.insert({{x,y},0});
+        while(true)
+        {
+            auto it=que_origin.front();
+            que_origin.pop();
+            int count_origin=seen_origin[it];
+            if(seen_target.find(it)!=seen_target.end())
+            {
+                return count_origin+seen_target[it];
+            }//if
+            
+            auto it_tar=que_target.front();
+            que_target.pop();
+            int count_target=seen_target[it_tar];
+            if(seen_origin.find(it_tar)!=seen_origin.end())
+            {
+                return seen_origin[it_tar]+count_target;
+            }//if
+            for(int i=0;i<8;i++)
+            {
+                int new_row=it.first+dir[i][0];
+                int new_col=it.second+dir[i][1];
+                if(new_row>=-300&&new_row<=300&&new_col>=-300&&new_col<=300&&seen_origin.find({new_row,new_col})==seen_origin.end())
+                {
+                    seen_origin.insert({{new_row,new_col},count_origin+1});
+                    que_origin.push({new_row,new_col});    
+                }//if
+            }//for
+            
+            for(int i=0;i<8;i++)
+            {
+                int new_row=it_tar.first+dir[i][0];
+                int new_col=it_tar.second+dir[i][1];
+                if(new_row>=-300&&new_row<=300&&new_col>=-300&&new_col<=300&&seen_target.find({new_row,new_col})==seen_target.end())
+                {
+                    seen_target.insert({{new_row,new_col},count_target+1});
+                    que_target.push({new_row,new_col});    
+                }//if
+            }//for         
+            
+        }//while
+        
+    }
+};
+
+
+#######################################################
+The solution in the solution part: dynamix programming
+#######################################################
+class Solution {
+public:
+    map<pair<int,int>,int> seen;
+    int dfs(int x, int y)
+    {
+        if(seen.find({x,y})!=seen.end())
+        {
+            return seen[{x,y}];
+        }//if
+        if(x==0&&y==0)
+        {
+            return 0;
+        }
+        if(x+y==2)
+        {
+            return 2;
+        }
+        int ans=min(dfs(abs(x-1),abs(y-2)),dfs(abs(x-2),abs(y-1)))+1;
+        seen.insert({{x,y},ans});
+        return ans;
+    }
+    int minKnightMoves(int x, int y) {
+        return dfs(abs(x),abs(y));
+        
+    }
+};
