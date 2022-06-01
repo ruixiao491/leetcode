@@ -1,0 +1,107 @@
+///Bitmask
+class Solution {
+public:
+    bool checkcommon(string s1, string s2)
+    {
+        long long bitmask1=0, bitmask2=0;
+        for(int i=0;i<s1.size();i++)
+        {
+            bitmask1|=1<<(s1[i]-'a');
+        }
+        for(int i=0;i<s2.size();i++)
+        {
+            bitmask2|=1<<(s2[i]-'a');
+        }
+        return (bitmask1&bitmask2)==0;
+    }//checkcommon
+    int maxProduct(vector<string>& words) {
+        int ans=0;
+        for(int i=0;i<words.size();i++)
+        {
+            for(int j=i;j<words.size();j++)
+            {
+                if(checkcommon(words[i],words[j]))
+                {
+                    int size1=words[i].size();
+                    int size2=words[j].size();
+                    ans=max(ans,size1*size2);
+                }//if
+                
+            }//for j
+        }//for i
+        return ans;
+        
+    }
+};
+
+#######################################################
+///Bitmask + precompute (save bitmask for every string)
+#######################################################
+class Solution {
+public:
+    int maxProduct(vector<string>& words) {
+        vector<long long> bitmask(words.size(),0);
+        int ans=0;
+        for(int i=0;i<words.size();i++)
+        {
+            long long mask=0;
+            for(int j=0;j<words[i].size();j++)
+            {
+                mask|=1<<(words[i][j]-'a');
+            }//for j
+            bitmask[i]=mask;
+        }//for i
+        
+        for(int i=0;i<words.size();i++)
+        {
+            for(int j=i;j<words.size();j++)
+            {
+                if((bitmask[i]&bitmask[j])==0)
+                {
+                    int size1=words[i].size();
+                    int size2=words[j].size();
+                    ans=max(ans,size1*size2);
+                }//if
+                
+            }//for j
+        }//for i
+        return ans;
+        
+    }
+};
+
+############################
+///Bitmask + precompute+map
+############################
+class Solution {
+public:
+    int maxProduct(vector<string>& words) {
+        map<int,int> seen;
+        int ans=0;
+        for(int i=0;i<words.size();i++)
+        {
+            int mask=0;
+            for(int j=0;j<words[i].size();j++)
+            {
+                mask|=1<<(words[i][j]-'a');
+            }//for j
+            int length=words[i].size();
+            seen[mask]=max(seen[mask],length);
+        }//for i
+        
+        for(auto x:seen)
+        {
+            int bitmask1=x.first;
+            for(auto y:seen)
+            {
+                int bitmask2=y.first;
+                if((bitmask1&bitmask2)==0)
+                {
+                    ans=max(ans,x.second*y.second);
+                }
+            }//for
+        }//for
+        return ans;
+        
+    }
+};
