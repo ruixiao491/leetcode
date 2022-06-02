@@ -1,0 +1,26 @@
+class Solution {
+public:
+    string largestNumber(vector<int>& nums) {
+        string ans="";
+        auto cmp=[](const string& a, const string& b)
+        {
+            return a+b>b+a;         
+        };//cmp
+        vector<string> nums1;
+        for(int i=0;i<nums.size();i++)
+        {
+            nums1.push_back(to_string(nums[i]));
+        }//for
+        sort(nums1.begin(),nums1.end(),cmp);
+        if(nums1[0]=="0")
+        {
+            return "0";
+        }
+        for(int i=0;i<nums1.size();i++)
+        {
+            ans+=nums1[i];
+        }
+        
+        return ans; 
+    }
+};
