@@ -1,0 +1,57 @@
+class TextEditor {
+public:
+    string s;
+    int pos;
+    TextEditor() {
+        s="";
+        pos=0;
+        
+    }
+    
+    void addText(string text) {
+        s.insert(pos,text);
+        pos=pos+text.size();
+        
+    }
+    
+    int deleteText(int k) {
+        if(pos-k>=0)
+        {
+            s.erase(pos-k,k);
+            pos=pos-k;
+            return k;
+        }
+        else
+        {
+            s.erase(0,pos);
+            int count=pos;
+            pos=0;
+            return count;
+        }
+        
+    }
+    
+    string cursorLeft(int k) {
+        pos=max(0,pos-k);
+        //int length=min(10,pos);
+        return s.substr(max(0,pos-10),min(10,pos));
+        
+    }
+    
+    string cursorRight(int k) {
+        pos=min(pos+k,int(s.size()));
+        //int length=min(10,pos);
+        return s.substr(max(0,pos-10),min(10,pos));
+        
+        
+    }
+};
+
+/**
+ * Your TextEditor object will be instantiated and called as such:
+ * TextEditor* obj = new TextEditor();
+ * obj->addText(text);
+ * int param_2 = obj->deleteText(k);
+ * string param_3 = obj->cursorLeft(k);
+ * string param_4 = obj->cursorRight(k);
+ */
