@@ -1,0 +1,48 @@
+//My solution:
+
+class Solution {
+public:
+    bool validWordAbbreviation(string word, string abbr) {
+        int left=0;
+        int right=0;
+        int m=word.size();
+        int n=abbr.size();
+        while(left<m&&right<n)
+        {
+            if(!isdigit(abbr[right]))
+            {
+                if(abbr[right]!=word[left])
+                {
+                    return false;
+                }
+                right++;
+                left++;
+            }
+            else
+            {
+                int num=0;
+                if(abbr[right]=='0')
+                {
+                    return false;
+                }
+                while(isdigit(abbr[right]))
+                {
+                    num=num*10+abbr[right]-'0';
+                    right++;
+                }//while
+                left=left+num;
+                if(left>m)
+                {
+                    return false;
+                }
+                    
+            }//else
+        }//while
+        if(left==m&&right==n)
+        {
+            return true;
+        }
+        return false;
+        
+    }
+};
