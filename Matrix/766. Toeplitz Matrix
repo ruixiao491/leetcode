@@ -1,0 +1,56 @@
+///My solution
+class Solution {
+public:
+    bool isToeplitzMatrix(vector<vector<int>>& matrix) {
+        int m=matrix.size();
+        int n=matrix[0].size();
+        if(m==1||n==1)
+        {
+            return true;
+        }
+        for(int i=1;i<m;i++)
+        {
+            for(int j=1;j<n;j++)
+            {
+                if(matrix[i][j]!=matrix[i-1][j-1])
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+        
+    }
+};
+
+
+####################################################
+The solution in the solution part: group by category
+####################################################
+class Solution {
+public:
+    bool isToeplitzMatrix(vector<vector<int>>& matrix) {
+        map<int,int> seen;
+        int m=matrix.size();
+        int n=matrix[0].size();
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(seen.find(i-j)==seen.end())
+                {
+                    seen.insert({i-j,matrix[i][j]});
+                }
+                else
+                {
+                    if(matrix[i][j]!=seen[i-j])
+                    {
+                        return false;
+                    }
+                }
+            }//for j
+            
+        }//for i
+        return true;
+    }
+};
