@@ -1,0 +1,96 @@
+class Solution {
+public:
+    vector<int> visit;
+    vector<vector<int>> subsets(vector<int>& nums) {
+        int n=nums.size();
+        visit=vector<int>(n,0);
+        vector<vector<int>> ans;
+        vector<int>perm;
+        ans.push_back(perm);
+        for(int i=1;i<=n;i++)
+        {
+            backtrack(nums,0,perm,ans,i);
+        }
+        
+        return ans;
+    }
+    void backtrack(vector<int>& nums,int start,vector<int>& perm,vector<vector<int>>& ans,int length)
+    {
+        if(perm.size()==length)
+        {
+            ans.push_back(perm);
+            return;
+        }
+        else
+        {
+            for(int i=start;i<nums.size();i++)
+            {
+                if(visit[i]==0)
+                {
+                    perm.push_back(nums[i]);
+                    visit[i]=1;
+                    backtrack(nums,i+1,perm,ans,length);        
+                    
+                    perm.pop_back();
+                    visit[i]=0;
+                    
+                }
+                
+            }//for i
+            
+            
+        }//else
+        
+        
+    }//backtrack
+};
+
+###################################
+The solution in the solution part:
+////Cascading
+###################################
+class Solution {
+public:
+    vector<vector<int>> subsets(vector<int>& nums) {
+        vector<vector<int>> ans;
+        vector<int> perm;
+        ans.push_back(perm);
+        for(int i=0;i<nums.size();i++)
+        {
+            int n=ans.size();
+            for(int j=0;j<n;j++)
+            {
+                perm=ans[j];
+                perm.push_back(nums[i]);
+                ans.push_back(perm);
+            }//for j
+        }//for i
+        return ans;
+    }
+};
+
+#########################################################################
+The solution in the solution part: Lexicographic (Binary Sorted) Subsets
+#########################################################################
+
+class Solution {
+public:
+    vector<vector<int>> subsets(vector<int>& nums) {
+        vector<vector<int>> ans;
+        vector<int> perm;
+        int n=nums.size();
+        for(int i=0;i<(1<<n);i++)
+        {
+            perm.clear();
+            for(int j=0;j<n;j++)
+            {
+                if(i&(1<<j))
+                {
+                    perm.push_back(nums[j]);
+                }
+            }//for j
+            ans.push_back(perm);
+        }//for i
+        return ans;
+    }
+};
