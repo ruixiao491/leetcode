@@ -1,0 +1,64 @@
+///My solution:
+class Solution {
+public:
+    vector<int> partitionLabels(string s) {
+        vector<int> ans;
+        map<char,pair<int,int>> seen;
+        for(int i=0;i<s.size();i++)
+        {
+            if(seen.find(s[i])!=seen.end())
+            {
+                seen[s[i]].second=i;
+            }
+            else
+            {
+                seen.insert({s[i],make_pair(i,i)});
+            }
+        }//for
+        int start=0, end=seen[s[0]].second;
+        for(int i=1;i<s.size();i++)
+        {
+            if(seen[s[i]].first<end)
+            {
+                if(seen[s[i]].second>end)
+                {
+                    end=seen[s[i]].second;
+                }
+            }
+            else
+            {
+                ans.push_back(end-start+1);
+                start=seen[s[i]].first;
+                end=seen[s[i]].second;
+            }          
+        }//for i
+        ans.push_back(end-start+1);
+        return ans;
+    }
+};
+
+################################################################################
+The solution in the solution part: similar idea: greedy, but it is more  precise
+################################################################################
+class Solution {
+public:
+    vector<int> partitionLabels(string s) {
+        int last[26];
+        int length = s.size();
+        for (int i = 0; i < length; i++) {
+            last[s[i] - 'a'] = i;
+        }
+        vector<int> partition;
+        int start = 0, end = 0;
+        for (int i = 0; i < length; i++) {
+            end = max(end, last[s[i] - 'a']);
+            if (i == end) {
+                partition.push_back(end - start + 1);
+                start = end + 1;
+            }
+        }
+        return partition;
+    }
+};
+
+
