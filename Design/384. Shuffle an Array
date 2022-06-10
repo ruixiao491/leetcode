@@ -1,0 +1,67 @@
+//My solution:
+class Solution {
+public:
+    vector<int> numbers;
+    vector<int> original;
+    Solution(vector<int>& nums) {
+        numbers=nums;
+        original=nums;
+        
+    }
+    
+    vector<int> reset() {        
+        numbers=original;
+        return numbers;
+        
+        
+    }
+    
+    vector<int> shuffle() {
+        vector<int> ans;
+        int n=numbers.size();
+        vector<int> index(n);
+        for(int i=0;i<n;i++)
+        {
+            index[i]=i;
+        }
+        while(ans.size()<n)
+        {
+            int id=rand()%(index.size());
+            ans.push_back(numbers[index[id]]);
+            index.erase(index.begin()+id);
+            
+        }
+        return ans;
+        
+    }
+};
+
+
+#####################################################################################
+The solution in the solution part: Fisher-Yates Algorithm (optimized my shuffle part)
+#####################################################################################
+class Solution {
+public:
+    Solution(vector<int>& nums) {
+        this->nums = nums;
+        this->original.resize(nums.size());
+        copy(nums.begin(), nums.end(), original.begin());
+    }
+    
+    vector<int> reset() {
+        copy(original.begin(), original.end(), nums.begin());
+        return nums;
+    }
+    
+    vector<int> shuffle() {
+        for (int i = 0; i < nums.size(); ++i) {
+            int j = i + rand() % (nums.size() - i);
+            swap(nums[i], nums[j]);
+        }
+        return nums;
+    }
+private:
+    vector<int> nums;
+    vector<int> original;
+};
+
