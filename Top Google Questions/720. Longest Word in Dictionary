@@ -1,0 +1,152 @@
+///My solution:
+class Solution {
+public:
+    string longestWord(vector<string>& words) {
+        sort(words.begin(),words.end());
+        int n=words.size();
+        string ans="";
+        map<string,int> seen;//for single char
+        int length=0;
+        for(int i=0;i<words.size();i++)
+        {
+            if(words[i].size()==1)
+            {
+                seen.insert({words[i],i});
+            }//if
+            
+        }//for
+        
+        auto it=seen.begin();
+        while(it!=seen.end())
+        {
+            int start=it->second;
+            stack<string> stk;
+            stk.push(it->first);
+            int a=1;
+            if(a>length)
+            {
+                ans=it->first;
+                length=a;
+            }
+            int end=n;
+            auto it2=seen.end();
+            it2--;
+            if(it!=it2)
+            {
+                auto it3=it;
+                it3++;
+                end=it3->second;
+            }
+            for(int i=start+1;i<end;i++)
+            {
+                //std::cout<<stk.top()<<"   "<<stk.top().size()<<"  "<<words[i]<<std::endl;
+                if(words[i]==stk.top()+words[i][words[i].size()-1])
+                {
+                    stk.push(words[i]);
+                    a++;
+                    if(a>length)
+                    {
+                        length=a;
+                        ans=words[i];
+                    }//if
+                }//if
+                else
+                {
+                    if(words[i].size()==stk.top().size()&&words[i].find(it->first)==0)
+                    {
+                        stk.pop();
+                        stk.push(words[i]);
+                    }//if
+                    
+                }//else
+                
+            }//for
+            it++;
+        }//while
+        return ans;
+        
+        
+    }
+};
+
+
+#################################################################################################
+The solution in the solution part: map (this method does not require to start from a single char)
+#################################################################################################
+class Solution {
+public:
+    string longestWord(vector<string> &words) {
+        sort(words.begin(), words.end(), [](const string &a, const string &b) {
+            return a.size() != b.size() ? a.size() < b.size() : a > b;
+        });
+        string longest;
+        unordered_set<string> candidates = {""};
+        for (const auto &word: words) {
+            if (candidates.count(word.substr(0, word.size() - 1))) {
+                candidates.emplace(word);
+                longest = word;
+            }
+        }
+        return longest;
+    }
+};
+
+########################################################
+The solution in the solution part: Trie (I did not read)
+########################################################
+class Trie {
+public:
+    Trie() {
+        this->children = vector<Trie *>(26, nullptr);
+        this->isEnd = false;
+    }
+    
+    bool insert(const string & word) {
+        Trie * node = this;
+        for (const auto & ch : word) {
+            int index = ch - 'a';
+            if (node->children[index] == nullptr) {
+                node->children[index] = new Trie();
+            }
+            node = node->children[index];
+        }
+        node->isEnd = true;
+        return true;
+    }
+
+    bool search(const string & word) {
+        Trie * node = this;
+        for (const auto & ch : word) {
+            int index = ch - 'a';
+            if (node->children[index] == nullptr || !node->children[index]->isEnd) {
+                return false;
+            }
+            node = node->children[index];
+        }
+        return node != nullptr && node->isEnd;
+    }
+private:
+    vector<Trie *> children;
+    bool isEnd;
+};
+
+class Solution {
+public:
+    string longestWord(vector<string>& words) {
+        Trie trie;
+        for (const auto & word : words) {
+            trie.insert(word);
+        }
+        string longest = "";
+        for (const auto & word : words) {
+            if (trie.search(word)) {
+                if (word.size() > longest.size() || (word.size() == longest.size() && word < longest)) {
+                    longest = word;
+                }
+            }
+        }
+        return longest;
+    }
+};
+
+
