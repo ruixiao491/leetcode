@@ -1,0 +1,88 @@
+////Adjast my solution:
+class Solution {
+public:
+    bool canTransform(string start, string end) {
+        string first="";
+        string second="";
+        int n=start.size();
+        for(int i=0;i<n;i++)
+        {
+            if(start[i]!='X')
+            {
+                first.push_back(start[i]);
+            }
+            if(end[i]!='X')
+            {
+                second.push_back(end[i]);
+            }
+        }//for
+        
+        if(first!=second)
+        {
+            return false;
+        }
+        int t=0;
+        for(int i=0;i<n;i++)
+        {
+            if(start[i]=='L')
+            {
+                while(end[t]!='L') t++;
+                if(i<t)
+                {
+                    return false;
+                }
+                t++;
+                
+            }//if
+        
+        }//for
+        t=0;
+        for(int i=0;i<n;i++)
+        {
+            if(start[i]=='R')
+            {
+                while(end[t]!='R') t++;
+                if(i>t)
+                {
+                    return false;
+                }
+                t++;
+            }
+        }//for
+        return true;
+        
+    }
+};
+
+
+####################################################################
+The solution in the discussion, similar idea, but only use one pass
+####################################################################
+class Solution {
+public:
+    bool canTransform(string start, string end) {
+        int L = 0, R = 0, N = start.length();
+        for (int i=0; i<N; i++) 
+        {
+            R += (start[i] == 'R');
+            R -= (end[i] == 'R');
+            L += (start[i] == 'L');
+            L -= (end[i] == 'L');         
+            if (R != 0 && L != 0)
+                return false;
+            
+            if (L > 0 || R < 0)
+                return false;            
+
+            if (start[i] == end[i]) 
+            {                
+                if (end[i] == 'L' && R != 0)
+                    return false;
+                if (end[i] == 'R' && L != 0)
+                    return false;
+            } 
+        }//for
+        
+        return L == 0 && R == 0;
+    }
+};
