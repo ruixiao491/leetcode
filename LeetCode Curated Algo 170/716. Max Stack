@@ -1,0 +1,211 @@
+///My solution
+class MaxStack {
+public:
+    stack<int> stk;
+    multiset<int> seen;
+    MaxStack() {
+        
+    }
+    
+    void push(int x) {
+        stk.push(x);
+        seen.insert(x);
+    }
+    
+    int pop() {
+        int val=stk.top();
+        stk.pop();
+        auto it=seen.begin();
+        while(it!=seen.end())
+        {
+            if(*it==val)
+            {
+                seen.erase(it);
+                break;
+            }
+            it++;
+        }//while
+        return val;
+        
+        
+    }
+    
+    int top() {
+        return stk.top();
+        
+    }
+    
+    int peekMax() {
+        auto it=seen.end();
+        it--;
+        return *it;
+        
+    }
+    
+    int popMax() {
+        auto it=seen.end();
+        it--;
+        stack<int> stk1;
+        int val=0;
+        while(!stk.empty())
+        {
+            if(stk.top()!=*it)
+            {
+                stk1.push(stk.top());
+                stk.pop();
+            }//if
+            else
+            {
+                val=stk.top();
+                stk.pop();
+                break;
+            }
+        }//while
+        while(!stk1.empty())
+        {
+            stk.push(stk1.top());
+            stk1.pop();
+        }
+        seen.erase(it);
+        return val;
+    }
+};
+
+##################################
+The solution in the solution part
+/////2 stacks
+##################################
+class MaxStack {
+public:
+    stack<int> stk;
+    stack<int> maxstk;
+    MaxStack() {
+        
+    }
+    
+    void push(int x) {
+        stk.push(x);
+        if(maxstk.empty())
+        {
+            maxstk.push(x);
+        }
+        else
+        {
+            int val=maxstk.top();
+            if(x>val)
+            {
+                val=x;
+            }
+            maxstk.push(val);
+        }//else
+
+    }
+    
+    int pop() {
+        maxstk.pop();
+        int val=stk.top();
+        stk.pop();
+        return val;
+        
+        
+        
+    }
+    
+    int top() {
+        return stk.top();
+        
+        
+    }
+    
+    int peekMax() {
+        return maxstk.top();
+
+        
+    }
+    
+    int popMax() {
+        int maxval=maxstk.top();
+        stack<int> stk2;
+        while(!stk.empty())
+        {
+            if(stk.top()!=maxval)
+            {
+                stk2.push(pop());
+            }
+            else
+            {
+                pop();
+                break;
+            }
+        }//while
+        while(!stk2.empty())
+        {
+            push(stk2.top());
+            stk2.pop();
+        }//while
+        return maxval;
+        
+    }
+};
+
+###############################
+The solution in the discussion
+//Linked list
+###############################
+class MaxStack {
+private:
+    // will store the key and the reference of the node into the vector, taking vector bcz there can be multiple numbers as well
+    // taking this (list<int>::iterator>) bcz, we need to store the reference of the DLL
+    map<int, vector<list<int>::iterator>> mp;
+    // doubly linked list
+    list<int> dll;
+    
+public:
+    MaxStack() {
+    }
+    
+    void push(int x) {
+        dll.push_back(x);
+        // --end(dll) will give the reference of the last inserted element, and pushing into the key
+        mp[x].push_back(--end(dll));
+    }
+    
+    int pop() {
+        int topValue = top();
+        
+        // delete the last inserted element from DLL
+        dll.pop_back();
+        
+        // pop the last inserted reference from the vector for that particular key(topValue)
+        mp[topValue].pop_back();
+        
+        // check if that key have empty vector then also erase that key from the map
+        if(mp[topValue].empty()) mp.erase(topValue);
+        return topValue;
+    }
+    
+    int top() {
+        // will return the last element
+        return *rbegin(dll);
+    }
+    
+    int peekMax() {
+        // value from last
+        return rbegin(mp)->first;
+    }
+    
+    int popMax() {
+        int maxValue = peekMax();
+        auto referenceOfMaxValue = mp[maxValue].back();
+        
+        // erase the reference(referenceOfMaxValue) from DLL
+        dll.erase(referenceOfMaxValue);
+        
+        // pop the last inserted reference from the vector for that particular key(maxValue)
+        mp[maxValue].pop_back();
+        
+        // check if that key have empty vector then also erase that key from the map
+        if(mp[maxValue].empty()) mp.erase(maxValue);
+        return maxValue;
+    }
+};
