@@ -1,0 +1,79 @@
+///My solution
+class Solution {
+public:
+    int minimumLengthEncoding(vector<string>& words) {
+        int ans=0;
+        set<string> seen;
+        for(int i=0;i<words.size();i++)
+        {
+            seen.insert(words[i]);
+        }
+        for(int i=0;i<words.size();i++)
+        {
+            for(int j=1;j<words[i].size();j++)
+            {
+                if(seen.find(words[i].substr(j))!=seen.end())
+                {
+                    //std::cout<<words[i].substr(j)<<std::endl;
+                    seen.erase(words[i].substr(j));
+                }//if
+            }//for j
+        }//for i
+        
+        auto it=seen.begin();
+        while(it!=seen.end())
+        {
+            string test=*it;
+            ans+=test.size()+1;
+            it++;
+        }//while
+        return ans;
+    }
+};
+
+
+#######################################
+The soluton in the solution part: Trie
+#######################################
+class TrieNode{
+    TrieNode* children[26];
+public:
+    int count;
+    TrieNode() {
+        for (int i = 0; i < 26; ++i) children[i] = NULL;
+        count = 0;
+    }
+    TrieNode* get(char c) {
+        if (children[c - 'a'] == NULL) {
+            children[c - 'a'] = new TrieNode();
+            count++;
+            //std::cout<<c<<"  "<<children[c-'a']->count<<"  "<<count<<std::endl;
+        }
+        std::cout<<c<<"  "<<children[c-'a']->count<<"  "<<count<<std::endl;
+        return children[c - 'a'];
+    }
+};
+class Solution {
+public:
+    int minimumLengthEncoding(vector<string>& words) {
+        TrieNode* trie = new TrieNode();
+        unordered_map<TrieNode*, int> nodes;
+
+        for (int i = 0; i < (int)words.size(); ++i) {
+            string word = words[i];
+            TrieNode* cur = trie;
+            for (int j = word.length() - 1; j >= 0; --j)
+                cur = cur->get(word[j]);
+            nodes[cur] = i;
+            //std::cout<<cur->count<<std::endl;
+        }
+
+        int ans = 0;
+        for (auto& [node, idx] : nodes) {
+            if (node->count == 0) {
+                ans += words[idx].length() + 1;
+            }
+        }
+        return ans;
+    }
+};
