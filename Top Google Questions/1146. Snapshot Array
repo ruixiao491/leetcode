@@ -1,0 +1,43 @@
+///Inspired by other's solution in the discussion.
+class SnapshotArray {
+public:
+    map<int,map<int,int>> seen;
+    int count;
+    SnapshotArray(int length) {
+        count=0;
+        
+    }
+    
+    void set(int index, int val) {
+        //std::cout<<index<<"  "<<count<<"  "<<val<<std::endl;
+        seen[index][count]=val;
+       
+    }
+    
+    int snap() {
+        count++;
+        return count-1;
+        
+        
+    }
+    
+    int get(int index, int snap_id) {
+        if(seen.find(index)==seen.end())
+        {
+            return 0;
+        }
+        else
+        {
+            auto it=seen[index].upper_bound(snap_id);
+            //std::cout<<"first: "<<it->first<<std::endl;
+            if(it==seen[index].begin())
+            {
+                return 0;
+            }
+            it--;
+            return it->second;
+        }
+        
+        
+    }
+};
