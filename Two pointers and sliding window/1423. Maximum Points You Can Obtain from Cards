@@ -1,0 +1,103 @@
+///My solution:
+class Solution {
+public:
+    int maxScore(vector<int>& cardPoints, int k) {
+        int ans=INT_MAX;
+        int n=cardPoints.size();
+        int m=n-k;
+        vector<int> sum=vector<int>(n,0);
+        for(int i=0;i<n;i++)
+        {
+            if(i==0)
+            {
+                sum[i]=cardPoints[i];
+            }
+            else
+            {
+                sum[i]=sum[i-1]+cardPoints[i];
+            }
+        }//for i
+        if(m==0)
+        {
+            return sum[n-1];
+        }
+        //std::cout<<m<<std::endl;
+        int start=0;
+        while(start+m<=n)
+        {
+            if(start==0)
+            {
+                ans=min(ans,sum[start+m-1]);
+            }
+            else
+            {
+                ans=min(ans,sum[start+m-1]-sum[start-1]);
+            }
+            //std::cout<<start<<"  "<<start+m-1<<"  "<<ans<<std::endl;;
+            start++;
+            
+        }//while
+        //std::cout<<sum[n-1]<<"  "<<ans<<std::endl;
+        return sum[n-1]-ans;
+    }
+};
+
+
+######################################################
+The solution in the solution part: dynamic programming
+######################################################
+class Solution {
+public:
+    int maxScore(vector<int> &cardPoints, int k) {
+        int n = cardPoints.size();
+
+        int frontSetOfCards[k + 1];
+        int rearSetOfCards[k + 1];
+
+        //Intialize 0th index in both the arrays
+        frontSetOfCards[0] = rearSetOfCards[0] = 0;
+
+        for (int i = 0; i < k; i++) {
+            frontSetOfCards[i + 1] = cardPoints[i] + frontSetOfCards[i];
+            rearSetOfCards[i + 1] = cardPoints[n - i - 1] + rearSetOfCards[i];
+        }
+
+        int maxScore = 0;
+        // Each i represents the number of cards we take from the front.
+        for (int i = 0; i <= k; i++) {
+            int currentScore = frontSetOfCards[i] + rearSetOfCards[k - i];
+            maxScore = max(maxScore, currentScore);
+        }
+
+        return maxScore;
+    }
+};
+
+#########################################################################
+The solution in the solution part: dynamic programming - space optimized
+#########################################################################
+class Solution {
+public:
+    int maxScore(vector<int> &cardPoints, int k) {
+        int frontScore = 0;
+        int rearScore = 0;
+        int n = cardPoints.size();
+
+        for (int i = 0; i < k; i++) {
+            frontScore += cardPoints[i];
+        }
+
+        // take all k cards from the beginning
+        int maxScore = frontScore;
+
+        // take i from the beginning and k - i from the end
+        for (int i = k - 1; i >= 0; i--) {
+            rearScore += cardPoints[n - (k - i)];
+            frontScore -= cardPoints[i];
+            int currentScore = rearScore + frontScore;
+            maxScore = max(maxScore, currentScore);
+        }
+
+        return maxScore;
+    }
+};
