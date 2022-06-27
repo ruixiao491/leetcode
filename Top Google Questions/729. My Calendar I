@@ -1,0 +1,40 @@
+//My solution
+class MyCalendar {
+public:
+    vector<pair<int,int>> calendar;
+    MyCalendar() {
+        
+    }
+    
+    bool book(int start, int end) {
+        for(int i=0;i<calendar.size();i++)
+        {
+            if(calendar[i].first<end&&calendar[i].second>start)
+            {
+                return false;
+            }
+        }
+        calendar.push_back(make_pair(start,end));
+        return true;
+    }
+};
+
+
+##################################################
+The solution in the discussion: map+binary search
+##################################################
+class MyCalendar {
+public:
+    map<int,int> seen;
+    MyCalendar() {
+        
+    }
+    
+    bool book(int start, int end) {
+        auto it=seen.lower_bound(start);
+        if(it!=seen.end()&&it->first<end) return false;
+        if(it!=seen.begin()&&(--it)->second>start) return false;
+        seen.insert({start,end});
+        return true;
+    }
+};
