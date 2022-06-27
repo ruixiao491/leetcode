@@ -1,0 +1,69 @@
+////My solution:DFS
+class Solution {
+public:
+    vector<int> time;
+    int numOfMinutes(int n, int headID, vector<int>& manager, vector<int>& informTime) {
+        int ans=0;
+        time=vector<int>(n,0);
+        for(int i=0;i<n;i++)
+        {
+            ans=max(ans,dfs(i,manager,informTime));
+        }//for
+        return ans;      
+        
+    }
+    int dfs(int index, vector<int>& manager, vector<int>& informTime)
+    {
+        if(manager[index]==-1||time[index]!=0)
+        {
+            return time[index];
+        }
+        else
+        {
+            time[index]=informTime[manager[index]]+dfs(manager[index],manager,informTime);
+        }
+        return time[index];
+    }//dfs
+};
+
+
+////My solution:BFS
+class Solution {
+public:
+    vector<int> time;
+    int numOfMinutes(int n, int headID, vector<int>& manager, vector<int>& informTime) {
+        int ans=0;
+        time=vector<int>(n,0);
+        vector<vector<int>> edges(n);
+        int head=0;
+        for(int i=0;i<n;i++)
+        {
+            if(manager[i]==-1)
+            {
+                head=i;
+            }
+            else
+            {
+                edges[manager[i]].push_back(i);
+            }
+            
+        }//for
+        queue<int> que;
+        que.push(head);
+        //std::cout<<head<<std::endl;
+        while(!que.empty())
+        {
+            int cur=que.front();
+            que.pop();
+            for(int i=0;i<edges[cur].size();i++)
+            {
+                time[edges[cur][i]]=time[cur]+informTime[cur];
+                que.push(edges[cur][i]);
+            }
+            ans=max(ans,time[cur]+informTime[cur]);
+        }//while
+        return ans;
+        
+        
+    }
+};
