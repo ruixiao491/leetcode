@@ -1,0 +1,41 @@
+class RLEIterator {
+public:
+    vector<int> nums;
+    int index;
+    int remain;
+    RLEIterator(vector<int>& encoding) {
+        nums=encoding;
+        index=0;
+        remain=encoding[index];
+        
+        
+    }
+    
+    int next(int n) {
+        while(index<nums.size())
+        {
+            //std::cout<<index<<" "<<n<<std::endl;
+            if(n<=remain)
+            {
+                remain=remain-n;
+                //std::cout<<remain<<" "<<n<<std::endl;
+                return nums[index+1];
+            }
+            else
+            {
+                n-=remain;
+                index=index+2;
+                if(index>=nums.size())
+                {
+                    return -1;
+                } 
+                remain=nums[index];
+            }
+        }//while
+        return -1;
+        
+                    
+        
+        
+    }
+};
