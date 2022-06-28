@@ -1,0 +1,56 @@
+///My solution: DFS
+class Solution {
+public:
+    vector<vector<int>> visit;
+    vector<vector<int>> dir={{1,0},{-1,0},{0,1},{0,-1}};
+    int countBattleships(vector<vector<char>>& board) {
+        int m=board.size();
+        int n=board[0].size();
+        int ans=0;
+        visit=vector<vector<int>>(m,vector<int>(n,0));
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(visit[i][j]==1) continue;
+                if(board[i][j]=='.')
+                {
+                    visit[i][j]=1;
+                }
+                else
+                {
+                    ans++;
+                    for(int k=0;k<4;k++)
+                    {
+                        int new_row=i+dir[k][0];
+                        int new_col=j+dir[k][1];
+                        if(new_row>=0&&new_row<m&&new_col>=0&&new_col<n)
+                        {
+                           dfs(new_row,new_col,k,board); 
+                        }
+                        
+                    }//for k
+                }//else
+            }//for j
+        }//for i
+        return ans;
+    }
+    void dfs(int row, int col,int dir_index,vector<vector<char>>& board)
+    {
+        int m=board.size();
+        int n=board[0].size();
+        visit[row][col]=1;
+        if(board[row][col]=='X')
+        {
+            int new_row=row+dir[dir_index][0];            
+            int new_col=col+dir[dir_index][1];
+            if(new_row>=0&&new_row<m&&new_col>=0&&new_col<n)
+            {
+                dfs(new_row,new_col,dir_index,board);             
+            }
+            
+        }//if
+        
+        
+    }//dfs
+};
