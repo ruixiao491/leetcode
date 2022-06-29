@@ -1,0 +1,37 @@
+///My solution:
+class Solution {
+public:
+    int longestStrChain(vector<string>& words) {
+        int n=words.size();
+        int ans=0;
+        map<string,int> counts;
+        auto cmp=[](const string& a, const string& b)
+        {
+            return a.size()<b.size();
+        };
+        sort(words.begin(),words.end(),cmp);
+        
+        for(int i=0;i<n;i++)
+        {
+            counts[words[i]]=1;
+            for(int j=0;j<words[i].size();j++)
+            {
+                string test=words[i];
+                test.erase(test.begin()+j);
+                if(counts.find(test)!=counts.end())
+                {
+                    counts[words[i]]=max(counts[words[i]],counts[test]+1);
+                }//if
+            }//for j
+            
+        }//for i
+        auto it=counts.begin();
+        while(it!=counts.end())
+        {
+            ans=max(ans,it->second);
+            it++;
+        }//while
+        return ans;
+           
+    }
+};
