@@ -1,0 +1,43 @@
+class Solution {
+public:
+    bool validTicTacToe(vector<string>& board) {
+        int countX=0;
+        int countO=0;
+        for(int i=0;i<3;i++)
+        {
+            for(int j=0;j<3;j++)
+            {
+                if(board[i][j]=='X') countX++;
+                if(board[i][j]=='O') countO++;       
+            }//for j
+        }//for i
+        if(countX==countO+1&&!win(board,'O'))
+        {
+            return true;
+        }
+        if(countO==countX&&!win(board,'X'))
+        {
+            return true;
+        }
+        return false;
+        
+        
+    }//validTicacToe
+    
+    bool win(vector<string>& board, char p)
+    {
+        for(int i=0;i<3;i++)
+        {
+            if(board[i][0]==p&&board[i][1]==p&&board[i][2]==p)
+            {
+                return true;
+            }
+            if(board[0][i]==p&&board[1][i]==p&&board[2][i]==p)
+            {
+                return true;
+            }
+        }//for i
+        return (board[0][0]==p&&board[1][1]==p&&board[2][2]==p)||(board[0][2]==p&&board[1][1]==p&&board[2][0]==p);
+        
+    }//win
+};
