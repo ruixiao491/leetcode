@@ -1,0 +1,22 @@
+class Solution {
+public:
+    vector<long long> maximumEvenSplit(long long finalSum) {
+        vector<long long> ans;
+        if(finalSum%2==1)
+        {
+            return ans;
+        }
+        long long start=2;
+        while(finalSum>=start)
+        {
+            finalSum=finalSum-start;
+            ans.push_back(start);
+            start+=2;
+        }//while
+        long long last=ans.back();
+        ans.pop_back();
+        ans.push_back(last+finalSum);
+        return ans;
+        
+    }
+};
