@@ -1,0 +1,63 @@
+////My solution: hit the memory limit, but it seems that it could pass previously
+class Solution {
+public:
+    bool differByOne(vector<string>& dict) {
+        map<string,int> seen;
+        int n=dict.size();
+        int m=dict[0].size();
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<m;j++)
+            {
+                string temp=dict[i];
+                temp[j]='A';
+                //std::cout<<temp<<std::endl;
+                seen[temp]++;
+                if(seen[temp]==2)
+                {
+                    return true;
+                }
+            }//for j
+        }//for i
+        
+        return false;
+        
+    }
+};
+
+
+###########################################
+The solution in the discussion, Brute Force
+###########################################
+class Solution {
+public:
+    bool differByOne(vector<string>& dict) {
+        for (int i = 0; i < dict.size(); i++) 
+        {
+            for (int j = i + 1; j < dict.size(); j++) 
+            {
+                if (compare(dict[i], dict[j])) 
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    bool compare(string& s1, string& s2) {
+        int diff = 0;
+        for (int i = 0; i < s1.size(); i++) 
+        {
+            if (s1[i] != s2[i]) 
+            {
+                diff++;
+            }
+            if (diff > 1) 
+            {
+                return false;
+            }
+        }
+        return diff == 1;
+    }
+};
