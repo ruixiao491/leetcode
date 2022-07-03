@@ -1,0 +1,43 @@
+class Solution {
+public:
+    string decodeMessage(string key, string message) {
+        set<char> seen;
+        map<char,char> replace;
+        string ans="";
+        for(int i=0;i<key.size();i++)
+        {
+            if(seen.find(key[i])!=seen.end()||isspace(key[i]))
+            {
+                key.erase(i,1);
+                i--;
+            }
+            else
+            {
+                seen.insert(key[i]);
+            }
+        }//for
+        //std::cout<<key.size()<<std::endl;
+        int start=0;
+        for(int i=0;i<key.size();i++)
+        {
+            //std::cout<<key[i]<<std::endl;
+            replace.insert({key[i],'a'+start});
+            start++;
+        }//for
+        for(int i=0;i<message.size();i++)
+        {
+            if(!isspace(message[i]))
+            {
+                ans.push_back(replace[message[i]]);
+            }
+            else
+            {
+                ans.push_back(message[i]);
+            }
+        }//for
+        return ans;
+        
+        
+        
+    }
+};
