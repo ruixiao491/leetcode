@@ -1,0 +1,90 @@
+class Solution {
+public:
+    vector<vector<int>> spiralMatrix(int m, int n, ListNode* head) {
+        vector<vector<int>> ans(m,vector<int>(n,0));
+        int count=1;
+        int layers=(m+1)/2;
+        for(int i=0;i<layers;i++)
+        {
+            ///left
+            for(int j=i;j<n-i&&count<=m*n;j++)
+            {
+                if(head!=nullptr)
+                {
+                    ans[i][j]=head->val;   
+                }
+                else
+                {
+                    ans[i][j]=-1;
+                }
+                count++;
+                if(head!=nullptr)
+                {
+                    head=head->next;
+                }
+                //std::cout<<head->val<<std::endl;
+                     
+            }//for j
+            
+            //down
+            for(int j=i+1;j<m-i&&count<=m*n;j++)
+            {
+                if(head!=nullptr)
+                {
+                    ans[j][n-i-1]=head->val;
+                }
+                else
+                {
+                    ans[j][n-i-1]=-1;
+                }
+                count++;
+                if(head!=nullptr)
+                {
+                    head=head->next;
+                }
+                
+            }//for j
+            
+            ///right
+            for(int j=n-i-2;j>=i&&count<=m*n;j--)
+            {
+                if(head!=nullptr)
+                {
+                    ans[m-i-1][j]=head->val;
+                }
+                else
+                {
+                    ans[m-i-1][j]=-1;
+                }
+                count++;
+                if(head!=nullptr)
+                {
+                    head=head->next;
+                }
+            }//for j
+            
+            //up
+            for(int j=m-i-2;j>i&&count<=m*n;j--)
+            {
+                if(head!=nullptr)
+                {
+                    ans[j][i]=head->val;
+                }
+                else
+                {
+                    ans[j][i]=-1;
+                }
+                count++;
+                if(head!=nullptr)
+                {
+                    head=head->next;
+                }
+                
+            }//for j
+           
+        }//for i
+        return ans;
+        
+        
+    }
+};
