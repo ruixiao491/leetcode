@@ -1,0 +1,43 @@
+class Solution {
+public:
+    vector<string> findAllRecipes(vector<string>& recipes, vector<vector<string>>& ingredients, vector<string>& supplies) {
+        vector<string> ans;
+        map<string, vector<string>> seen_ingre;
+        map<string, int> seen_recipes;
+        queue<string> que;
+        for(int i=0;i<recipes.size();i++)
+        {
+            for(int j=0;j<ingredients[i].size();j++)
+            {
+                seen_ingre[ingredients[i][j]].push_back(recipes[i]);
+            }//for j
+            seen_recipes[recipes[i]]=ingredients[i].size();
+        }//for i
+        for(int i=0;i<supplies.size();i++)
+        {
+            que.push(supplies[i]);
+        }
+        while(!que.empty())
+        {
+            string a=que.front();
+            que.pop();
+            if(seen_ingre.find(a)!=seen_ingre.end())
+            {
+                auto it=seen_ingre.find(a);
+                vector<string> b=it->second;
+                for(int i=0;i<b.size();i++)
+                {
+                    seen_recipes[b[i]]--;
+                    if(seen_recipes[b[i]]==0)
+                    {
+                        ans.push_back(b[i]);
+                        que.push(b[i]);
+                    }//if
+                }//for i            
+            }//if find    
+        }//while
+        
+        return ans;
+        
+    }//findAllRecipes
+};
