@@ -1,0 +1,30 @@
+//The solution of others in the discussion:
+
+class Solution {
+public:
+    int wordsTyping(vector<string>& sentence, int rows, int cols) {
+        string s = "";
+        int ret = 0;
+        for(int i=0; i<sentence.size(); i++)
+            s+=sentence[i]+" ";
+        //std::cout<<s.size()<<std::endl;
+        int char_fit = 0;
+        for(int i=0; i<rows; i++)
+        {
+            char_fit = char_fit + cols; //keep adding cols, as these are available slots to be filled in ro
+			// and by doing this, you specifically calculate the index of word that will be at the end of the
+			// column
+            //std::cout<<"first: "<<char_fit<<std::endl;
+            if(s[char_fit%s.length()]==' ')
+                char_fit++;
+            else
+            {
+                while(char_fit>0 && s[(char_fit-1)%s.length()]!=' ')
+                    char_fit--;
+            }
+            //std::cout<<"second: "<<char_fit<<std::endl;
+        }
+        ret = char_fit/s.length();
+        return ret;
+    }
+};
