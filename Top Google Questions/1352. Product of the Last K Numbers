@@ -1,0 +1,42 @@
+class ProductOfNumbers {
+public:
+    vector<int> products;
+    ProductOfNumbers() {
+        
+    }
+    
+    void add(int num) {
+        if(products.size()==0&&num!=0)
+        {
+            products.push_back(num);
+        }
+        else if(products.size()>0&&num!=0)
+        {
+            int last=products.back();
+            products.push_back(num*last);
+        }
+        else if(num==0)
+        {
+            products.clear();
+        }
+        
+        
+    }
+    
+    int getProduct(int k) {
+        int length=products.size();
+        if(k<length)
+        {
+            return products[length-1]/products[length-k-1];
+        }
+        else if(k==length)
+        {
+            return products[length-1];
+        }
+        else
+        {
+            return 0;
+        }
+
+    }
+};
