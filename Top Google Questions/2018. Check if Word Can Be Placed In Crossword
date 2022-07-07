@@ -1,0 +1,100 @@
+///The solution inspired by others' in the discussion
+///Simulation
+class Solution {
+public:
+    int m, n;
+    bool placeWordInCrossword(vector<vector<char>>& board, string word) {
+        m=board.size();
+        n=board[0].size();
+        int k=word.size();
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j+k-1<n;j++)
+            {
+                if(checkrow(board,word,i,j))
+                {
+                    return true;
+                }
+            }//for j
+        }//for i
+        
+        for(int i=0;i+k-1<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(checkcol(board,word,i,j))
+                {
+                    return true;
+                }
+            }//for j
+        }//for i
+        
+        reverse(word.begin(),word.end());
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j+k-1<n;j++)
+            {
+                if(checkrow(board,word,i,j))
+                {
+                    return true;
+                }
+            }//for j
+        }//for i
+        
+        for(int i=0;i+k-1<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                //std::cout<<checkcol(board,word,i,j)<<std::endl;
+                if(checkcol(board,word,i,j))
+                {
+                    return true;
+                }
+            }//for j
+        }//for i
+        
+        return false;
+
+    }//placeWordInCrossword
+    bool checkrow(vector<vector<char>>& board, string word, int x, int y)
+    {
+        if(!(y==0||board[x][y-1]=='#')) return false;
+        int i;
+        for(i=0;i<word.size();i++)
+        {
+            if(board[x][y+i]=='#'||board[x][y+i]!=' '&&board[x][y+i]!=word[i])
+            {
+                return false;
+            }//if
+        }//for i
+        if(y+i<n&&board[x][y+i]!='#')
+        {
+            return false;
+        }
+        return true;
+    }//check row
+    
+    bool checkcol(vector<vector<char>>& board, string& word, int x, int y)
+    {
+        if(x>0&&board[x-1][y]!='#')
+        {
+            return false;
+        }
+        int i;
+        for(i=0;i<word.size();i++)
+        {
+            if(board[x+i][y]=='#'||board[x+i][y]!=' '&&board[x+i][y]!=word[i])
+            {
+                return false;
+            }//if 
+        }//for
+        //std::cout<<i<<"  "<<board[x+i][y]<<std::endl;
+        
+        if(x+i<m&&board[x+i][y]!='#')
+        {
+            return false;
+        }
+        return true;
+    }//checkcol
+
+};
