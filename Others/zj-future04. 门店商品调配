@@ -1,0 +1,65 @@
+题目：
+某连锁店开设了若干门店，门店间允许进行商品借调以应对暂时性的短缺。本月商品借调的情况记于数组 distributions，其中 distributions[i] = [from,to,num]，表示从 from 门店调配了 num 件商品给 to 门店。
+若要使得每一个门店最终借出和借入的商品数量相同，请问至少还需要进行多少次商品调配。
+注意：一次商品调配以三元组 [from, to, num] 表示，并有 from ≠ to 且 num > 0。
+
+例子：
+输入：distributions = [[0,1,5],[1,2,10],[2,0,5],[2,1,1]]
+输出：1
+解释：
+商店 0 给商店 1 五件商品；
+商店 1 给商店 2 十件商品；
+商店 2 给商店 0 五件商品；
+商店 2 给商店 1 一件商品。
+此时商店 1 少了 4 件商品，商店 2 多了 4 件商品，
+
+因此仅需一次商品调配，商店 2 给商店 1 四件商品，即可满足每个门店借出和借入商品数量相同：
+商店 0 借出和借入的商品数量均为 5；
+商店 1 借出和借入的商品数量均为 10；
+商店 2 借出和借入的商品数量均为 10。
+
+
+#######################
+The solution of others
+#######################
+class Solution {
+public:
+    int res = INT_MAX;
+    //第几个数， 操作次数， 
+    void dfs(int now, int count, vector<int>& nums, int n){
+            while(now < n && nums[now] == 0) now++;
+            if(now == n){
+               //     cout<<count<<' ';
+                    res = min(res, count);
+            }
+            for(int i = now + 1; i < n; i++){
+                    if(nums[i] * nums[now] < 0){
+                     //   int tmp = nums[i];
+                        nums[i] += nums[now];
+                   //     nums[i] = 0;
+                        dfs(now + 1, count + 1, nums, n);
+                   //     nums[i] = tmp;
+                        nums[i] -= nums[now];
+                    }
+            }
+    }
+    int minTransfers(vector<vector<int>>& distributions) {
+        int len = 0;
+        for(auto&s : distributions){
+            len = max(len, s[0]);
+            len = max(len, s[1]);
+        }
+        vector<int> dist(len + 1, 0);
+        for(auto& s : distributions){
+            dist[s[0]] -= s[2];
+            dist[s[1]] += s[2];
+        }
+        vector<int> nums;
+        for(auto i : dist){
+            if(i != 0) nums.push_back(i);
+          
+        }
+       dfs(0, 0, nums, nums.size());
+        return res;
+    }
+};
