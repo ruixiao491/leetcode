@@ -1,0 +1,88 @@
+#############################################
+The solutions of others':dynamic programming
+#############################################
+class Solution {
+private:
+    vector<int> calculateNext(vector<int>& indexes)
+    {
+        int n = indexes.size();
+        // 初始化的无效值
+        vector<int> res(n, -1);
+        // 保持单调递减的栈，一旦大于，则弹出后直到更小
+        stack<int> s;
+
+        for (int i = 0; i < n; ++i)
+        {
+            // 找到更小的，那么就更新对应的序号
+            while (!s.empty() && s.top() < indexes[i])
+            {
+                res[s.top()] = indexes[i];
+                s.pop();
+            }
+            s.push(indexes[i]);
+        }
+
+        return res;
+    }
+public:
+    int oddEvenJumps(vector<int>& arr) {
+        int n = arr.size();
+        vector<int> indexes(n, 0);
+        for (int i = 0; i < n; ++i)
+        {
+            indexes[i] = i;
+        }
+
+        // oddNext是需要更大，升序排列
+        sort(indexes.begin(), indexes.end(), [&arr](int a, int b) {
+            return arr[a] < arr[b] || (arr[a] == arr[b] && a < b);
+        });
+        vector<int> oddNext = calculateNext(indexes);
+        // 相反计算eventNext,降序排列
+        sort(indexes.begin(), indexes.end(), [&arr](int a, int b) {
+            return arr[a] > arr[b] || (arr[a] == arr[b] && a < b);
+        });
+        vector<int> evenNext = calculateNext(indexes);
+
+        // 动态规划初始化
+        bool odd[n];
+        memset(odd, 0, sizeof(odd));
+        bool even[n];
+        memset(even, 0, sizeof(even));
+        odd[n-1] = true;
+        even[n-1] = true;
+        
+        for (int i = n -2; i >= 0; --i)
+        {
+            if (oddNext[i] != -1)
+            {
+                odd[i] = even[oddNext[i]];
+            }
+            if (evenNext[i] != -1)
+            {
+                even[i] = odd[evenNext[i]];
+            }
+        }
+
+        int res = 0;
+        for (int i = 0; i < n; ++i)
+        {
+            res += odd[i] == true;
+        }
+
+        return res;
+    }
+};
+
+
+预计算+动态规划
+
+    预计算：
+        预先计算每个位置作为奇数次跳跃，或者偶数次跳跃的下一个符合要求的序号
+        考虑到需要进行大小比较，其实就是先排序，然后用贪心方式去找最小或最大的值
+    动态规划
+        定义 even[i] odd[i]为对应奇偶跳跃是否可以到达终点的
+        初始化 event[n-1]=odd[n-1]=true (最后一个结点总是可达的)
+        计算 考虑是最后一个是后效的，那么就是从后往前计算，一次按照 odd 和 even去交替赋值
+        结果 计算过程里odd靠前，那么就要计算 odd[i]=true 的计数，反之则用even （因为后继无法准确更新，要到下个循环）
+
