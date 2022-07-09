@@ -1,0 +1,153 @@
+///My solution: (Greedy) alternate placing the most common letters
+class Solution {
+public:
+    string reorganizeString(string s) {
+        string ans="";
+        vector<int> counts(26,0);
+        for(int i=0;i<s.size();i++)
+        {
+            counts[s[i]-'a']++;
+        }
+        priority_queue<pair<int,char>> que;
+        for(int i=0;i<26;i++)
+        {
+            if(counts[i]>0)
+            {
+               que.push(make_pair(counts[i],'a'+i)); 
+            }           
+        }//for i
+        //std::cout<<"first: "<<que.size()<<std::endl;
+        while(que.size()>1)
+        {
+            auto it=que.top();
+            int count1=it.first;
+            char a=it.second;
+            que.pop();
+            auto it2=que.top();
+            que.pop();
+            int count2=it2.first;
+            char b=it2.second;
+            ans.push_back(a);
+            ans.push_back(b);
+            count1--;
+            count2--;
+            if(count1>0)
+            {
+                que.push(make_pair(count1,a)); 
+            }
+            if(count2>0)
+            {
+                que.push(make_pair(count2,b));
+            }            
+        }//while
+        if(que.size()==1)
+        {
+            auto it=que.top();
+            if(it.first==1)
+            {
+                ans.push_back(it.second);
+            }
+            else
+            {
+                return "";
+            }
+        }//if
+        
+        
+        return ans;
+        
+    }
+};
+
+##########################################################
+The solution in the solution part: similar to my solution
+##########################################################
+class Solution {
+public:
+    string reorganizeString(string s) {
+        if (s.length() < 2) {
+            return s;
+        }
+        vector<int> counts(26, 0);
+        int maxCount = 0;
+        int length = s.length();
+        for (int i = 0; i < length; i++) {
+            char c = s[i];
+            counts[c - 'a']++;
+            maxCount = max(maxCount, counts[c - 'a']);
+        }
+        if (maxCount > (length + 1) / 2) {
+            return "";
+        }
+        auto cmp = [&](const char& letter1, const char& letter2) {
+            return counts[letter1 - 'a']  < counts[letter2 - 'a'];
+        };
+        priority_queue<char, vector<char>,  decltype(cmp)> queue{cmp};
+        for (char c = 'a'; c <= 'z'; c++) {
+            if (counts[c - 'a'] > 0) {
+                queue.push(c);
+            }
+        }
+        string sb = "";
+        while (queue.size() > 1) {
+            char letter1 = queue.top(); queue.pop();
+            char letter2 = queue.top(); queue.pop();
+            sb += letter1;
+            sb += letter2;
+            int index1 = letter1 - 'a', index2 = letter2 - 'a';
+            counts[index1]--;
+            counts[index2]--;
+            if (counts[index1] > 0) {
+                queue.push(letter1);
+            }
+            if (counts[index2] > 0) {
+                queue.push(letter2);
+            }
+        }
+        if (queue.size() > 0) {
+            sb += queue.top();
+        }
+        return sb;
+    }
+};
+
+######################################################
+The solution in the solution part: (greedy) on counts
+######################################################
+class Solution {
+public:
+    string reorganizeString(string s) {
+        if (s.length() < 2) {
+            return s;
+        }
+        vector<int> counts(26, 0);
+        int maxCount = 0;
+        int length = s.length();
+        for (int i = 0; i < length; i++) {
+            char c = s[i];
+            counts[c - 'a']++;
+            maxCount = max(maxCount, counts[c - 'a']);
+        }
+        if (maxCount > (length + 1) / 2) {
+            return "";
+        }
+        string reorganizeArray(length, ' ');
+        int evenIndex = 0, oddIndex = 1;
+        int halfLength = length / 2;
+        for (int i = 0; i < 26; i++) {
+            char c = 'a' + i;
+            while (counts[i] > 0 && counts[i] <= halfLength && oddIndex < length) {
+                reorganizeArray[oddIndex] = c;
+                counts[i]--;
+                oddIndex += 2;
+            }
+            while (counts[i] > 0) {
+                reorganizeArray[evenIndex] = c;
+                counts[i]--;
+                evenIndex += 2;
+            }
+        }
+        return reorganizeArray;
+    }
+};
+
