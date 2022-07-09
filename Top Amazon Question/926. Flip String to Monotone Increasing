@@ -1,0 +1,68 @@
+///My solution: dynamic programming
+class Solution {
+public:
+    int minFlipsMonoIncr(string s) {
+        int n=s.size();
+        vector<int>dp(n,0);
+        int counts=s[0]=='1'? 1:0;
+        for(int i=1;i<n;i++)
+        {
+            if(s[i]=='1')
+            {
+                dp[i]=dp[i-1];
+                counts++;
+            }
+            else
+            {
+                dp[i]=min(dp[i-1]+1,counts);
+            }
+            
+        }//fori
+        return dp[n-1];
+        
+    }
+};
+
+
+#######################################################
+The solution in the solution part: dynamic programming
+#######################################################
+class Solution {
+public:
+    int minFlipsMonoIncr(string &s) {
+        int dp0 = 0, dp1 = 0;
+        for (char c: s) {
+            int dp0New = dp0, dp1New = min(dp0, dp1);
+            if (c == '1') {
+                dp0New++;
+            } else {
+                dp1New++;
+            }
+            dp0 = dp0New;
+            dp1 = dp1New;
+        }
+        return min(dp0, dp1);
+    }
+};
+
+
+###############################################
+The solution in the solution part: prefix sum
+###############################################
+class Solution {
+public:
+    int minFlipsMonoIncr(string s) {
+        int n=s.size();
+        vector<int> sum(n+1,0);
+        for(int i=0;i<n;i++)
+        {
+            sum[i+1]=sum[i]+(s[i]-'0');
+        }//for i
+        int ans=INT_MAX;
+        for(int i=0;i<=n;i++)
+        {
+            ans=min(ans,sum[i]+n-i-(sum[n]-sum[i]));
+        }//for i
+        return ans;
+    }
+};
