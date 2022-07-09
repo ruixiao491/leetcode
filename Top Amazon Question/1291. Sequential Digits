@@ -24,3 +24,30 @@ public:
         return ans;
     }
 };
+
+
+##################################################
+The solution in the solution part: sliding window
+##################################################
+class Solution {
+public:
+    vector<int> sequentialDigits(int low, int high) {
+        string sample="123456789";
+        int n=sample.size();
+        vector<int> ans;
+        int lowLen=to_string(low).size();
+        int highLen=to_string(high).size();
+        for(int length=lowLen;length<highLen+1;length++)
+        {
+            for(int start=0;start<=n-length;start++)
+            {
+                int num=stoi(sample.substr(start,length));
+                if(num>=low&&num<=high)
+                {
+                    ans.push_back(num);
+                }
+            }//for start
+        }//for length
+        return ans;
+    }
+};
