@@ -1,0 +1,31 @@
+class SmallestInfiniteSet {
+public:
+    set<int> seen;
+    int minval;
+    SmallestInfiniteSet() {
+        minval=1;
+        seen.clear();
+        
+    }
+    
+    int popSmallest() {
+        int ans=minval;
+        seen.insert(minval);
+        while(seen.find(minval)!=seen.end())
+        {
+            minval++;
+        }
+        return ans;
+        
+        
+    }
+    
+    void addBack(int num) {
+        if(seen.find(num)!=seen.end())
+        {
+            seen.erase(num);
+        }
+        minval=min(minval,num);
+        
+    }
+};
