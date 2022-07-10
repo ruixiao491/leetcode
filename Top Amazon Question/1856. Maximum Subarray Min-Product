@@ -1,0 +1,71 @@
+class Solution {
+public:
+    int maxSumMinProduct(vector<int>& nums) {
+        stack<int> stk;
+        int n=nums.size();
+        long long mod=1e9+7;
+        if(n==1)
+        {
+            return (long long)nums[0]*nums[0]%mod;
+        }
+        vector<int> leftmin(n,-1);
+        vector<int> rightmin(n,n);
+        vector<long long> sum(n,0);
+        long long ans=0;
+        //left part
+        for(int i=0;i<n;i++)
+        {
+            while(!stk.empty()&&nums[stk.top()]>=nums[i])
+            {
+                stk.pop();
+            }//while
+            if(!stk.empty())
+            {
+                leftmin[i]=stk.top();
+            }
+            stk.push(i);
+            if(i==0)
+            {
+                sum[i]=nums[i];
+            }
+            else
+            {
+                sum[i]=sum[i-1]+nums[i];
+            }
+        }//for
+        stk=stack<int>();
+        for(int i=n-1;i>=0;i--)
+        {
+            while(!stk.empty()&&nums[stk.top()]>=nums[i])
+            {
+                stk.pop();
+            }//while
+            if(!stk.empty())
+            {
+                rightmin[i]=stk.top();
+            }
+            stk.push(i);
+        }//for i
+        
+        for(int i=0;i<n;i++)
+        {
+            int left=leftmin[i];
+            int right=rightmin[i];
+            //std::cout<<i<<"  "<<left<<"  "<<right<<std::endl;
+            if(left!=-1)
+            {
+                long long val=(sum[right-1]-sum[left])*nums[i];
+                ans=max(ans,val);
+            }
+            else
+            {
+                //std::cout<<sum[right-1]<<" "<<nums[i]<<std::endl;
+                long long val=sum[right-1]*nums[i];
+                ans=max(ans,val);
+            }
+        }//for
+        return ans%mod; 
+        
+        
+    }
+};
