@@ -1,0 +1,52 @@
+class Solution {
+public:
+    bool canChange(string start, string target) {
+        string first="";
+        string second="";
+        int n=start.size();
+        for(int i=0;i<n;i++)
+        {
+            if(start[i]!='_')
+            {
+                first.push_back(start[i]);
+            }
+            if(target[i]!='_')
+            {
+                second.push_back(target[i]);
+            }
+        }//for i
+        if(first!=second)
+        {
+            return false;
+        }
+        int t=0;
+        for(int i=0;i<n;i++)
+        {
+            if(start[i]=='L')
+            {
+                while(target[t]!='L') t++;
+                if(i<t)
+                {
+                    return false;
+                }
+                t++;
+            }//if
+        }//for i
+        
+        t=0;
+        for(int i=0;i<n;i++)
+        {
+            if(start[i]=='R')
+            {
+                while(target[t]!='R') t++;
+                if(i>t)
+                {
+                    return false;
+                }
+                t++;
+            }//if
+        }//for i
+        return true;
+        
+    }
+};
