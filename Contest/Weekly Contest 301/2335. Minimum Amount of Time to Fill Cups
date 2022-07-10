@@ -1,0 +1,39 @@
+class Solution {
+public:
+    int fillCups(vector<int>& amount) {
+        priority_queue<int> que;
+        int ans=0;
+        for(int i=0;i<3;i++)
+        {
+            if(amount[i]>0)
+            {
+                que.push(amount[i]);
+            }  
+        }
+        while(que.size()>1)
+        {
+            int num1=que.top();
+            que.pop();
+            int num2=que.top();
+            que.pop();
+            //std::cout<<num1<<" "<<num2<<std::endl;
+            num1--;
+            num2--;
+            ans++;
+            if(num1>0)
+            {
+                que.push(num1);
+            }
+            if(num2>0)
+            {
+                que.push(num2);
+            }   
+        }//while
+        if(que.size()==1)
+        {
+            int num=que.top();
+            ans+=num;
+        }
+        return ans;
+    }
+};
