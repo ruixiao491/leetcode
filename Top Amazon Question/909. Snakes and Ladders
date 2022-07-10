@@ -1,0 +1,55 @@
+///BFS inspired by the solution
+class Solution {
+public:
+    int n;
+    int snakesAndLadders(vector<vector<int>>& board) {
+        n=board.size();
+        vector<int> visit(n*n+1,0);
+        queue<pair<int,int>> que;
+        que.push({1,0});
+        visit[1]=1;
+        while(!que.empty())
+        {
+            auto it=que.front();
+            int id=it.first;
+            int count=it.second;
+            que.pop();
+            for(int i=1;i<=6;i++)
+            {
+                int new_id=id+i;
+                if(new_id>n*n)
+                {
+                    break;
+                }
+                auto it2=positionindex(new_id);
+                int col=it2.second;
+                if(board[it2.first][it2.second]>0)
+                {
+                    new_id=board[it2.first][it2.second];
+                }
+                if(new_id==n*n)
+                {
+                    return count+1;
+                }
+                
+                if(visit[new_id]==0)
+                {
+                    que.push({new_id,count+1});
+                    visit[new_id]=1;
+                }
+            }//for i            
+        }//while
+        return -1;
+        
+    }//snakeAndLadders
+    pair<int,int> positionindex(int id)
+    {
+        int row=(id-1)/n;
+        int col=(id-1)%n;
+        if(row%2==1)
+        {
+            col=n-1-col;
+        }
+        return make_pair(n-1-row,col);
+    }//positionindex
+};
