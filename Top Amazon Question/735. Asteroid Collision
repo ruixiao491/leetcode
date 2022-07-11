@@ -1,0 +1,49 @@
+///Stack
+class Solution {
+public:
+    vector<int> asteroidCollision(vector<int>& asteroids) {
+        vector<int> ans;
+        stack<int> stk;
+        stk.push(asteroids[0]);
+        for(int i=1;i<asteroids.size();i++)
+        {
+            int flag=0;
+            if(asteroids[i]<0)
+            {
+                while(!stk.empty()&&stk.top()>0)
+                {
+                    if(stk.top()<-asteroids[i])
+                    {
+                        stk.pop();
+                    }
+                    else if(stk.top()==-asteroids[i])
+                    {
+                        stk.pop();
+                        flag=1;
+                        break;
+                    }
+                    else
+                    {
+                        flag=1;
+                        break;
+                    }
+                }//while
+            }//if<0
+            if(flag==0)
+            {
+                stk.push(asteroids[i]);
+            }
+
+        }//for i
+        
+        while(!stk.empty())
+        {
+            ans.push_back(stk.top());
+            stk.pop();
+        }
+        reverse(ans.begin(),ans.end());
+        return ans;
+        
+    }//asteroidCollision
+    
+};
