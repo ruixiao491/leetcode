@@ -1,0 +1,58 @@
+///My solution: change Linked List to vector + two pointers
+class Solution {
+public:
+    int pairSum(ListNode* head) {
+        vector<int> nums;
+        while(head!=nullptr)
+        {
+            nums.push_back(head->val);
+            head=head->next;
+        }//while
+        int n=nums.size();
+        int left=0, right=n-1;
+        int ans=0;
+        while(left<right)
+        {
+            ans=max(ans,nums[left]+nums[right]);
+            left++;
+            right--;
+        }//while
+        return ans;
+        
+    }
+};
+
+
+###############################################################################################
+The solution in the solution part: fast and slow pointers + reverse the second half Linked List
+###############################################################################################
+class Solution {
+public:
+    int pairSum(ListNode* head) {
+        ListNode* slow = head;
+        ListNode* fast = head->next;
+        while (fast->next) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        // 反转链表
+        ListNode* last = slow->next;
+        while (last->next) 
+        {
+            ListNode* cur = last->next;
+            last->next = cur->next;
+            cur->next = slow->next;
+            slow->next = cur;
+        }
+        int ans = 0;
+        ListNode* x = head;
+        ListNode* y = slow->next;
+        while (y) {
+            ans = max(ans, x->val + y->val);
+            x = x->next;
+            y = y->next;
+        }
+        return ans;
+
+    }
+};
