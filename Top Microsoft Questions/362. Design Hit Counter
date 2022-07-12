@@ -1,0 +1,79 @@
+####################################################################################
+The solution in the solution part: using queue, each hit is treated as a new element
+####################################################################################
+class HitCounter {
+private:
+    
+    queue<int> hits;
+    
+public:
+    
+    /** Initialize your data structure here. */
+    HitCounter() {
+    }
+    
+    /** Record a hit.
+        @param timestamp - The current timestamp (in seconds granularity). */
+    void hit(int timestamp) {
+        this->hits.push(timestamp);
+    }
+    
+    /** Return the number of hits in the past 5 minutes.
+        @param timestamp - The current timestamp (in seconds granularity). */
+    int getHits(int timestamp) {
+        while (!this->hits.empty()) {
+            int diff = timestamp - this->hits.front();
+            if (diff >= 300) this->hits.pop();
+            else break;
+        }
+        return this->hits.size();
+    }
+};
+
+
+###############################################################################################
+Inspired by the solution: deque (actually it is still queue) with pair (timestamp, hit numbers)
+###############################################################################################
+class HitCounter {
+public:
+    queue<pair<int,int>> que;
+    int total;
+    HitCounter() {
+        total=0;
+        
+    }
+
+    void hit(int timestamp) {
+        total++;
+        if(que.size()==0)
+        {
+            que.push(make_pair(timestamp,1));
+            
+        }
+        else
+        {
+            if(que.back().first==timestamp)
+            {
+                que.back().second++;
+            }
+            else
+            {
+                que.push(make_pair(timestamp,1));
+            }
+        }//else
+
+    }//hit
+    
+    int getHits(int timestamp) {
+        while(!que.empty()&&que.front().first<=timestamp-300)
+        {
+            total-=que.front().second;
+            que.pop();
+        }
+        return total;
+
+        
+        
+        
+    }//getHits
+};
