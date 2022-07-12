@@ -1,0 +1,88 @@
+struct Node{
+    string user;
+    int time;
+    string web;
+};///struct Node
+class Solution {
+public:
+    vector<string> mostVisitedPattern(vector<string>& username, vector<int>& timestamp, vector<string>& website) {
+        vector<string> ans;
+        int n=username.size();
+        vector<Node> nodes(n);
+        map<string,vector<string>> seen;
+        for(int i=0;i<n;i++)
+        {
+            nodes[i]=Node{username[i],timestamp[i],website[i]};
+        }//for i
+        auto cmp=[](const Node& a, const Node& b)
+        {
+            return a.time<b.time;
+        };//cmp
+        sort(nodes.begin(),nodes.end(),cmp);
+        for(int i=0;i<n;i++)
+        {
+            seen[nodes[i].user].push_back(nodes[i].web);
+        }//for i
+        map<string,int> path_count;        
+        auto it=seen.begin();
+        while(it!=seen.end())
+        {
+            set<string> cur_path_uset;
+            vector<string> visit=it->second;
+            int vn=visit.size();
+            for (int i = 0; i < vn; i ++)
+            {
+                for (int j = i + 1; j < vn; j ++)
+                {
+                    for (int k = j + 1; k < vn ; k ++)
+                    {
+                        string cur_path = visit[i]+ '-' + visit[j] + '-' + visit[k];
+                        cur_path_uset.insert(cur_path);
+                    }
+                }
+            }
+            for (string path : cur_path_uset)
+            {
+                path_count[path] ++;
+            }
+            it++;
+            
+        }///while
+        
+        int counts=0;
+        string b="";
+        auto it2=path_count.begin();
+        while(it2!=path_count.end())
+        {
+            if(it2->second>counts)
+            {
+                counts=it2->second;
+                b=it2->first;
+            }
+            else if(it2->second==counts)
+            {
+                if(it2->first<b)
+                {
+                    b=it2->first;
+                }
+            }//else if
+            it2++;
+        }//while
+        //std::cout<<b<<std::endl;
+        int start=0;
+        for(int i=0;i<b.size();i++)
+        {
+            if(b[i]=='-')
+            {
+                ans.push_back(b.substr(start,i-start));
+                start=i+1;
+            }
+            if(i==b.size()-1)
+            {
+                ans.push_back(b.substr(start));
+            }
+        }
+        return ans;        
+    }
+
+};
