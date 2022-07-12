@@ -1,0 +1,65 @@
+class Solution {
+public:
+    string tictactoe(vector<vector<int>>& moves) {
+        vector<int> Row(3,0);
+        vector<int> Col(3,0);
+        int diagonal=0;
+        int antidiagonal=0;
+        int n=moves.size();
+        for(int i=0;i<n;i++)
+        {
+            int row=moves[i][0];
+            int col=moves[i][1];
+            //std::cout<<row<<" "<<col<<" "<<i<<std::endl;
+            if(i%2==0)
+            {
+                Row[row]++;
+                Col[col]++;
+                if(row==col)
+                {
+                    diagonal++;
+                }
+                if(row+col==2)
+                {
+                    antidiagonal++;
+                }
+            }//if
+            else
+            {
+                Row[row]--;
+                Col[col]--;
+                if(row==col)
+                {
+                    diagonal--;
+                }
+                if(row+col==2)
+                {
+                    antidiagonal--;
+                    //std::cout<<antidiagonal<<std::endl;
+                }
+            }
+        }//for
+        //std::cout<<abs(antidiagonal)<<std::endl;
+        for(int i=0;i<3;i++)
+        {
+            if(abs(Row[i])==3||abs(Col[i])==3||abs(diagonal)==3||abs(antidiagonal)==3)
+            {
+                if(n%2==0)
+                {
+                    return "B";
+                }
+                else
+                {
+                    return "A";
+                }
+            }//if
+        }//for
+        if(n==9)
+        {
+            return "Draw";
+        }
+        return "Pending";
+        
+        
+    }
+};
