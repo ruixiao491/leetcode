@@ -1,0 +1,13 @@
+class Solution {
+public:
+    double angleClock(int hour, int minutes) {
+        if(hour==12)
+        {
+            hour=0;
+        }
+        double angle1=180*minutes/30;
+        double angle2=180*hour/6+(double)180*minutes/360;
+        return min(abs(angle1-angle2),360-abs(angle1-angle2));
+        
+    }
+};
