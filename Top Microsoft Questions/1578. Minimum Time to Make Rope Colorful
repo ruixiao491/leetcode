@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int minCost(string colors, vector<int>& neededTime) {
+        int ans=0;
+        pair<char,int> prev=make_pair(colors[0],neededTime[0]);
+        for(int i=1;i<colors.size();i++)
+        {
+            if(colors[i]==prev.first)
+            {
+                ans+=min(prev.second,neededTime[i]);
+                prev.second=max(prev.second,neededTime[i]);
+            }//if
+            else
+            {
+                prev.first=colors[i];
+                prev.second=neededTime[i];
+            }
+            
+        }//for i
+        return ans;
+    }
+};
