@@ -1,0 +1,62 @@
+///My solution:
+class Solution {
+public:
+    int maximalNetworkRank(int n, vector<vector<int>>& roads) {
+        vector<vector<int>> edges(n);
+        for(int i=0;i<roads.size();i++)
+        {
+            edges[roads[i][0]].push_back(roads[i][1]);
+            edges[roads[i][1]].push_back(roads[i][0]);
+        }//for 
+        int ans=0;
+        for(int i=0;i<n;i++)
+        {
+            for(int j=i+1;j<n;j++)
+            {
+                int test=0;
+                for(int k=0;k<edges[i].size();k++)
+                {
+                    if(edges[i][k]==j)
+                    {
+                        test--;
+                    }
+                }//for k
+                test+=edges[i].size()+edges[j].size();
+                ans=max(ans,test);
+            }//for j
+        }//for i    
+        return ans;
+    }
+};
+
+
+######################################
+The solution of others: more optimized
+######################################
+class Solution {
+public:
+    int maximalNetworkRank(int n, vector<vector<int>>& roads) {
+        bool connected[n][n];
+        memset(connected, 0, sizeof(connected));
+        int cnt[n];
+        memset(cnt, 0, sizeof(cnt));
+        for (vector<int>& road : roads)
+        {
+            connected[road[0]][road[1]] = true;
+            connected[road[1]][road[0]] = true;
+            ++cnt[road[0]];
+            ++cnt[road[1]];
+        }
+
+        int res = 0;
+        for (int i = 0; i < n; ++i)
+        {
+            for (int j = i + 1; j < n; ++j)
+            {
+                res = max(res, cnt[i] + cnt[j] - connected[i][j]);
+            }
+        }
+
+        return res;
+    }
+};
