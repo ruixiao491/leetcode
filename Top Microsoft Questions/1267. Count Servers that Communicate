@@ -1,0 +1,80 @@
+///My solutions: 2 maps
+class Solution {
+public:
+    int countServers(vector<vector<int>>& grid) {
+        int m=grid.size();
+        int n=grid[0].size();
+        int ans=0;
+        int count=0;
+        map<int,vector<int>> seen_row;
+        map<int,vector<int>> seen_col;
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(grid[i][j]==1)
+                {
+                    seen_row[i].push_back(j);
+                    seen_col[j].push_back(i);
+                    count++;
+                }
+            }//for j
+        }//for i
+        
+        auto it=seen_row.begin();
+        while(it!=seen_row.end())
+        {
+            if(it->second.size()==1)
+            {
+                if(seen_col[it->second[0]].size()==1)
+                {
+                    ans++;
+                }
+            }
+            it++;
+        }//while
+        return count-ans;
+    }
+};
+
+
+
+############################################
+The solution in the solution part: counting
+############################################
+class Solution {
+public:
+    int countServers(vector<vector<int>>& grid) {
+        int m=grid.size();
+        int n=grid[0].size();
+        vector<int> Row(m,0);
+        vector<int> Col(n,0);
+        int ans=0;
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(grid[i][j]==1)
+                {
+                    Row[i]++;
+                    Col[j]++;
+                }
+            }//for j
+        }//fori
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(grid[i][j]==1)
+                {
+                    if(Row[i]>1||Col[j]>1)
+                    {
+                       ans++; 
+                    }
+                }//if
+            }//for j
+        }//for i
+        
+        return ans;
+    }
+};
