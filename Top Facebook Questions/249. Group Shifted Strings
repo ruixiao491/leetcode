@@ -1,0 +1,27 @@
+///My solution: Map
+class Solution {
+public:
+    vector<vector<string>> groupStrings(vector<string>& strings) {
+        map<string,vector<string>> seen;
+        vector<vector<string>> ans;
+        for(int i=0;i<strings.size();i++)
+        {
+            string key="";
+            for(int j=0;j<strings[i].size();j++)
+            {
+                key.push_back((strings[i][j]-strings[i][0]+26)%26+'a');
+            }//for j
+            //std::cout<<i<<"  "<<key<<std::endl;
+            seen[key].push_back(strings[i]);
+        }//for i
+        
+        auto it=seen.begin();
+        while(it!=seen.end())
+        {
+            ans.push_back(it->second);
+            it++;
+        }//while
+        
+        return ans;
+    }
+};
