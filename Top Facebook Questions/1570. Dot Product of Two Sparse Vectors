@@ -1,0 +1,94 @@
+###############################################################
+The solution in the solution part: Non-efficient Array Approach
+###############################################################
+class SparseVector {
+public:
+    vector<int> vec1;
+    SparseVector(vector<int> &nums) {
+        vec1=nums;
+        
+    }
+    
+    // Return the dotProduct of two sparse vectors
+    int dotProduct(SparseVector& vec) {
+        int n=vec1.size();
+        int ans=0;
+        for(int i=0;i<n;i++)
+        {
+            ans+=vec1[i]*vec.vec1[i];
+            
+        }//for
+        return ans;
+    }
+};
+
+######################################
+The solution in the solution part: Set
+######################################
+
+class SparseVector {
+public:
+    map<int,int> seen;
+    SparseVector(vector<int> &nums) {
+        for(int i=0;i<nums.size();i++)
+        {
+            if(nums[i]!=0)
+            {
+                seen.insert({i,nums[i]});
+            }
+        }//for
+        
+    }
+    int dotProduct(SparseVector& vec) {
+        int ans=0;
+        auto it=seen.begin();
+        while(it!=seen.end())
+        {
+            ans+=it->second*vec.seen[it->first];
+            it++;
+        }//while
+        return ans;
+        
+    }
+};
+
+
+####################################################
+The solution in the solution part: Index-Value Pairs
+####################################################
+
+class SparseVector {
+public:
+    vector<pair<int,int>>pairs;
+    SparseVector(vector<int> &nums) {
+        for(int i=0;i<nums.size();i++)
+        {
+            if(nums[i]!=0)
+            {
+                pairs.push_back({i,nums[i]});
+            }
+        }//for i
+        
+    }
+    int dotProduct(SparseVector& vec) {
+        int ans=0, p1=0, p2=0;
+        while(p1<pairs.size()&&p2<vec.pairs.size())
+        {
+            if(pairs[p1].first==vec.pairs[p2].first)
+            {
+                ans+=pairs[p1].second*vec.pairs[p2].second;
+                p1++;
+                p2++;
+            }
+            else if(pairs[p1].first>vec.pairs[p2].first)
+            {
+                p2++;
+            }//else if
+            else
+            {
+                p1++;
+            }
+        }//while
+        return ans;
+    }
+};
