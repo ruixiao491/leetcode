@@ -1,0 +1,52 @@
+////My solution: rand() + map
+class Solution {
+public:
+    map<int,vector<int>> seen;
+    Solution(vector<int>& nums) {
+        for(int i=0;i<nums.size();i++)
+        {
+            seen[nums[i]].push_back(i);
+        }//for i
+        
+    }
+    
+    int pick(int target) {
+        int length=seen[target].size();
+        int index=rand()%length;
+        return seen[target][index];
+        
+    }
+};
+
+#############################################################################
+The solution in the solution part: Reservoir sampling (o(1) space complexity)
+#############################################################################
+class Solution {
+public:
+    
+    vector<int> nums;
+    
+    Solution(vector<int>& nums) {
+        this->nums.swap(nums);
+    }
+    
+    int pick(int target) {
+        int n = nums.size();
+        int count = 0;
+        int idx = 0;
+        for (int i = 0; i < n; ++i) {
+            // if nums[i] is equal to target, i is a potential candidate
+            // which needs to be chosen uniformly at random
+            if (nums[i] == target) {
+                // increment the count of total candidates
+                // available to be chosen uniformly at random
+                count++;
+                // we pick the current number with probability 1 / count (reservoir sampling)
+                if (rand() % count == 0) {
+                    idx = i;
+                }
+            }
+        }
+        return idx;
+    }
+};
