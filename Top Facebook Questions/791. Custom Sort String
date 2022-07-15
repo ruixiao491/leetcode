@@ -1,0 +1,50 @@
+//My solution: sort + comparator
+class Solution {
+public:
+    string customSortString(string order, string s) {
+        auto cmp=[&](const char& a, const char& b)
+        {
+            int pos1=order.find(a);
+            int pos2=order.find(b);
+            return pos1<pos2;
+        };//cmp
+        sort(s.begin(),s.end(),cmp);
+        return s;
+        
+    }
+};
+
+
+############################################################################
+The solution in the solution part: count the occurrences and then construct
+############################################################################
+
+class Solution {
+public:
+    string customSortString(string order, string s) {
+        vector<int> count(26);
+        string ans="";
+        for(int i=0;i<s.size();i++)
+        {
+            count[s[i]-'a']++;
+        }//for i
+        
+        for(int i=0;i<order.size();i++)
+        {
+            for(int j=0;j<count[order[i]-'a'];j++)
+            {
+                ans.push_back(order[i]);
+            }//for j
+            count[order[i]-'a']=0;
+        }//for i
+        
+        for(char c='a';c<='z';c++)
+        {
+            for(int i=0;i<count[c-'a'];i++)
+            {
+                ans.push_back(c);
+            }
+        }//for c
+        return ans;
+    }
+};
