@@ -1,0 +1,45 @@
+class Solution {
+public:
+    int maxLength(vector<int>& ribbons, int k) {
+        long long sum=0;
+        int maxval=0;
+        for(int i=0;i<ribbons.size();i++)
+        {
+            sum+=ribbons[i];
+            maxval=max(maxval,ribbons[i]);
+        }//for i
+        if(sum<k)
+        {
+            return 0;
+        }
+        if(k==1)
+        {
+            return maxval;
+        }
+        int left=1, right=maxval;
+        while(left<right)
+        {
+            int mid=(left+right)/2+((left+right)%2==1);
+            //std::cout<<left<<" "<<right<<" "<<mid<<" "<<number(ribbons,mid)<<std::endl;
+            if(number(ribbons, mid)<k)
+            {
+                right=mid-1;
+            }
+            else
+            {
+                left=mid;
+            }
+        }//while
+        return left;
+        
+    }
+    int number(vector<int>& ribbons, int length)
+    {
+        int ans=0;
+        for(int i=0;i<ribbons.size();i++)
+        {
+            ans+=ribbons[i]/length;
+        }
+        return ans;
+    }
+};
