@@ -1,0 +1,99 @@
+######################################################
+The solution in the solution part: backtracking + map
+######################################################
+class Solution {
+public:
+    map<Node*, Node*> visit;
+    Node* copyRandomList(Node* head) {
+        if(head==nullptr)
+        {
+            return nullptr;
+        }
+        if(visit.find(head)!=visit.end())
+        {
+            return visit[head];
+        }//if
+
+        Node* node=new Node(head->val);
+        visit.insert({head,node});
+        node->next=copyRandomList(head->next);
+        node->random=copyRandomList(head->random);
+            
+
+            
+        return visit[head];
+        
+    }
+};
+
+
+################################
+Change the above solution a bit
+################################
+class Solution {
+public:
+    map<Node*, Node*> visit;
+    Node* copyRandomList(Node* head) {
+        Node* cur=head;
+        while(cur!=nullptr)
+        {
+            Node* node=new Node(cur->val);
+            visit.insert({cur,node});
+            cur=cur->next;
+        }//while
+        
+        cur=head;
+        while(cur!=nullptr)
+        {
+            if(cur->next!=nullptr)
+            {
+                visit[cur]->next=visit[cur->next];
+            }
+            else
+            {
+                visit[cur]->next=nullptr;
+            }
+            
+            if(cur->random!=nullptr)
+            {
+                visit[cur]->random=visit[cur->random];
+            }
+            else
+            {
+                visit[cur]->random=nullptr;
+            }
+            
+            cur=cur->next;
+        }//while
+        return visit[head];
+    }
+};
+
+
+##########################################################################
+The solution in the solution part: iteration + with o(1) space complexity
+##########################################################################
+class Solution {
+public:
+    Node* copyRandomList(Node* head) {
+        if (head == nullptr) {
+            return nullptr;
+        }
+        for (Node* node = head; node != nullptr; node = node->next->next) {
+            Node* nodeNew = new Node(node->val);
+            nodeNew->next = node->next;
+            node->next = nodeNew;
+        }
+        for (Node* node = head; node != nullptr; node = node->next->next) {
+            Node* nodeNew = node->next;
+            nodeNew->random = (node->random != nullptr) ? node->random->next : nullptr;
+        }
+        Node* headNew = head->next;
+        for (Node* node = head; node != nullptr; node = node->next) {
+            Node* nodeNew = node->next;
+            node->next = node->next->next;
+            nodeNew->next = (nodeNew->next != nullptr) ? nodeNew->next->next : nullptr;
+        }
+        return headNew;
+    }
+};
