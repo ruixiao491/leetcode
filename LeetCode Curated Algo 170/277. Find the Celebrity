@@ -1,0 +1,91 @@
+////My solution: not good, use too many knows functions.
+class Solution {
+public:
+    int findCelebrity(int n) {
+        for(int i=0;i<n;i++)
+        {
+            int count=0;
+            for(int j=0;j<n;j++)
+            {
+                //std::cout<<i<<" "<<j<<" "<<knows(j,i)<<std::endl;
+                if(j==i) continue;
+                if(knows(j,i)==0)
+                {
+                    break;
+                }//if
+                else
+                {
+                    count++;
+                    if(count==n-1)
+                    {
+                        int flag=0;
+                        for(int k=0;k<n;k++)
+                        {
+                            if(k==i) continue;
+                            if(knows(i,k)==1)
+                            {
+                                flag=1;
+                                break;
+                            }
+                        }//for k
+                        if(flag==0)
+                        {
+                            return i;
+                        }
+                        
+                    }
+                }//else
+            }//for j
+        }//for i
+        
+        return -1;
+    }
+};
+
+
+##################################################################################################
+The solution in the solution part: logical deduction with map
+(Logical deduction has already decreased the number of calls, and optimized even bettter with map)
+##################################################################################################
+class Solution {
+public:
+    map<pair<int,int>,bool> seen;
+    bool KNOWS(int a, int b)
+    {
+        if(seen.find({a,b})==seen.end())
+        {
+            seen[{a,b}]=knows(a,b);
+        }
+        return seen[{a,b}];
+        
+    }//bool
+    int findCelebrity(int n) {
+        int candidate=0;
+        for(int i=1;i<n;i++)
+        {
+            if(KNOWS(candidate,i))
+            {
+                candidate=i;
+            }//if
+        }//for i
+        
+        if(isCelebrity(candidate,n))
+        {
+            return candidate;
+        }
+        return -1;      
+    }
+    bool isCelebrity(int i,int n)
+    {
+        for(int j=0;j<n;j++)
+        {
+            if(i==j) continue;
+            if(KNOWS(i,j)||!KNOWS(j,i))
+            {
+                return false;
+            }
+        }//for i
+        return true;
+    }//isCelebrity
+    
+};
