@@ -1,0 +1,35 @@
+class Solution {
+public:
+    int maximumSum(vector<int>& nums) {
+        int n=nums.size();
+        map<int,int> digits;
+        int ans=-1;
+        for(int i=0;i<n;i++)
+        {
+            int sum=sumdigit(nums[i]);
+            if(digits.find(sum)!=digits.end())
+            {
+                ans=max(ans,digits[sum]+nums[i]);
+                if(digits[sum]<nums[i])
+                {
+                    digits[sum]=nums[i];
+                }
+            }
+            else
+            {
+                digits.insert({sum,nums[i]});
+            }
+        }//for i
+       return ans; 
+    }
+    int sumdigit(int a)
+    {
+        int ans=0;
+        while(a>0)
+        {
+            ans+=a%10;
+            a=a/10;
+        }//while
+        return ans;
+    }
+};
