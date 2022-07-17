@@ -1,0 +1,32 @@
+class Solution {
+public:
+    vector<int> smallestTrimmedNumbers(vector<string>& nums, vector<vector<int>>& queries) {
+        int n=nums.size();
+        int length=nums[0].size();
+        vector<int> ans;
+        vector<pair<string,int>> copyone(n);
+        for(int i=0;i<n;i++)
+        {
+            copyone[i]=make_pair(nums[i],i);  
+            //std::cout<<nums[i]<<" "<<i<<std::endl;
+            //std::cout<<copyone[i].second<<std::endl;
+        }//for
+        for(int i=0;i<queries.size();i++)
+        {
+            //std::cout<<kthsmall(copyone,queries,i,length)<<std::endl;
+            ans.push_back(kthsmall(copyone,queries,i,length));
+        }//for i
+        return ans;
+    }
+    int kthsmall(vector<pair<string,int>> copyone,vector<vector<int>>& queries, int index,int length)
+    {
+        int start=length-queries[index][1];
+        for(int i=0;i<copyone.size();i++)
+        {
+            copyone[i].first=copyone[i].first.substr(start);
+        }
+        sort(copyone.begin(),copyone.end());
+        //std::cout<<queries[index][0]-1<<std::endl;
+        return copyone[queries[index][0]-1].second;
+    }
+};
