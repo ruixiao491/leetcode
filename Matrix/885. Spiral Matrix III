@@ -1,0 +1,48 @@
+##########################################################
+The solution of others: Simulation: 
+https://leetcode.cn/problems/spiral-matrix-iii/solution/dongge-de-jie-fa-si-lu-qing-xi-by-victor-gmmz/
+
+Set the 4 boundaries of each turn.
+
+class Solution {
+
+public:
+    vector<vector<int>> spiralMatrixIII(int rows, int cols, int rStart, int cStart) {
+        vector<vector<int>> around={{0,1},{1,0},{0,-1},{-1,0}};
+        int x=rStart, y=cStart, num=1, dir=0;
+        vector<vector<int>> ans;
+        int Left=cStart-1, Right=cStart+1, Upper=rStart-1, Bottom=rStart+1;
+        while(num<=rows*cols)
+        {
+            if(x>=0&&x<rows&&y>=0&&y<cols)
+            {
+                ans.push_back({x,y});
+                num++;
+            }
+            if(dir==0&&y==Right)
+            {
+                dir++;
+                Right++;
+            }
+            else if(dir==1&&x==Bottom)
+            {
+                dir++;
+                Bottom++;
+            }
+            else if(dir==2&&y==Left)
+            {
+                dir++;
+                Left--;
+            }
+            else if(dir==3&&x==Upper)
+            {
+                dir=0;
+                Upper--;
+            }
+            x+=around[dir][0];
+            y+=around[dir][1];
+        }//while
+        return ans;
+        
+    }
+};
