@@ -1,0 +1,63 @@
+//My solution:
+class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        if(root==nullptr)
+        {
+            return false;
+        }
+        if(root->left==nullptr&&root->right==nullptr&&root->val==targetSum)
+        {
+            return true;
+        }
+        bool ans=0;
+        if(root->left!=nullptr&&ans==0)
+        {
+            ans=hasPathSum(root->left, targetSum-root->val);
+        }
+        if(root->right!=nullptr&&ans==0)
+        {
+            ans=hasPathSum(root->right,targetSum-root->val);
+        }
+        return ans;
+        
+    }
+};
+
+
+#########################################
+The solution in the solution part: BFS
+#########################################
+class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        if(root==nullptr)
+        {
+            return false;
+        }
+        queue<pair<TreeNode*, int>> que;
+        que.push({root,root->val});
+        while(!que.empty())
+        {
+            auto it=que.front();
+            que.pop();
+            if(it.first->left!=nullptr)
+            {
+                que.push({it.first->left,it.second+it.first->left->val});
+            }
+            if(it.first->right!=nullptr)
+            {
+                que.push({it.first->right,it.second+it.first->right->val});
+            }
+            if(it.first->left==nullptr&&it.first->right==nullptr)
+            {
+                if(it.second==targetSum)
+                {
+                    return true;
+                }
+            }//if
+            
+        }//while
+        return false;
+    }
+};
