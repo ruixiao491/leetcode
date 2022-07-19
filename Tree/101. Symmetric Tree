@@ -1,0 +1,100 @@
+///My solution:
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        if(root==nullptr)
+        {
+            return true;
+        }
+        queue<TreeNode*> que;
+        que.push(root);
+        while(!que.empty())
+        {
+            int length=que.size();
+            vector<int> test;
+            for(int i=0;i<length;i++)
+            {
+                TreeNode* cur=que.front();
+                que.pop();
+                if(cur->left!=nullptr)
+                {
+                    que.push(cur->left);
+                    test.push_back(cur->left->val);
+                }
+                else
+                {
+                    test.push_back(-200);
+                }
+                if(cur->right!=nullptr)
+                {
+                    que.push(cur->right);
+                    test.push_back(cur->right->val);
+                }
+                else
+                {
+                    test.push_back(-200);
+                }
+            }//for
+            //std::cout<<test.size()<<" "<<check(test)<<std::endl;
+            if(check(test)==0)
+            {
+                return false;
+            }
+            
+        }//while
+        return true;
+        
+    }
+    bool check(vector<int>& test)
+    {
+        vector<int> copy=test;
+        reverse(copy.begin(),copy.end());
+        return copy==test;
+    }
+};
+
+
+############################################
+The solution of the solution part: recursive
+############################################
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        return isMirror(root,root);
+    }
+    bool isMirror(TreeNode* t1, TreeNode* t2)
+    {
+        if(t1==nullptr&&t2==nullptr) return true;
+        if(t1==nullptr||t2==nullptr) return false;
+        return (t1->val==t2->val)&&isMirror(t1->left, t2->right)&&isMirror(t1->right, t2->left);
+    }//isMirror
+};
+
+
+#############################################
+The solution of the solution part: iterative
+#############################################
+class Solution {
+public:
+    bool isSymmetric(TreeNode* root) {
+        queue<TreeNode*>que;
+        que.push(root);
+        que.push(root);
+        while(!que.empty())
+        {
+            TreeNode* t1=que.front();
+            que.pop();
+            TreeNode* t2=que.front();
+            que.pop();
+            if(t1==nullptr&&t2==nullptr) continue;
+            if(t1==nullptr||t2==nullptr) return false;
+            if(t1->val!=t2->val) return false;
+            que.push(t1->left);
+            que.push(t2->right);
+            que.push(t1->right);
+            que.push(t2->left);
+            
+        }//while
+        return true;
+    }
+};
