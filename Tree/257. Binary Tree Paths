@@ -45,3 +45,72 @@ public:
         ans.push_back(test);
     }//getPath
 };
+
+
+
+#######################################
+The solution in the solution part: DFS
+#######################################
+class Solution {
+public:
+    vector<string> ans;
+    vector<string> binaryTreePaths(TreeNode* root) {
+        dfs(root,"");
+        return ans;
+        
+    }
+    void dfs(TreeNode* root, string path)
+    {
+        if(root==nullptr)
+        {
+            return;
+        }
+        path+=to_string(root->val);
+        if(root->left==nullptr&&root->right==nullptr)
+        {
+            ans.push_back(path);
+        }//if
+        else
+        {
+            path+="->";
+            dfs(root->left,path);
+            dfs(root->right,path);
+        }
+    }//dfs
+    
+};
+
+
+#########################################################
+The solution in the solution part: BFS (better than mine)
+#########################################################
+class Solution {
+public:
+    vector<string> binaryTreePaths(TreeNode* root) {
+        vector<string> ans;
+        if(root==nullptr)
+        {
+            return ans;
+        }
+        queue<pair<TreeNode*,string>> que;
+        que.push({root,to_string(root->val)});
+        while(!que.empty())
+        {
+            auto it=que.front();
+            que.pop();
+            if(it.first->left==nullptr&&it.first->right==nullptr)
+            {
+                ans.push_back(it.second);
+            }
+            if(it.first->left!=nullptr)
+            {
+                que.push({it.first->left,it.second+"->"+to_string(it.first->left->val)});
+            }
+            if(it.first->right!=nullptr)
+            {
+                que.push({it.first->right,it.second+"->"+to_string(it.first->right->val)});
+            }
+        }//while
+        return ans;
+    }
+};
