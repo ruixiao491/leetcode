@@ -1,0 +1,31 @@
+####################################################
+The solution in the solution part: prefix sum + map
+####################################################
+class Solution {
+public:
+    map<long long, int> seen;
+    int pathSum(TreeNode* root, int targetSum) {
+        seen[0]=1;
+        return dfs(root,0,targetSum);
+        
+    }
+    int dfs(TreeNode* node, long long currval, int targetSum)
+    {
+        if(node==nullptr)
+        {
+            return 0;
+        }
+        int ans=0;
+        currval+=node->val;
+        if(seen.find(currval-targetSum)!=seen.end())
+        {
+            ans+=seen[currval-targetSum];
+        }
+        seen[currval]++;
+        ans+=dfs(node->left,currval,targetSum);
+        ans+=dfs(node->right,currval,targetSum);
+        seen[currval]--;
+        return ans;
+        
+    }//dfs
+};
