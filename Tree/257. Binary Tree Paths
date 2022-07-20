@@ -1,0 +1,47 @@
+//My solution: BFS
+class Solution {
+public:
+    vector<string> ans;
+    map<TreeNode*,TreeNode*> seen;
+    vector<string> binaryTreePaths(TreeNode* root) {
+
+        queue<TreeNode*> que;
+        que.push(root);
+        while(!que.empty())
+        {
+            TreeNode* cur=que.front();
+            que.pop();
+            if(cur->left!=nullptr)
+            {
+                seen[cur->left]=cur;
+                que.push(cur->left);
+            }
+            if(cur->right!=nullptr)
+            {
+                seen[cur->right]=cur;
+                que.push(cur->right);
+            }
+            if(cur->left==nullptr&&cur->right==nullptr)
+            {
+                getPath(cur);
+            }        
+        }//while 
+        return ans;
+    }//binaryTreePaths
+    void getPath(TreeNode* node)
+    {
+        string test="";
+        vector<int> nums;
+        while(node!=nullptr)
+        {
+            nums.push_back(node->val);
+            node=seen[node];
+        }
+        for(int i=nums.size()-1;i>0;i--)
+        {
+            test+=to_string(nums[i])+"->";
+        }
+        test+=to_string(nums[0]);
+        ans.push_back(test);
+    }//getPath
+};
