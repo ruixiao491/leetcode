@@ -31,9 +31,10 @@ public:
     }
 };
 
-#####################################################
+################################################################################################################
 The solution in the solution part: inorder tranverse
-#####################################################
+without using any extra space。 (Assume that the implicit stack space incurred due to recursion does not count).
+################################################################################################################
 class Solution {
 public:
     vector<int> answer;
