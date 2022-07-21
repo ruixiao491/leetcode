@@ -1,0 +1,72 @@
+///My solution: BFS+map
+class Solution {
+public:
+    vector<int> findMode(TreeNode* root) {
+        map<int,int> seen;
+        map<int,vector<int>> counts;
+        queue<TreeNode*> que;
+        que.push(root);
+        while(!que.empty())
+        {
+            TreeNode* cur=que.front();
+            que.pop();
+            seen[cur->val]++;
+            if(cur->left!=nullptr)
+            {
+                que.push(cur->left);
+            }
+            if(cur->right!=nullptr)
+            {
+                que.push(cur->right);
+            }
+        }//while
+        auto it=seen.begin();
+        while(it!=seen.end())
+        {
+            counts[it->second].push_back(it->first);
+            it++;
+        }//while
+        auto it2=counts.rbegin();
+        return it2->second;       
+    }
+};
+
+#####################################################
+The solution in the solution part: inorder tranverse
+#####################################################
+class Solution {
+public:
+    vector<int> answer;
+    int base, count, maxCount;
+
+    void update(int x) {
+        if (x == base) {
+            ++count;
+        } else {
+            count = 1;
+            base = x;
+        }
+        if (count == maxCount) {
+            answer.push_back(base);
+        }
+        if (count > maxCount) {
+            maxCount = count;
+            answer = vector<int> {base};
+        }
+    }
+
+    void dfs(TreeNode* o) {
+        if (!o) {
+            return;
+        }
+        dfs(o->left);
+        update(o->val);
+        dfs(o->right);
+    }
+
+    vector<int> findMode(TreeNode* root) {
+        dfs(root);
+        return answer;
+    }
+};
+
