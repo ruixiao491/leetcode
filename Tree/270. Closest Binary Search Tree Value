@@ -1,0 +1,62 @@
+////My solution:BFS
+class Solution {
+public:
+    int closestValue(TreeNode* root, double target) {
+        int ans=0;
+        double difference=DBL_MAX;
+        queue<TreeNode*> que;
+        que.push(root);
+        while(!que.empty())
+        {
+            TreeNode* cur=que.front();
+            que.pop();
+            //std::cout<<cur->val<<" "<<abs(cur->val-target)<<std::endl;
+            if(abs(cur->val-target)<difference)
+            {
+                ans=cur->val;
+                difference=abs(cur->val-target);
+            }
+            if(cur->left!=nullptr)
+            {
+                que.push(cur->left);
+            }
+            if(cur->right!=nullptr)
+            {
+                que.push(cur->right);
+            }
+        }//while
+        return ans;
+    }
+};
+
+
+##################################################
+The solution in the solution part: Binary search
+##################################################
+class Solution {
+public:
+    int closestValue(TreeNode* root, double target) {
+        int ans=root->val;
+        while(root!=nullptr)
+        {
+            if(abs(root->val-target)<abs(ans-target))
+            {
+                ans=root->val;
+            }//if
+            if(target==root->val)
+            {
+                return root->val;
+            }
+            if(target<root->val)
+            {
+                root=root->left;
+            }
+            else if(target>root->val)
+            {
+                root=root->right;
+            }
+            
+        }//while
+        return ans;
+    }
+};
