@@ -1,0 +1,113 @@
+///2 pointers
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        sort(nums.begin(),nums.end());
+        vector<vector<int>> ans;
+        int n=nums.size();
+        for(int i=0;i<n-2;i++)
+        {
+            if(i>0&&nums[i]==nums[i-1]) continue;
+            if(nums[i]>0) break;
+            int left=i+1;
+            int right=n-1;
+            while(left<right)
+            {
+                if(nums[left]+nums[right]<-1*nums[i])
+                {
+                    left++;
+                }//if
+                else if(nums[left]+nums[right]>-1*nums[i])
+                {
+                    right--;
+                }
+                else
+                {
+                    vector<int> test;
+                    test.push_back(nums[i]);
+                    test.push_back(nums[left]);
+                    test.push_back(nums[right]);
+                    ans.push_back(test);
+                    int low=nums[left];
+                    int high=nums[right];
+                    while(left<n-1&&nums[left]==low)
+                    {
+                        left++;
+                    }
+                    while(right>i&&nums[right]==high)
+                    {
+                        right--;
+                    }
+                }
+            }//while
+        }//for i
+        return ans;
+    }
+};
+
+###############################################
+The solution in the solution part: map + sort
+###############################################
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        sort(begin(nums), end(nums));
+        vector<vector<int>> res;
+        for (int i = 0; i < nums.size() && nums[i] <= 0; ++i)
+            if (i == 0 || nums[i - 1] != nums[i]) {
+                twoSum(nums, i, res);
+            }
+        return res;
+    }
+    void twoSum(vector<int>& nums, int i, vector<vector<int>> &res) {
+        unordered_set<int> seen;
+        for (int j = i + 1; j < nums.size(); ++j) {
+            int complement = -nums[i] - nums[j];
+            if (seen.count(complement)) {
+                res.push_back({nums[i], complement, nums[j]});
+                while (j + 1 < nums.size() && nums[j] == nums[j + 1]) {
+                    ++j;
+                }
+            }
+            seen.insert(nums[j]);
+        }
+    }
+};
+
+
+
+
+#######################################################
+The solution in the solution part: map without sorting
+#######################################################
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        set<vector<int>> res;
+        set<int> counts;
+        map<int,int> seen;
+        for(int i=0;i<nums.size();i++)
+        {
+           
+            if(counts.find(nums[i])!=counts.end())
+            {
+                continue;
+            }//if
+            counts.insert(nums[i]);
+            for(int j=i+1;j<nums.size();j++)
+            {
+                int complement=-nums[i]-nums[j];
+                auto it=seen.find(complement);
+                if(it!=seen.end()&&it->second==i)
+                {
+                    vector<int> test={nums[i],nums[j],complement};
+                    sort(test.begin(),test.end());
+                    res.insert(test);
+                }//if
+                seen[nums[j]]=i;
+            }//for j
+        }//for i
+        
+        return vector<vector<int>>(begin(res),end(res));
+    }
+};
