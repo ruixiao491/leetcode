@@ -1,0 +1,68 @@
+##########################################
+The solution of others' in the discussion
+##########################################
+class Node {
+public:
+    Node(const string& val): val(val), left(nullptr),right(nullptr){}
+    virtual ~Node () {};
+    virtual int evaluate() 
+    {
+        if(val=="+")
+        {
+            return left->evaluate()+right->evaluate();
+        }
+        else if(val=="-")
+        {
+            return left->evaluate()-right->evaluate();
+        }
+        else if(val=="*")
+        {
+            return left->evaluate()*right->evaluate();
+        }
+        else if(val=="/")
+        {
+            return left->evaluate()/right->evaluate();
+        }
+        else 
+        {
+            return stoi(val);
+        }
+        
+    }
+protected:
+    // define your fields here
+    string val;
+    Node* left;
+    Node* right;
+    
+    friend class TreeBuilder;
+    //////////If you would like to keep "protected, then you need to add "friend class TreeBuilder". If you do not have protected, then you don't need this.
+};
+
+
+/**
+ * This is the TreeBuilder class.
+ * You can treat it as the driver code that takes the postinfix input 
+ * and returns the expression tree represnting it as a Node.
+ */
+
+class TreeBuilder {
+public:
+    Node* buildTree(vector<string>& postfix) {
+        stack<Node*> stk;
+        for(int i=0;i<postfix.size();i++)
+        {
+            Node* n=new Node(postfix[i]);
+            if(postfix[i]=="+"||postfix[i]=="-"||postfix[i]=="*"||postfix[i]=="/")
+            {
+                n->right=stk.top();
+                stk.pop();
+                n->left=stk.top();
+                stk.pop();
+            }//if
+            stk.push(n);
+        }//for
+        return stk.top();
+        
+    }
+};
