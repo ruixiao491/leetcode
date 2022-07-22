@@ -1,0 +1,80 @@
+///My solution: inorder tranverse
+class Solution {
+public:
+    vector<TreeNode*> res;
+    TreeNode* inorderSuccessor(TreeNode* root, TreeNode* p) {
+        helper(root);
+        //std::cout<<res.size()<<std::endl;
+        for(int i=0;i<res.size();i++)
+        {
+            //std::cout<<res[i]->val<<std::endl;
+            if(res[i]==p&&i<res.size()-1)
+            {
+                return res[i+1];
+            }
+        }
+        return nullptr;
+        
+    }
+    void helper(TreeNode* root)
+    {
+        if(root==nullptr) return;
+        helper(root->left);
+        res.push_back(root);
+        helper(root->right);
+        
+    }
+};
+
+#####################################################################################
+The solution in the solution part: inorder tranverse with optimized space complexity
+#####################################################################################
+class Solution {
+public:
+    TreeNode* inorderSuccessor(TreeNode* root, TreeNode* p) {
+        stack<TreeNode*> st;
+        TreeNode *prev = nullptr, *curr = root;
+        while (!st.empty() || curr != nullptr) {
+            while (curr != nullptr) {
+                st.emplace(curr);
+                curr = curr->left;
+            }
+            curr = st.top();
+            st.pop();
+            if (prev == p) {
+                return curr;
+            }
+            prev = curr;
+            curr = curr->right;
+        }
+        return nullptr;
+    }
+};
+
+########################################################
+The solution in the solution part: Using BST properties
+########################################################
+class Solution {
+public:
+    TreeNode* inorderSuccessor(TreeNode* root, TreeNode* p) {
+        TreeNode *successor = nullptr;
+        if (p->right != nullptr) {
+            successor = p->right;
+            while (successor->left != nullptr) {
+                successor = successor->left;
+            }
+            return successor;
+        }
+        TreeNode *node = root;
+        while (node != nullptr) {
+            if (node->val > p->val) {
+                successor = node;
+                node = node->left;
+            } else {
+                node = node->right;
+            }
+        }
+        return successor;
+    }
+};
+
