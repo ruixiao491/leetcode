@@ -1,0 +1,41 @@
+class Solution {
+public:
+    TreeNode* ans;
+    TreeNode* lowestCommonAncestor(TreeNode* root, vector<TreeNode*> &nodes) {
+        if(nodes.size()==1)
+        {
+            return nodes[0];
+        }
+        dfs(root, nodes);
+        return ans;
+        
+    }
+    bool dfs(TreeNode* root, vector<TreeNode*>& nodes)
+    {
+        if(root==nullptr) return false;
+        bool lson=dfs(root->left, nodes);
+        bool rson=dfs(root->right, nodes);
+        //std::cout<<root->val<<" "<<lson<<" "<<rson<<std::endl;
+        if(lson&&rson)
+        {
+            ans=root;
+        }
+        else
+        {
+            for(int i=0;i<nodes.size();i++)
+            {
+                if(root->val==nodes[i]->val)
+                {
+                    //std::cout<<root->val<<std::endl;
+                    if(lson||rson)
+                    {
+                        ans=root; 
+                    }
+
+                    return true;
+                }
+            }//for i
+        }//else
+        return lson||rson;
+    }//dfs
+};
