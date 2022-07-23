@@ -1,0 +1,61 @@
+#############################################
+The solution in the solution part: DFS + map
+#############################################
+class Solution {
+public:
+    map<string, int> count;
+    vector<TreeNode*> ans;
+    vector<TreeNode*> findDuplicateSubtrees(TreeNode* root) {
+        collect(root);
+        return ans;       
+        
+    }
+    string collect(TreeNode* node)
+    {
+        if(node==nullptr) return "#";
+        string series=to_string(node->val)+","+collect(node->left)+","+collect(node->right);
+        count[series]++;
+        if(count[series]==2)
+        {
+            ans.push_back(node);
+        }
+        return series;
+    }
+};
+
+
+##############################################################################
+The solution in the solution part: the only marker (similar to the solution 1)
+##############################################################################
+class Solution {
+public:
+    map<string,int> trees;
+    map<int,int> seen;
+    vector<TreeNode*> ans;
+    int start;
+    vector<TreeNode*> findDuplicateSubtrees(TreeNode* root) {
+        start=1;
+        lookup(root);
+        return ans;
+        
+        
+    }
+    int lookup(TreeNode* node)
+    {
+        if(node==nullptr) return 0;
+        string series=to_string(node->val)+","+to_string(lookup(node->left))+","+to_string(lookup(node->right));
+        if(trees.find(series)==trees.end())
+        {
+            start++;
+            trees[series]=start;
+        }
+        int uid=trees[series];
+        seen[uid]++;
+        if(seen[uid]==2)
+        {
+            ans.push_back(node);
+        }
+        return uid;
+        
+    }//lookup
+};
