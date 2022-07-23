@@ -1,0 +1,116 @@
+##########################################
+The solution in solution part: DFS + map
+##########################################
+class Solution {
+public:
+    map<int,TreeNode*> parents;
+    vector<int> ans;
+    vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
+        //find the parents
+        queue<TreeNode*> que;
+        que.push(root);
+        while(!que.empty())
+        {
+            TreeNode* cur=que.front();
+            que.pop();
+            if(cur->left!=nullptr)
+            {
+                parents[cur->left->val]=cur;
+                que.push(cur->left);
+            }
+            if(cur->right!=nullptr)
+            {
+                parents[cur->right->val]=cur;
+                que.push(cur->right);
+            }
+        }//while
+        findAns(target,nullptr,0,k);
+        return ans;       
+        
+    }
+    void findAns(TreeNode* node, TreeNode* from, int depth, int k)
+    {
+        if(node==nullptr) return;
+        if(depth==k)
+        {
+            ans.push_back(node->val);
+            return;
+        }
+        if(node->left!=from)
+        {
+            findAns(node->left,node,depth+1,k);
+        }
+        if(node->right!=from)
+        {
+            findAns(node->right,node,depth+1,k);
+        }
+        if(parents[node->val]!=from)
+        {
+            findAns(parents[node->val],node,depth+1,k);
+        }
+    }//findAns
+};
+
+
+
+#############################################
+The solution in the solution part: BFS + map
+#############################################
+class Solution {
+public:
+    map<int,TreeNode*> parents;
+    vector<int> ans;
+    vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
+        //find the parents
+        queue<TreeNode*> que;
+        que.push(root);
+        while(!que.empty())
+        {
+            TreeNode* cur=que.front();
+            que.pop();
+            if(cur->left!=nullptr)
+            {
+                parents[cur->left->val]=cur;
+                que.push(cur->left);
+            }
+            if(cur->right!=nullptr)
+            {
+                parents[cur->right->val]=cur;
+                que.push(cur->right);
+            }
+        }//while
+        
+        ///BFS
+        queue<pair<TreeNode*,int>> que2;
+        set<int> seen;
+        que2.push({target,0});
+        seen.insert(target->val);
+        while(!que2.empty())
+        {
+            auto it=que2.front();
+            que2.pop();
+            if(it.second==k)
+            {
+                ans.push_back(it.first->val);
+            }
+            if(it.first->left!=nullptr&&seen.find(it.first->left->val)==seen.end())
+            {
+                que2.push({it.first->left,it.second+1});
+                seen.insert(it.first->left->val);
+            }
+            if(it.first->right!=nullptr&&seen.find(it.first->right->val)==seen.end())
+            {
+                que2.push({it.first->right,it.second+1});
+                seen.insert(it.first->right->val);
+            }
+            if(parents[it.first->val]!=nullptr&&seen.find(parents[it.first->val]->val)==seen.end())
+            {
+                que2.push({parents[it.first->val],it.second+1});
+                seen.insert(parents[it.first->val]->val);
+            }
+            
+        }//while
+     
+        return ans;
+    }
+};
