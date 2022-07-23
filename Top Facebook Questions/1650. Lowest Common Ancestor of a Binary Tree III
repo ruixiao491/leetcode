@@ -1,0 +1,21 @@
+class Solution {
+public:
+    Node* lowestCommonAncestor(Node* p, Node * q) {
+        set<Node*> seen;
+        while(p!=nullptr)
+        {
+            seen.insert(p);
+            p=p->parent;
+        }
+        
+        while(q!=nullptr)
+        {
+            if(seen.find(q)!=seen.end())
+            {
+                return q;
+            }
+            q=q->parent;
+        }//while
+        return nullptr;
+    }
+};
