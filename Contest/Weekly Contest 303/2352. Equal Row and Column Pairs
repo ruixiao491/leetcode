@@ -1,0 +1,31 @@
+class Solution {
+public:
+    int equalPairs(vector<vector<int>>& grid) {
+        map<vector<int>,int> seen;
+        int n=grid.size();
+        if(n==1)
+        {
+            return 1;
+        }
+        int ans=0;
+        for(int i=0;i<n;i++)
+        {
+            seen[grid[i]]++;
+        }
+        
+        for(int i=0;i<n;i++)
+        {
+            vector<int> test;
+            for(int j=0;j<n;j++)
+            {
+                test.push_back(grid[j][i]);
+            }//for j
+            if(seen.find(test)!=seen.end())
+            {
+                ans+=seen[test];
+            }
+        }//for i
+        return ans;
+        
+    }
+};
