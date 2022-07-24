@@ -1,0 +1,30 @@
+class FoodRatings {
+public:
+    map<string,pair<string,int>> seen;
+    map<string,set<pair<int,string>>> score;
+    FoodRatings(vector<string>& foods, vector<string>& cuisines, vector<int>& ratings) {
+        int n=foods.size();
+        for(int i=0;i<n;i++)
+        {
+            seen.insert({foods[i],make_pair(cuisines[i],-ratings[i])});
+            score[cuisines[i]].insert({-ratings[i],foods[i]});
+                 
+        }//for i
+    }
+    
+    void changeRating(string food, int newRating) {
+        if(seen[food].second==-newRating) return; 
+        string type2=seen[food].first;
+        score[type2].erase({seen[food].second,food});
+        seen[food].second=-newRating;
+        score[type2].insert({seen[food].second,food});
+        
+        
+    }
+    
+    string highestRated(string cuisine) {
+        auto it=score[cuisine].begin();
+        return it->second;
+        
+    }
+};
