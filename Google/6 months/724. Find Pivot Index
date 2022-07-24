@@ -1,0 +1,61 @@
+///My solution: prefix sum
+class Solution {
+public:
+    int pivotIndex(vector<int>& nums) {
+        int n=nums.size();
+        vector<int> sum(n,0);
+        for(int i=0;i<n;i++)
+        {
+            if(i==0)
+            {
+                sum[i]=nums[i];
+            }
+            else
+            {
+                sum[i]=sum[i-1]+nums[i];
+            }
+        }//for i
+        
+        for(int i=0;i<n;i++)
+        {
+            int left=0;
+            if(i!=0)
+            {
+                left=sum[i-1];
+            }
+            int right=sum[n-1]-sum[i];
+            if(left==right)
+            {
+                return i;
+            }//if
+        }//for i
+        return -1;
+        
+    }
+};
+
+########################################################################
+The solution in the solution part: optimized the space complexity (o(1))
+########################################################################
+class Solution {
+public:
+    int pivotIndex(vector<int>& nums) {
+        int sum=0;
+        int left=0;
+        int n=nums.size();
+        for(int i=0;i<n;i++)
+        {
+            sum+=nums[i];
+        }
+        for(int i=0;i<n;i++)
+        {
+            if(left==sum-left-nums[i])
+            {
+                return i;
+            }
+            left+=nums[i];
+            
+        }//for i
+        return -1;
+    }
+};
