@@ -1,0 +1,38 @@
+class Solution {
+public:
+    long long countExcellentPairs(vector<int>& nums, int k) {
+        int n=nums.size();
+        long long ans=0;
+        set<int> seen;
+        vector<int> setbits;
+        for(int i=0;i<nums.size();i++)
+        {
+            if(seen.find(nums[i])==seen.end())
+            {
+                //std::cout<<nums[i]<<std::endl;
+                setbits.push_back(number(nums[i]));
+            }//if
+            seen.insert(nums[i]);
+        
+        }//for
+        sort(setbits.begin(),setbits.end());
+        n=setbits.size();
+        for(int i=0;i<n;i++)
+        {
+            auto it=lower_bound(setbits.begin(),setbits.end(),k-setbits[i]);
+            ans+=setbits.end()-it;
+        }//for i
+        return ans;
+        
+    }//countExcellent
+    int number(int a)
+    {
+        int ans=0;
+        while(a>0)
+        {
+            a&=a-1;
+            ans++;
+        }//while
+        return ans;
+    }//number
+};
