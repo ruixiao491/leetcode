@@ -1,0 +1,18 @@
+class Solution {
+public:
+    int ans=0;
+    int diameterOfBinaryTree(TreeNode* root) {
+        longestdepth(root);
+        return ans;
+        
+    }
+    int longestdepth(TreeNode* node)
+    {
+        if(node==nullptr) return 0;
+        int leftPath=longestdepth(node->left);
+        int rightPath=longestdepth(node->right);
+        ans=max(ans,leftPath+rightPath);
+        //std::cout<<node->val<<" "<<leftPath<<" "<<rightPath<<std::endl;
+        return max(leftPath,rightPath)+1;
+    }//depth
+};
