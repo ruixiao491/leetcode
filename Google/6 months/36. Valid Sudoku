@@ -1,0 +1,172 @@
+///My solution:
+class Solution {
+public:
+    bool isValidSudoku(vector<vector<char>>& board) {
+        //Rows and Cols
+        for(int i=0;i<9;i++)
+        {
+            set<int> Rows_seen;
+            set<int> Cols_seen;
+            for(int j=0;j<9;j++)
+            {
+                if(isdigit(board[i][j])&&Rows_seen.find(board[i][j])!=Rows_seen.end())
+                {
+                    return false;
+                }//if
+                if(isdigit(board[j][i])&&Cols_seen.find(board[j][i])!=Cols_seen.end())
+                {
+                    return false;
+                }
+                Rows_seen.insert(board[i][j]);
+                Cols_seen.insert(board[j][i]);             
+            }//for j            
+        }//for i
+        
+        for(int i=0;i<9;i=i+3)
+        {
+            for(int j=0;j<9;j=j+3)
+            {
+                set<int> box_seen;
+                for(int k=0;k<3;k++)
+                {
+                    if(isdigit(board[i+k][j])&&box_seen.find(board[i+k][j])!=box_seen.end())
+                    {
+                        return false;
+                    }
+                    if(isdigit(board[i+k][j+1])&&box_seen.find(board[i+k][j+1])!=box_seen.end())
+                    {
+                        return false;
+                    }
+                    if(isdigit(board[i+k][j+2])&&box_seen.find(board[i+k][j+2])!=box_seen.end())
+                    {
+                        return false;
+                    }
+                    
+                    box_seen.insert(board[i+k][j]);
+                    box_seen.insert(board[i+k][j+1]);
+                    box_seen.insert(board[i+k][j+2]);
+                }//for k
+                    
+            }//for j
+        }//for i
+        return true;        
+    }
+    
+};
+
+##################################################################################################
+The solution in the solution part: set (better optimized the box part, others are similar to mine)
+##################################################################################################
+class Solution {
+public:
+    bool isValidSudoku(vector<vector<char>>& board) {
+        vector<set<char>> Rows_seen(9);
+        vector<set<char>> Cols_seen(9);
+        vector<set<char>> Box_seen(9);
+        for(int i=0;i<9;i++)
+        {
+            for(int j=0;j<9;j++)
+            {
+                if(!isdigit(board[i][j])) continue;
+                char val=board[i][j];
+                if(Rows_seen[i].find(val)!=Rows_seen[i].end())
+                {
+                    return false;
+                }
+                Rows_seen[i].insert(val);
+                if(Cols_seen[j].find(val)!=Cols_seen[j].end())
+                {
+                    return false;
+                }
+                Cols_seen[j].insert(val);
+                int idx=(i/3)*3+(j/3);
+                if(Box_seen[idx].find(val)!=Box_seen[idx].end())
+                {
+                    return false;
+                }
+                Box_seen[idx].insert(val);
+                
+            }//for j
+        }//for i
+        return true;       
+    }
+};
+
+############################################################
+The solution in the solution part: vector of fixed length 9
+############################################################
+class Solution {
+public:
+    bool isValidSudoku(vector<vector<char>>& board) {
+        vector<vector<int>> Rows_seen(9,vector<int>(9,0));
+        vector<vector<int>> Cols_seen(9,vector<int>(9,0));
+        vector<vector<int>> Box_seen(9,vector<int>(9,0));
+        for(int i=0;i<9;i++)
+        {
+            for(int j=0;j<9;j++)
+            {
+                if(!isdigit(board[i][j])) continue;
+                int val=board[i][j]-'0'-1;
+                if(Rows_seen[i][val]==1)
+                {
+                    return false;
+                }
+                Rows_seen[i][val]=1;
+                if(Cols_seen[j][val]==1)
+                {
+                    return false;
+                }
+                Cols_seen[j][val]=1;
+                int idx=(i/3)*3+j/3;
+                if(Box_seen[idx][val]==1)
+                {
+                    return false;
+                }
+                Box_seen[idx][val]=1;
+                
+            }//for j
+        }//for i
+        return true;
+    }
+};
+
+########################################################################################################
+The solution in the solution part: Bitmask (better space complexity o(N), where, N is 9 in this problem
+########################################################################################################
+class Solution {
+public:
+    bool isValidSudoku(vector<vector<char>>& board) {
+        vector<int> Rows_seen(9,0);
+        vector<int> Cols_seen(9,0);
+        vector<int> Box_seen(9,0);
+        for(int i=0;i<9;i++)
+        {
+            for(int j=0;j<9;j++)
+            {
+                if(!isdigit(board[i][j])) continue;
+                int val=board[i][j]-'0'-1;
+                int pos=1<<val;
+                if((Rows_seen[i]&pos)>0)
+                {
+                    return false;
+                }
+                Rows_seen[i]|=pos;
+                if((Cols_seen[j]&pos)>0)
+                {
+                    return false;
+                }
+                Cols_seen[j]|=pos;
+                int idx=(i/3)*3+j/3;
+                if((Box_seen[idx]&pos)>0)
+                {
+                    return false;
+                }
+                Box_seen[idx]|=pos;
+                
+                
+            }//for j
+        }//for i
+        return true;
+        
+    }
+};
