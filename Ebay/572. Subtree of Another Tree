@@ -1,0 +1,61 @@
+////My solution: use the similar method of 572.
+class Solution {
+public:
+    string target="";
+    bool ans;
+    bool isSubtree(TreeNode* root, TreeNode* subRoot) {
+        ans=false;
+        target=collect_target(subRoot);
+        collect(root,target);
+        return ans;
+        
+        
+        
+    }
+    string collect(TreeNode* node,string target)
+    {
+        if(node==nullptr) return "#";
+        string series=to_string(node->val)+","+collect(node->left,target)+","+collect(node->right,target);
+        if(series==target)
+        {
+            ans=true;
+        }
+        return series;
+    }//string collect
+    
+    string collect_target(TreeNode* node)
+    {
+        if(node==nullptr) return "#";
+        string series=to_string(node->val)+","+collect_target(node->left)+","+collect_target(node->right);
+        return series;
+    }//string collect
+};
+
+
+######################################################
+The solution of others in the discussion (much better)
+######################################################
+class Solution {
+public:
+    bool isSubtree(TreeNode* root, TreeNode* subRoot) {
+        if(root==nullptr) return false;
+        if(identical(root, subRoot)) return true;
+        return isSubtree(root->left, subRoot)||isSubtree(root->right,subRoot);
+        
+    }
+    bool identical(TreeNode* r1, TreeNode* r2)
+    {
+        if(r1==nullptr&&r2==nullptr) return true;
+        if(r1==nullptr&&r2!=nullptr) return false;
+        if(r1!=nullptr&&r2==nullptr) return false;
+        bool left=identical(r1->left, r2->left);
+        bool right=identical(r1->right,r2->right);
+        if(left&&right&&r1->val==r2->val)
+        {
+            return true;
+        }
+        return false;
+        
+    }//identical
+        
+};
