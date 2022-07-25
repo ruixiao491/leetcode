@@ -1,0 +1,70 @@
+////Inspired by the hint:
+class Solution {
+public:
+    vector<vector<int>> candyCrush(vector<vector<int>>& board) {
+        int m=board.size();
+        int n=board[0].size();
+        while(checkcrush(board,m,n))
+        {
+            rebuild(board,m,n);
+        }//while
+        return board;
+        
+    }
+    bool checkcrush(vector<vector<int>>& board,int m, int n)
+    {
+        bool flag=false;
+        //check rows
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n-2;j++)
+            {
+                int v=abs(board[i][j]);
+                if(v!=0&&v==abs(board[i][j+1])&&v==abs(board[i][j+2]))
+                {
+                    board[i][j]=board[i][j+1]=board[i][j+2]=-v;
+                    flag=true;
+                }//if
+            }//for j
+        }//for i
+        ////check column
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<m-2;j++)
+            {
+                int v=abs(board[j][i]);
+                if(v!=0&&v==abs(board[j+1][i])&&v==abs(board[j+2][i]))
+                {
+                    board[j][i]=board[j+1][i]=board[j+2][i]=-v;
+                    flag=true;
+                }
+            }//for j
+        }//for i
+        return flag;
+    }//checkcrush
+    
+    void rebuild(vector<vector<int>>& board, int m, int n)
+    {
+        for(int i=0;i<n;i++)
+        {
+            int p1=m-1;
+            for(int j=m-1;j>=0;j--)
+            {
+                if(board[j][i]>0)
+                {
+                    board[p1][i]=board[j][i];
+                    p1--;
+                }//if
+            }//for
+            while(p1>=0)
+            {
+                board[p1][i]=0;
+                p1--;
+            }//while
+        }//for i
+    }//rebuild
+};
+
+
+The hint: Carefully perform the "crush" and "gravity" steps. In the crush step, flag each candy that should be removed, then go through and crush each flagged candy. In the gravity step, collect the candy in each column and then rewrite the column appropriately. Do these steps repeatedly until there's no work left to do.
+
