@@ -1,0 +1,33 @@
+///My solution: to_string
+class Solution {
+public:
+    int findNumbers(vector<int>& nums) {
+        int ans=0;
+        for(int i=0;i<nums.size();i++)
+        {
+            string s=to_string(nums[i]);
+            if(s.size()%2==0)
+            {
+                ans++;
+            }
+        }//fori
+        return ans;
+    }
+};
+
+
+########################################
+The solution in the solution part: log10
+########################################
+class Solution {
+public:
+    int findNumbers(vector<int>& nums) {
+        int ans = 0;
+        for (int num: nums) {
+            if ((int)(log10(num) + 1) % 2 == 0) {
+                ++ans;
+            }
+        }
+        return ans;
+    }
+};
