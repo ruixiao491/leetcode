@@ -1,0 +1,91 @@
+////My solution
+class Solution {
+public:
+    bool canBeIncreasing(vector<int>& nums) {
+        if(nums.size()==2)
+        {
+            return true;
+        }
+        int val=-1;
+        for(int i=0;i<nums.size();i++)
+        {
+            if(i>0&&nums[i]<=nums[i-1])
+            {
+                if(i==nums.size()-1) return true;
+                if((i-2>=0&&nums[i]>nums[i-2])||i-2<0)
+                {
+                    val=nums[i];
+                }
+                else
+                {
+                    val=nums[i-1];
+                }
+                
+                bool right=is_sorted(nums.begin()+i+1,nums.end());
+                if(right==0)
+                {
+                    return false;
+                }
+                else
+                {
+                    if(nums[i+1]<=val)
+                    {
+                        return false;
+                    }
+                    break;     
+                }//else
+            }//if
+        }//for i
+        return true;
+        
+    }
+};
+
+##################################################
+The solution in the solution part: similar to mine
+##################################################
+class Solution {
+public:
+    bool canBeIncreasing(vector<int>& nums) {
+        if(nums.size()==2)
+        {
+            return true;
+        }
+        int val=-1;
+        for(int i=0;i<nums.size();i++)
+        {
+            if(i>0&&nums[i]<=nums[i-1])
+            {
+                if(i==nums.size()-1) return true;
+                if((i-2>=0&&nums[i]>nums[i-2])||i-2<0)
+                {
+                    val=nums[i];
+                }
+                else
+                {
+                    val=nums[i-1];
+                }
+                return check(nums,i+1,val);
+            }//if
+            
+        }//for i
+        return true;
+        
+    }//canbeIncreasing
+    bool check(vector<int>& nums,int index,int prev)
+    {
+        for(int i=index;i<nums.size();i++)
+        {
+            if(nums[i]<=prev)
+            {
+                return false;
+            }
+            else
+            {
+                prev=nums[i];
+            }
+        }//for i
+        return true;
+        
+    }//check
+};
