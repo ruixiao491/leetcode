@@ -1,0 +1,77 @@
+class Solution {
+public:
+    string alienOrder(vector<string>& words) {
+        set<char> seen;
+        string ans="";
+        //get all the unique letters
+        for(int i=0;i<words.size();i++)
+        {
+            for(int j=0;j<words[i].size();j++)
+            {
+                seen.insert(words[i][j]);
+            }//for j
+        }//for i 
+        vector<vector<char>> edges(26);
+        map<char,int> degree;
+        for(int i=0;i<words.size()-1;i++)
+        {
+            if(checkprefix(words[i],words[i+1])) continue;
+            if(checkprefix(words[i+1],words[i])) return "";
+            auto it =firstdiff(words[i],words[i+1]);
+            edges[it.first-'a'].push_back(it.second);
+            degree[it.second]++;
+        }//for i
+        queue<char> que;
+        for(int i=0;i<26;i++)
+        {
+            if(seen.find(i+'a')!=seen.end()&&degree.find(i+'a')==degree.end())
+            {
+                que.push(i+'a');
+            }//if
+        }//for i
+        
+        while(!que.empty())
+        {
+            //std::cout<<que.front()<<std::endl;
+            ans.push_back(que.front());
+            int index=que.front()-'a';
+            que.pop();
+            //std::cout<<index<<" "<<edges[index].size()<<std::endl;
+            for(int i=0;i<edges[index].size();i++)
+            {
+                degree[edges[index][i]]--;
+                if(degree[edges[index][i]]==0)
+                {
+                    que.push(edges[index][i]);
+                }//if
+            }//for i
+        }//while
+        if(ans.size()<seen.size())
+        {
+            return "";
+        }
+        return ans;
+        
+        
+    }
+    bool checkprefix(string a, string b)
+    {
+        ///a's size < b's size, since a is in front of b
+        if(a.size()>b.size()) return false;
+        if(b.substr(0,a.size())==a)
+        {
+            return true;
+        }
+        return false;
+    }//checkprefix
+    pair<char,char> firstdiff(string a, string b)
+    {
+        int start=0;
+        while(start<a.size()&&start<b.size()&&a[start]==b[start])
+        {
+            start++;
+        }//while
+        return {a[start],b[start]};
+    }//firstdiff
+    
+};
