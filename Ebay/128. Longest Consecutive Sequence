@@ -1,0 +1,37 @@
+////set
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        if(nums.size()==0)
+        {
+            return 0;
+        }
+        set<int> seen;
+        for(int i=0;i<nums.size();i++)
+        {
+            seen.insert(nums[i]);
+        }
+        int ans=0;
+        int length=1;
+        auto it=seen.begin();
+        int num=*it;
+        it++;
+        while(it!=seen.end())
+        {
+            //std::cout<<*it<<std::endl;
+            if(*it==num+1)
+            {
+                length++;
+            }
+            else
+            {
+                ans=max(ans,length);
+                length=1;
+            }
+            num=*it;
+            it++; 
+        }//while
+        ans=max(ans,length);
+        return ans;
+    }
+};
