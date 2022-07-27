@@ -1,0 +1,233 @@
+///My solution: follow by the rules
+class Solution {
+public:
+    bool isNumber(string s) {
+        if(s.size()==1&&s[0]=='.') return false;
+        int start=0;
+        if(s[0]=='+'||s[0]=='-')
+        {
+            start=1;
+            if(start==s.size()) return false;
+        }
+        bool e1=false;
+        int pos_e=0;
+        if(s.find('e')<s.size()||s.find('E')<s.size())
+        {
+            e1=true;
+            pos_e=min(s.find('e'),s.find('E'));
+            if(pos_e==start||pos_e==s.size()-1) return false;
+        }
+        if(start==s.size()-1&&s[1]=='.') return false;
+        int count=0;
+        //std::cout<<"test"<<std::endl;
+        for(int i=start;i<s.size();i++)
+        {
+            if(s[i]=='+'||s[i]=='-')
+            {
+                if(!e1||i==s.size()-1)
+                {
+                   return false; 
+                }
+                else
+                {
+                    if(i!=pos_e+1)
+                    {
+                        return false;
+                    }
+                }
+                
+            }
+            if(isalpha(s[i]))
+            {
+                if(!e1)
+                {
+                    return false; 
+                }
+                else
+                {
+                    if(tolower(s[i])!='e')
+                    {
+                        return false;
+                    }
+                }
+            }
+            if(e1&&i>pos_e&&(s[i]=='e'||s[i]=='E'))
+            {
+                return false;
+            }
+            if(s[i]=='.')
+            {
+                count++;
+                if(count>1)
+                {
+                    return false;
+                }
+                if(e1&&(i>pos_e||pos_e==start+1))
+                {
+                    return false;
+                }
+            }   
+        }//fori
+        return true;
+        
+    }//isNumber
+};
+
+
+#######################################################################
+The solution in the solution part: follow the rules (better than mine)
+#######################################################################
+class Solution {
+public:
+    bool isNumber(string s) {
+        bool seenDigit=false;
+        bool seenExponent=false;
+        bool seenDot=false;
+        
+        for(int i=0;i<s.size();i++)
+        {
+            char curr=s[i];
+            if(isdigit(curr))
+            {
+                seenDigit=true;
+            }
+            else if(curr=='+'||curr=='-')
+            {
+                if(i>0&&s[i-1]!='e'&&s[i-1]!='E')
+                {
+                    return false;
+                }
+            }
+            else if(curr=='e'||curr=='E')
+            {
+                if(seenExponent||!seenDigit)
+                {
+                    return false;
+                }
+                seenExponent=true;
+                seenDigit=false;
+            }
+            else if(curr=='.')
+            {
+                if(seenDot||seenExponent)
+                {
+                    return false;
+                }
+                seenDot=true;
+            }
+            else
+            {
+                return false;
+            }
+        }//for i
+        return seenDigit;
+    }
+};
+
+
+#######################################################################
+The solution in the solution part: Deterministic Finite Automaton (DFA)
+#######################################################################
+
+class Solution {
+public:
+    enum State {
+        STATE_INITIAL,
+        STATE_INT_SIGN,
+        STATE_INTEGER,
+        STATE_POINT,
+        STATE_POINT_WITHOUT_INT,
+        STATE_FRACTION,
+        STATE_EXP,
+        STATE_EXP_SIGN,
+        STATE_EXP_NUMBER
+    };
+
+    enum CharType {
+        CHAR_NUMBER,
+        CHAR_EXP,
+        CHAR_POINT,
+        CHAR_SIGN,
+        CHAR_ILLEGAL
+    };
+
+    CharType toCharType(char ch) {
+        if (ch >= '0' && ch <= '9') {
+            return CHAR_NUMBER;
+        } else if (ch == 'e' || ch == 'E') {
+            return CHAR_EXP;
+        } else if (ch == '.') {
+            return CHAR_POINT;
+        } else if (ch == '+' || ch == '-') {
+            return CHAR_SIGN;
+        } 
+        else {
+            return CHAR_ILLEGAL;
+        }
+    }
+
+    bool isNumber(string s) {
+        unordered_map<State, unordered_map<CharType, State>> transfer{
+            {STATE_INITIAL, {
+                    {CHAR_NUMBER, STATE_INTEGER},
+                    {CHAR_POINT, STATE_POINT_WITHOUT_INT},
+                    {CHAR_SIGN, STATE_INT_SIGN}
+                }
+            }, 
+            {STATE_INT_SIGN, {
+                    {CHAR_NUMBER, STATE_INTEGER},
+                    {CHAR_POINT, STATE_POINT_WITHOUT_INT}
+                }
+            }, 
+            {STATE_INTEGER, {
+                    {CHAR_NUMBER, STATE_INTEGER},
+                    {CHAR_EXP, STATE_EXP},
+                    {CHAR_POINT, STATE_POINT}
+                }
+            }, 
+            {STATE_POINT, {
+                    {CHAR_NUMBER, STATE_FRACTION},
+                    {CHAR_EXP, STATE_EXP}
+                }
+            }, 
+            {STATE_POINT_WITHOUT_INT, {
+                    {CHAR_NUMBER, STATE_FRACTION}
+                }
+            }, 
+            {STATE_FRACTION,
+                {
+                    {CHAR_NUMBER, STATE_FRACTION},
+                    {CHAR_EXP, STATE_EXP}
+                }
+            }, 
+            {STATE_EXP,
+                {
+                    {CHAR_NUMBER, STATE_EXP_NUMBER},
+                    {CHAR_SIGN, STATE_EXP_SIGN}
+                }
+            }, 
+            {STATE_EXP_SIGN, {
+                    {CHAR_NUMBER, STATE_EXP_NUMBER}
+                }
+            }, 
+            {STATE_EXP_NUMBER, {
+                    {CHAR_NUMBER, STATE_EXP_NUMBER}
+                }
+            }
+        };
+
+        int len = s.length();
+        State st = STATE_INITIAL;
+
+        for (int i = 0; i < len; i++) {
+            CharType typ = toCharType(s[i]);
+            if (transfer[st].find(typ) == transfer[st].end()) {
+                return false;
+            } else {
+                st = transfer[st][typ];
+            }
+        }
+        return st == STATE_INTEGER || st == STATE_POINT || st == STATE_FRACTION || st == STATE_EXP_NUMBER;
+        //return st == STATE_INTEGER || st == STATE_POINT || st == STATE_FRACTION || st == STATE_EXP_NUMBER || st == STATE_END;
+    }
+};
