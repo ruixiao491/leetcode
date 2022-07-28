@@ -1,0 +1,49 @@
+##############################################
+The solution in the solution part: backtrack
+##############################################
+class Solution {
+public:
+    vector<string> ans;
+    vector<string> addOperators(string num, int target) {
+        int n=num.size();
+        string expression="";
+        backtrack(expression,0, num,target, n, 0,0);
+        return ans;
+        
+    }//addOperators
+    void backtrack(string expression, int index, string num, int target,int length, long long res, long long prev)
+    {
+        if(index==length)
+        {
+            if(res==target)
+            {
+                ans.push_back(expression);                
+            }
+            return;
+        }
+        int symbol_index=expression.size();
+        if(index>0) expression.push_back('s');
+        long long val=0;
+        for(int i=index;i<length&&(i==index||num[index]!='0');i++)
+        {
+            val=val*10+num[i]-'0';
+            expression.push_back(num[i]);
+            if(index==0)
+            {
+                backtrack(expression, i+1,num,target,length,val,val);
+            }
+            else
+            {
+                expression[symbol_index]='+';
+                backtrack(expression,i+1,num,target,length,res+val,val);
+                expression[symbol_index]='-';
+                backtrack(expression,i+1,num,target,length,res-val,-val);
+                expression[symbol_index]='*';
+                backtrack(expression,i+1,num,target,length,res-prev+prev*val,prev*val);
+                
+            }//else
+        }//for i
+        expression.resize(symbol_index);
+        
+    }//backtrack    
+};
