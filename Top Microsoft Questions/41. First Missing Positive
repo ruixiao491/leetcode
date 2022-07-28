@@ -1,0 +1,46 @@
+class Solution {
+public:
+    int firstMissingPositive(vector<int>& nums) {
+        bool findone=false;
+        int n=nums.size();
+        for(int i=0;i<nums.size();i++)
+        {
+            if(nums[i]==1)
+            {
+                findone=true;
+            }
+            if(nums[i]<0||nums[i]==0)
+            {
+                nums[i]=1;
+            }
+            if(nums[i]>n)
+            {
+                nums[i]=1;
+            }
+        }//for i
+        if(!findone)
+        {
+            return 1;
+        }
+        for(int i=0;i<nums.size();i++)
+        {
+            int index=abs(nums[i])-1;
+            if(nums[index]>0)
+            {
+                nums[index]=-nums[index];
+            }//if
+        }//for i
+        
+        for(int i=0;i<nums.size();i++)
+        {
+            if(nums[i]>0)
+            {
+                std::cout<<"test"<<std::endl;
+                return i+1;
+            }
+        }//for
+        return nums.size()+1;
+
+        
+    }
+};
