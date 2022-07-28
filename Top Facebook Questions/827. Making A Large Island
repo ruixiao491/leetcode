@@ -1,0 +1,90 @@
+///Inspired by the solution in the solution part: Component size: BFS. Time complexity and space complexity are both o(n2)
+class Solution {
+public:
+    vector<vector<int>> dir={{1,0},{-1,0},{0,1},{0,-1}};
+    vector<int> area;
+    int largestIsland(vector<vector<int>>& grid) {
+        int n=grid.size();
+        area=vector<int>(n*n+2,0);
+        count(grid);
+        int ans=0;
+        for(int i=0;i<area.size();i++)
+        {
+            ans=max(ans,area[i]);
+        }
+        std::cout<<ans<<std::endl;
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(grid[i][j]==0)
+                {
+                    set<int> seen;
+                    for(int k=0;k<4;k++)
+                    {
+                        int new_row=i+dir[k][0];
+                        int new_col=j+dir[k][1];
+                        if(new_row>=0&&new_row<n&&new_col>=0&&new_col<n&&grid[new_row][new_col]>1)
+                        {
+                            seen.insert(grid[new_row][new_col]);
+                        }//if
+                    }//for k
+                    int new_area=1;
+                    auto it=seen.begin();
+                    while(it!=seen.end())
+                    {
+                        new_area+=area[*it];
+                        it++;
+                    }//while
+                    ans=max(ans,new_area);
+                }//if grid[i][j]==0               
+            }//for j
+        }//for i
+        return ans;
+    }//largestIsland
+
+
+    
+    void count(vector<vector<int>>& grid)
+    {
+        int num=0;
+        int n=grid.size();
+        int index=2;
+        queue<pair<int,int>> que;
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(grid[i][j]!=1) continue;
+                que.push({i,j});
+                grid[i][j]=index;
+                num=0;
+                while(!que.empty())
+                {
+                    auto it=que.front();
+                    que.pop();
+                    num++;
+                    int row=it.first;
+                    int col=it.second;
+                    for(int k=0;k<4;k++)
+                    {
+                        int new_row=row+dir[k][0];
+                        int new_col=col+dir[k][1];
+                        if(new_row>=0&&new_row<n&&new_col>=0&&new_col<n&&grid[new_row][new_col]==1)
+                        {
+                            que.push({new_row,new_col});
+                            grid[new_row][new_col]=index;
+                            
+                        }//if
+                    }//for k       
+                }//while
+                //std::cout<<index<<" "<<num<<std::endl;
+                area[index]=num;
+                index++;        
+            }//for j
+        }//for i
+    }//count
+    
+    
+};
+
