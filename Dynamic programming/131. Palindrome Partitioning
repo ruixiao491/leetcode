@@ -1,0 +1,132 @@
+////Backtrack + 2 pointers
+class Solution {
+public:
+    vector<vector<string>> ans;
+    vector<string> test;
+    vector<vector<string>> partition(string s) {
+        backtrack(s,0);
+        return ans;
+        
+    }
+    bool check(string s)
+    {
+        int right=s.size()-1;
+        int left=0;
+        while(left<right)
+        {
+            if(s[left]!=s[right])
+            {
+                return false;
+            }
+            left++;
+            right--;     
+        }
+        return true;
+    }//check
+    
+    void backtrack(string s, int index)
+    {
+        if(index==s.size())
+        {
+            ans.push_back(test);
+            return;
+        }
+        for(int i=index;i<s.size();i++)
+        {
+            string part=s.substr(index,i-index+1);
+            if(check(part))
+            {
+                test.push_back(part);
+                backtrack(s,i+1);
+                test.pop_back();
+            }//if
+        }//for
+    }//backtrack
+};
+
+##################################################################
+The solution in the solution part: backtrack + dynamic programming
+time complexity is o(n*2^n), space complexity is o(n2)
+##################################################################
+class Solution {
+private:
+    vector<vector<int>> f;
+    vector<vector<string>> ret;
+    vector<string> ans;
+    int n;
+
+public:
+    void dfs(const string& s, int i) {
+        if (i == n) {
+            ret.push_back(ans);
+            return;
+        }
+        for (int j = i; j < n; ++j) {
+            if (f[i][j]) {
+                ans.push_back(s.substr(i, j - i + 1));
+                dfs(s, j + 1);
+                ans.pop_back();
+            }
+        }
+    }
+
+    vector<vector<string>> partition(string s) {
+        n = s.size();
+        f.assign(n, vector<int>(n, true));
+
+        for (int i = n - 1; i >= 0; --i) {
+            for (int j = i + 1; j < n; ++j) {
+                f[i][j] = (s[i] == s[j]) && f[i + 1][j - 1];
+            }
+        }
+
+        dfs(s, 0);
+        return ret;
+    }
+};
+
+####################################################################################################
+The solution in the solution part: Backtrack + memorizaiton (to me: it is same as the above method)
+####################################################################################################
+class Solution {
+private:
+    vector<vector<int>> f;
+    vector<vector<string>> ret;
+    vector<string> ans;
+    int n;
+
+public:
+    void dfs(const string& s, int i) {
+        if (i == n) {
+            ret.push_back(ans);
+            return;
+        }
+        for (int j = i; j < n; ++j) {
+            if (isPalindrome(s, i, j) == 1) {
+                ans.push_back(s.substr(i, j - i + 1));
+                dfs(s, j + 1);
+                ans.pop_back();
+            }
+        }
+    }
+
+    // 记忆化搜索中，f[i][j] = 0 表示未搜索，1 表示是回文串，-1 表示不是回文串
+    int isPalindrome(const string& s, int i, int j) {
+        if (f[i][j]) {
+            return f[i][j];
+        }
+        if (i >= j) {
+            return f[i][j] = 1;
+        }
+        return f[i][j] = (s[i] == s[j] ? isPalindrome(s, i + 1, j - 1) : -1);
+    }
+
+    vector<vector<string>> partition(string s) {
+        n = s.size();
+        f.assign(n, vector<int>(n));
+
+        dfs(s, 0);
+        return ret;
+    }
+};
+
