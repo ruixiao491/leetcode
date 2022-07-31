@@ -1,0 +1,135 @@
+///My solution: BFS
+class Solution {
+public:
+    int closestMeetingNode(vector<int>& edges, int node1, int node2) {
+        if(node1==node2)
+        {
+            return node1;
+        }
+        queue<int>que1;
+        queue<int>que2;
+        que1.push(node1);
+        que2.push(node2);
+        set<int> visit1;
+        set<int> visit2;
+        visit1.insert(node1);
+        visit2.insert(node2);
+        bool flag=false;
+        int ans=INT_MAX;
+        int cur1=0;
+        int cur2=0;
+        while(!que1.empty()&&!que2.empty())
+        {
+            cur1=que1.front();
+            que1.pop();
+            cur2=que2.front();
+            que2.pop();
+            //std::cout<<cur1<<" "<<cur2<<" "<<ans<<std::endl;
+            if(edges[cur1]>=0&&visit2.find(edges[cur1])==visit2.end()&&visit1.find(edges[cur1])==visit1.end())
+            {
+                //std:cout<<edges[cur1]<<std::endl;
+                que1.push(edges[cur1]);
+                visit1.insert(edges[cur1]);
+            }
+            else if(edges[cur1]>=0&&visit2.find(edges[cur1])!=visit2.end())
+            {
+                flag=1;
+                ans=min(ans,edges[cur1]);
+            }
+            if(edges[cur2]>=0&&visit1.find(edges[cur2])==visit1.end()&&visit2.find(edges[cur2])==visit2.end())
+            {
+                que2.push(edges[cur2]);
+                visit2.insert(edges[cur2]);
+            }
+            else if(edges[cur2]>=0&&visit1.find(edges[cur2])!=visit1.end())
+            {
+                flag=1;
+                ans=min(ans,edges[cur2]);
+            }
+            if(flag==1)
+            {
+                break;
+            }        
+        }//while
+        std::cout<<cur1<<" "<<cur2<<" "<<que1.size()<<" "<<que2.size()<<" "<<ans<<std::endl;
+        if(ans==INT_MAX)
+        {
+            while(!que1.empty())
+            {
+               cur1=que1.front();
+               que1.pop();
+               if(edges[cur1]>=0&&visit2.find(edges[cur1])==visit2.end()&&visit1.find(edges[cur1])==visit1.end())
+               {
+                //std:cout<<edges[cur1]<<std::endl;
+                que1.push(edges[cur1]);
+                visit1.insert(edges[cur1]);
+               }
+                else if(edges[cur1]>=0&&visit2.find(edges[cur1])!=visit2.end())
+                {
+                ans=min(ans,edges[cur1]);
+                    return ans;
+                    
+                }
+                
+            }
+            while(!que2.empty())
+            {
+               cur2=que2.front();
+               if(cur2==cur1) return cur1;
+               que2.pop();
+                if(edges[cur2]>=0&&visit1.find(edges[cur2])==visit1.end()&&visit2.find(edges[cur2])==visit2.end())
+            {
+                que2.push(edges[cur2]);
+                visit2.insert(edges[cur2]);
+            }
+            else if(edges[cur2]>=0&&visit1.find(edges[cur2])!=visit1.end())
+            {
+                ans=min(ans,edges[cur2]);
+                return ans;
+            }
+                    
+            }
+            return -1;        
+        }//if
+        
+        return ans;
+        
+    }
+};
+
+
+
+#############################################
+The solution of others in the discussion: BFS
+#############################################
+class Solution {
+public:
+void bfs(int src, vector<int> &dist,vector<int>& edge,int n){
+    queue<int> q;
+    q.push(src);
+    dist[src]=0;
+    vector<bool> vis(n);
+    vis[src]=true;
+    while(q.size()>0){
+        auto p= q.front(); q.pop();
+        if(edge[p]!=-1 and !vis[edge[p]]){
+            q.push(edge[p]);  
+            dist[edge[p]]= dist[p]+1; 
+            vis[edge[p]]=true;
+        }
+    }
+}
+
+int closestMeetingNode(vector<int>& e, int n1, int n2) {
+    int n= e.size();
+    vector<int> A(n,INT_MAX), B(n,INT_MAX);
+    bfs(n1,A,e,n);   
+    bfs(n2,B,e,n);
+    int res= INT_MAX, node=-1;
+    for(int i=0;i<n;i++){
+        if(A[i]==INT_MAX or B[i]==INT_MAX) continue;
+        if(res>max(A[i],B[i])) node=i,res= max(A[i],B[i]);
+    }
+    return node;
+}
+};
