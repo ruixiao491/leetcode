@@ -1,0 +1,45 @@
+#######################################################
+The solution in the solution part: dynamic programming
+#######################################################
+class Solution {
+public:
+    vector<vector<int>> f;
+    int minCut(string s) {
+        int n=s.size();
+        f=vector(n,vector(n,1));
+        vector<int> dp(n,INT_MAX);
+        for(int i=n-1;i>=0;i--)
+        {
+            for(int j=i+1;j<n;j++)
+            {
+                f[i][j]=(s[i]==s[j])&&f[i+1][j-1];
+            }
+        }//for i
+        
+        dp[0]=0;
+        for(int i=1;i<n;i++)
+        {
+            for(int j=0;j<i;j++)
+            {
+                if(f[0][i]==1)
+                {
+                    dp[i]=0;
+                }
+                else
+                {
+                    if(f[j+1][i]==1)
+                    {
+                        dp[i]=min(dp[i],dp[j]+1);
+                    }
+                    
+                }
+                
+            }//for j
+            //std::cout<<i<<" "<<dp[i]<<std::endl;
+        }//for i
+        return dp[n-1];
+        
+        
+    }
+    
+};
