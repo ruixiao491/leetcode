@@ -1,0 +1,43 @@
+######################################################
+The solution in the solution part: dynamic programming
+######################################################
+class Solution {
+public:
+    map<int,vector<string>> ans;
+    set<string> seen;  
+    vector<string> wordBreak(string s, vector<string>& wordDict) { 
+        int n=wordDict.size();
+        for(int i=0;i<n;i++)
+        {
+            seen.insert(wordDict[i]);
+        }//for i
+        backtrack(s,0);
+        return ans[0];       
+        
+    }//wordBreak
+    void backtrack(string s, int index)
+    {
+        if(!ans.count(index))
+        {
+            if(index==s.size())
+            {
+                ans[index]={""};
+                return;
+            }
+            ans[index]={};
+            for(int i=index+1;i<=s.size();i++)
+            {
+                string word=s.substr(index,i-index);
+                if(seen.find(word)!=seen.end())
+                {
+                    backtrack(s,i);
+                    for(int j=0;j<ans[i].size();j++)
+                    {
+                        ans[index].push_back(ans[i][j].empty()? word: word+" "+ans[i][j]);
+                    }//for i
+                }//if
+            }//for i
+        }//if
+    }//backtrack
+    
+};
