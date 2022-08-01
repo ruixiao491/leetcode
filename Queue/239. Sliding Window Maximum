@@ -1,0 +1,91 @@
+###########################################################################
+The solution in the solution part: priority queue, time complexity o(nlogn)
+###########################################################################
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        vector<int> ans;
+        int n=nums.size();
+        priority_queue<pair<int,int>> que;
+        for(int i=0;i<k;i++)
+        {
+            que.push({nums[i],i});
+        }
+        ans.push_back(que.top().first);
+        for(int i=k;i<n;i++)
+        {
+            que.push({nums[i],i});
+            while(que.top().second<=i-k)
+            {
+                que.pop();
+            }//while
+            ans.push_back(que.top().first);
+        }
+        
+        return ans;
+    }
+};
+
+##############################################################
+The solution in the solution part: deque, time complexity o(n)
+##############################################################
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        int n = nums.size();
+        deque<int> q;
+        for (int i = 0; i < k; ++i) {
+            while (!q.empty() && nums[i] >= nums[q.back()]) {
+                q.pop_back();
+            }
+            q.push_back(i);
+        }
+
+        vector<int> ans = {nums[q.front()]};
+        for (int i = k; i < n; ++i) {
+            while (!q.empty() && nums[i] >= nums[q.back()]) {
+                q.pop_back();
+            }
+            q.push_back(i);
+            while (q.front() <= i - k) {
+                q.pop_front();
+            }
+            ans.push_back(nums[q.front()]);
+        }
+        return ans;
+    }
+};
+
+######################################################
+The solution in the solution part: dynamic programming
+######################################################
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        int n = nums.size();
+        vector<int> prefixMax(n), suffixMax(n);
+        for (int i = 0; i < n; ++i) {
+            if (i % k == 0) {
+                prefixMax[i] = nums[i];
+            }
+            else {
+                prefixMax[i] = max(prefixMax[i - 1], nums[i]);
+            }
+        }
+        for (int i = n - 1; i >= 0; --i) {
+            if (i == n - 1 || (i + 1) % k == 0) {
+                suffixMax[i] = nums[i];
+            }
+            else {
+                suffixMax[i] = max(suffixMax[i + 1], nums[i]);
+            }
+        }
+
+        vector<int> ans;
+        for (int i = 0; i <= n - k; ++i) {
+            ans.push_back(max(suffixMax[i], prefixMax[i + k - 1]));
+        }
+        return ans;
+    }
+};
+
