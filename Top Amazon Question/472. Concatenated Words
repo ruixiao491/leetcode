@@ -1,0 +1,184 @@
+//My solution: DP
+class Solution {
+public:
+    set<string> seen;
+    vector<string> findAllConcatenatedWordsInADict(vector<string>& words) {
+        int minlength=INT_MAX;
+        vector<string> ans;
+        if(words.size()<=2)
+        {
+            return ans;
+        }
+        for(int i=0;i<words.size();i++)
+        {
+            seen.insert(words[i]);
+            minlength=min(minlength,(int)words[i].size());
+        }//for i
+        
+        for(int i=0;i<words.size();i++)
+        {
+            if((int)words[i].size()==minlength) continue;
+            if(check(words[i]))
+            {
+                ans.push_back(words[i]);
+            }
+        }//for i
+        return ans;
+        
+        
+    }//findAllConcatenated
+    
+    bool check(string s)
+    {
+        int n=s.size();
+        vector<int> dp(n+1,0);
+        seen.erase(s);
+        dp[0]=1;
+        for(int i=1;i<=n;i++)
+        {
+            for(int j=0;j<i;j++)
+            {
+                if(dp[j]&&seen.find(s.substr(j,i-j))!=seen.end())
+                {
+                    dp[i]=1;
+                    break;
+                }//if
+            }//for j
+        }//for i
+        seen.insert(s);
+        return dp[n];
+    }//check   
+    
+};
+
+##########################################################################
+The solution of others: DP, similar like mine, check function is different
+##########################################################################
+class Solution {
+public:
+    set<string> seen;
+    vector<string> findAllConcatenatedWordsInADict(vector<string>& words) {
+        int minlength=INT_MAX;
+        vector<string> ans;
+        if(words.size()<=2)
+        {
+            return ans;
+        }
+        for(int i=0;i<words.size();i++)
+        {
+            seen.insert(words[i]);
+            minlength=min(minlength,(int)words[i].size());
+        }//for i
+        
+        for(int i=0;i<words.size();i++)
+        {
+            if((int)words[i].size()==minlength) continue;
+            if(check(words[i]))
+            {
+                ans.push_back(words[i]);
+            }
+        }//for i
+        return ans;
+        
+        
+    }//findAllConcatenated
+    bool check(string s)
+    {
+        int n=s.size();
+        vector<int> dp(n+1,-1);
+        dp[0]=0;
+        for(int i=1;i<=n;i++)
+        {
+            //if(dp[i]=-1) continue;
+            for(int j=0;j<i;j++)
+            {
+                if(dp[j]!=-1&&seen.find(s.substr(j,i-j))!=seen.end())
+                {
+                    dp[i]=max(dp[i],dp[j]+1);
+                }///if
+            }//for j
+        }//for i
+        if(dp[n]>1)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+        
+    }//check
+};
+*/
+
+struct Trie {
+    bool isEnd;
+    vector<Trie *> children;
+    Trie() {
+        this->children = vector<Trie *>(26, nullptr);
+        this->isEnd = false;
+    }
+};
+
+class Solution {
+public:
+    Trie * trie = new Trie();
+
+    vector<string> findAllConcatenatedWordsInADict(vector<string>& words) {
+        vector<string> ans;
+        sort(words.begin(), words.end(), [&](const string & a, const string & b){
+            return a.size() < b.size(); 
+        });
+        for (int i = 0; i < words.size(); i++) {
+            string word = words[i];
+            if (word.size() == 0) {
+                continue;
+            }
+            vector<int> visited(word.size(), 0);
+            if (dfs(word, 0, visited)) {
+                ans.emplace_back(word);
+            } else {
+                insert(word);
+            }
+        }
+        return ans;
+    }
+
+    bool dfs(const string & word, int start, vector<int> & visited) {
+        if (word.size() == start) {
+            return true;
+        }
+        if (visited[start]) {
+            return false;
+        }
+        visited[start] = true;
+        Trie * node = trie;
+        for (int i = start; i < word.size(); i++) {
+            char ch = word[i];
+            int index = ch - 'a';
+            node = node->children[index];
+            if (node == nullptr) {
+                return false;
+            }
+            if (node->isEnd) {
+                if (dfs(word, i + 1, visited)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    void insert(const string & word) {
+        Trie * node = trie;
+        for (int i = 0; i < word.size(); i++) {
+            char ch = word[i];
+            int index = ch - 'a';
+            if (node->children[index] == nullptr) {
+                node->children[index] = new Trie();
+            }
+            node = node->children[index];
+        }
+        node->isEnd = true;
+    }
+};
