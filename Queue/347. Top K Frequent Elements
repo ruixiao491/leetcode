@@ -1,0 +1,29 @@
+//My solution:
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        vector<int> ans;
+        map<int,int> seen;
+        for(int i=0;i<nums.size();i++)
+        {
+            seen[nums[i]]++;
+        }//for
+        
+        multimap<int,int> sorted_seen;
+        auto it=seen.begin();
+        while(it!=seen.end())
+        {
+            sorted_seen.insert({it->second,it->first});
+            it++;
+        }//while
+        auto it2=sorted_seen.end();
+        while(k>0)
+        {
+            it2--;
+            ans.push_back(it2->second);
+            k--;
+        }//while
+        return ans;
+        
+    }
+};
