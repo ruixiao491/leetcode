@@ -1,0 +1,55 @@
+#######################################################
+The solution of others: pre-prefix sum + monotone stack: https://leetcode.cn/problems/sum-of-total-strength-of-wizards/solution/ji-suan-mei-ge-shu-zi-zuo-wei-zui-xiao-z-3jvr/
+#######################################################
+class Solution {
+public:
+    int mod=1E9+7;
+    int totalStrength(vector<int>& strength) {
+        stack<int> stk;
+        int n=strength.size();
+        vector<int> right(n,n);
+        vector<int> left(n,-1);
+        vector<int> sum=strength;
+        for(int i=0;i<n;i++)
+        {
+            while(!stk.empty()&&strength[stk.top()]>strength[i])
+            {
+                right[stk.top()]=i;
+                stk.pop();
+            }//while
+            if(stk.size())
+            {
+                left[i]=stk.top();
+            }
+            stk.push(i);
+        }//for i
+        for(int i=1;i<n;i++)
+        {
+            sum[i]=(sum[i-1]+sum[i])%mod;    
+        }//for i
+        vector<int> psum=sum;
+        for(int i=1;i<n;i++)
+        {
+            psum[i]=(psum[i-1]+psum[i])%mod;
+        }//for i
+        auto f=[&](int l, int r){
+        if(r<0) return 0;
+        if(l<0) return psum[r]%mod;
+        return (psum[r]-psum[l])%mod;
+        };
+        int ans=0;
+        for(int i=0;i<n;i++)
+        {
+            int l=left[i]+1;
+            int r=right[i]-1;
+            long long sum_left=(long long)f(l-2,i-1)*(r-i+1)%mod;
+            long long sum_right=(long long)f(i-1,r)*(i-l+1)%mod;
+            //std::cout<<sum_right-sum_left<<std::endl;
+            ans+=(long long)strength[i]*((sum_right-sum_left+mod)%mod)%mod;
+            ans%=mod;
+        }
+        return ans;      
+    }
+    
+    
+};
