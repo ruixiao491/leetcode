@@ -1,0 +1,27 @@
+///My solution: count the contribution of each character: same as 828, 907 annd 2281.
+class Solution {
+public:
+    long long appealSum(string s) {
+        if(s.size()==1) return 1;
+        int n=s.size();
+        vector<vector<int>> pos(26);
+        long long ans=0;
+        for(int i=0;i<n;i++)
+        {
+            pos[s[i]-'a'].push_back(i);
+        }//for i
+        
+        for(int i=0;i<26;i++)
+        {
+            if(pos[i].size()==0) continue;
+            for(int j=0;j<pos[i].size();j++)
+            {
+                int left=pos[i][j]+1;
+                int right= j==pos[i].size()-1? n-pos[i][j]:pos[i][j+1]-pos[i][j];
+                ans+=left*right;
+            }//for j
+        }//for i
+        return ans;
+        
+    }
+};
