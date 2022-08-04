@@ -1,0 +1,99 @@
+////My solution inspired by hints: prefix  sum + binary search + sort
+class Solution {
+public:
+    int maximumWhiteTiles(vector<vector<int>>& tiles, int carpetLen) {
+        int n=tiles.size();
+        vector<int> startpart(n);
+        vector<int> endpart(n);
+        vector<int> presum(n);
+        int ans=0;
+        for(int i=0;i<n;i++)
+        {
+            startpart[i]=tiles[i][0];
+            endpart[i]=tiles[i][1];
+        }//for i
+        sort(startpart.begin(),startpart.end());
+        sort(endpart.begin(),endpart.end());
+        for(int i=0;i<n;i++)
+        {
+            if(i==0)
+            {
+                presum[i]=endpart[i]-startpart[i]+1;
+            }
+            else
+            {
+                presum[i]=presum[i-1]+endpart[i]-startpart[i]+1;
+            }
+        }//for i
+        
+        for(int i=0;i<n;i++)
+        {
+            int start=startpart[i];
+            int tail=start+carpetLen-1;
+            int test=0;
+            auto it=lower_bound(endpart.begin(),endpart.end(),tail);
+            if(it==endpart.begin()&&*it>tail)
+            {
+                return carpetLen;
+            }
+            if(it==endpart.end()||*it>tail)
+            {
+                it--;
+            }
+            int index=it-endpart.begin();
+            test=presum[index];
+            if(i>0)
+            {
+                test-=presum[i-1];
+            }
+            if(index+1<n&&startpart[index+1]<=tail)
+            {
+                test=test+tail-startpart[index+1]+1;
+            }
+            //std::cout<<start<<" "<<test<<std::endl;
+            ans=max(ans,test);
+            if(ans==carpetLen)
+            {
+                return ans;
+            }
+                               
+        }//for i
+        return ans;
+        
+        
+    }
+};
+
+
+########################################################
+The solution in the solution part: sort and two pointers
+########################################################
+class Solution {
+public:
+    int maximumWhiteTiles(vector<vector<int>>& tiles, int carpetLen) {
+        sort(tiles.begin(), tiles.end());   // 按照起始位置排序
+        int n = tiles.size();
+        int res = 0;   // 最多可以覆盖的瓷砖数量
+        int cnt = 0;   // 当前可以完全覆盖的连续瓷砖段的瓷砖数总和
+        int r = 0;   // 从左至右第一段无法完全覆盖的连续瓷砖的下标
+        // 枚举起始点对应连续瓷砖段的下标
+        for (int l = 0; l < n; ++l) {
+            if (l) {
+                cnt -= tiles[l-1][1] - tiles[l-1][0] + 1;
+            }
+            while (r < n && tiles[l][0] + carpetLen > tiles[r][1]) {
+                cnt += tiles[r][1] - tiles[r][0] + 1;
+                ++r;
+            }
+            if (r == n) {
+                // 此时无法通过右移增加覆盖瓷砖数，更新最大值并返回即可
+                res = max(res, cnt);
+                return res;
+            }
+            int extra = max(0, tiles[l][0] + carpetLen - tiles[r][0]);   // 当前无法完全覆盖的连续瓷砖段的覆盖瓷砖数
+            res = max(res, cnt + extra);
+        }
+        return res;
+    }
+};
+
