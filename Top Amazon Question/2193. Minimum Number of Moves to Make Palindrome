@@ -1,0 +1,38 @@
+///Inspired by the hints of the problem: Greedy
+class Solution {
+public:
+    int minMovesToMakePalindrome(string s) {
+        if(s.size()<=2) return 0;
+        int ans=0;
+        while(s.size()>2)
+        {
+            ans+=helper(s);  
+        }
+        return ans;
+              
+    }
+    int helper(string& s)
+    {
+        int ans=0;
+        char left=s[0];
+        int right=s.size()-1;
+        while(right>0&&s[right]!=left)
+        {
+            right--;
+        }
+        //std::cout<<left<<" "<<right<<std::endl;
+        if(right==0)
+        {
+            ans=s.size()/2;
+            s.erase(0,1);
+        }
+        else
+        {
+            ans=s.size()-right-1;
+            s.erase(right,1);
+            s.erase(0,1);
+        }
+             
+        return ans;
+    }
+};
