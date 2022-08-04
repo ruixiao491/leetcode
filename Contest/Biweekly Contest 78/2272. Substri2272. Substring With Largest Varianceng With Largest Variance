@@ -1,0 +1,48 @@
+####################################################################################################
+Almost the same as the solution in the solution part: enumerate + dynamic programming
+time complexity: o((2*sigma-1)n) where, sigma is the size of character, and n is the total occurance
+####################################################################################################
+class Solution {
+public:
+    int largestVariance(string s) {
+        int ans=0;
+        vector<vector<int>> pos(26);
+        int n=s.size();
+        for(int i=0;i<n;i++)
+        {
+            pos[s[i]-'a'].push_back(i);
+        }//for
+        
+        for(int i=0;i<26;i++)
+        {
+            if(pos[i].size()==0) continue;
+            for(int j=0;j<26;j++)
+            {
+                if(pos[j].size()==0||i==j) continue;
+                int start1=0, start2=0;
+                int f=0, g=INT_MIN;
+                //std::cout<<pos[i].size()<<" "<<pos[j].size()<<std::endl;
+                while(start1<pos[i].size()||start2<pos[j].size())
+                {
+                    if(start2==pos[j].size()||(start1<pos[i].size()&&pos[i][start1]<pos[j][start2]))
+                    {
+                        f=max(f,0)+1;
+                        g=g+1;
+                        start1++;
+                        
+                    }//if
+                    else
+                    {
+                        g=max(max(f,g),0)-1;
+                        f=max(f,0)-1;
+                        start2++;         
+                    }//else
+                    //std::cout<<start1<<" "<<start2<<"  "<<g<<std::endl;
+                    ans=max(ans,g);
+                }//while            
+            }//for j
+        }//for i
+        return ans;
+        
+    }
+};
