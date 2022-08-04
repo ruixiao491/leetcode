@@ -1,0 +1,74 @@
+////My solution: map,set
+class SORTracker {
+public:
+    map<int,set<string>> names;
+    int times;
+    SORTracker() {
+        times=1;
+         
+        
+    }
+    
+    void add(string name, int score) {
+        names[-score].insert(name);
+           
+        
+    }
+    
+    string get() {
+        string ans="";
+        auto it=names.begin();
+        int counts=0;
+        while(it!=names.end())
+        {
+            if(counts+it->second.size()>=times)
+            {
+                int pos=times-counts;
+                auto it2=it->second.begin();
+                std::advance(it2,pos-1);
+                ans=*it2;
+                break;
+            }
+            else
+            {
+                counts+=it->second.size();
+            }
+            it++;
+        }//while
+        times++;
+        return ans;       
+        
+    }
+};
+
+
+###########################################################################################
+The solution of others: two priority queue (similar like 295: Find Median from Data Stream)
+###########################################################################################
+class SORTracker {
+public:
+    priority_queue<pair<int,string>,vector<pair<int,string>>,less<pair<int,string>>> left;
+    priority_queue<pair<int,string>,vector<pair<int,string>>,greater<pair<int,string>>> right;
+    SORTracker() {
+        
+           
+        
+    }
+    
+    void add(string name, int score) {
+        left.push({-score,name});
+        right.push(left.top());
+        left.pop();
+
+              
+        
+    }
+    
+    string get() {
+        left.push(right.top());
+        right.pop();
+        return left.top().second;
+        
+        
+    }
+};
