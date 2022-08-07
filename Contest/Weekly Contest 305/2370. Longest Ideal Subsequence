@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int longestIdealString(string s, int k) {
+        int n=s.size();
+        if(n==1) return 1;
+        int ans=1;
+        vector<int> count(26,0);
+        for(int i=0;i<n;i++)
+        {
+            int index=s[i]-'a';
+            int start=index-k>=0? index-k:0;
+            int final=index+k<26? index+k:25;
+            int res=count[index];
+            //std::cout<<s[i]<<" "<<res<<std::endl;
+            for(int j=start;j<=final;j++)
+            {
+                if(j==index) continue;
+                count[index]=max(count[index],count[j]+1);
+            }//for i
+            count[index]=max(count[index],res+1);
+            //std::cout<<s[i]<<" "<<count[index]<<std::endl; 
+            ans=max(ans,count[index]);
+        }//for i
+        return ans;
+        
+    }
+};
