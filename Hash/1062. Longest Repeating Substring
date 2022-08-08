@@ -1,0 +1,107 @@
+///My solution: binary search + set
+class Solution {
+public:
+    int longestRepeatingSubstring(string s) {
+        int n=s.size();
+        int hi=n-1, low=1;
+        while(low<hi)
+        {
+            int mid=low+(hi-low)/2+((hi-low)%2==1);
+            if(check(s,mid))
+            {
+                low=mid;
+            }
+            else
+            {
+                hi=mid-1;
+            }
+        }//while
+        if(check(s,low)==0)
+        {
+            return 0;
+        }
+        return low;
+        
+        
+    }
+    bool check(string s,int length)
+    {
+        set<string> seen;
+        for(int i=0;i+length-1<s.size();i++)
+        {
+            if(seen.find(s.substr(i,length))!=seen.end())
+            {
+                return true;
+            }
+            seen.insert(s.substr(i,length));
+        }//for
+        return false;
+    }//check
+    
+};
+
+#########################################################################
+The solution in the solution part: binary search + hash (Rabin-Karp)+set
+The hash part is less time-consuming
+#########################################################################
+class Solution {
+public:
+    int mod;
+    int a;
+    int longestRepeatingSubstring(string s) {
+        mod=INT_MAX;
+        a=26;
+        int n=s.size();
+        int hi=n-1, low=1;
+        while(low<hi)
+        {
+            int mid=low+(hi-low)/2+((hi-low)%2==1);
+            if(check(s,mid))
+            {
+                low=mid;
+            }
+            else
+            {
+                hi=mid-1;
+            }
+        }//while
+        if(check(s,low)==0)
+        {
+            return 0;
+        }
+        return low;
+    }
+    bool check(string s, int length)
+    {
+        long long h=0;
+        set<long long> seen;
+        for(int i=0;i<length;i++)
+        {
+            h=(h*a+s[i]-'a')%mod;
+        }//for i
+        seen.insert(h);
+        long aL=1;
+        for(int i=0;i<length;i++)
+        {
+            aL=(aL*a)%mod;
+        }
+        //std::cout<<h<<" "<<aL<<std::endl;
+        for(int i=1;i<s.size()-length+1;i++)
+        {
+            h=(h*a-(s[i-1]-'a')*aL%mod+mod)%mod;
+            h=(h+s[i+length-1]-'a')%mod;
+            if(seen.count(h))
+            {
+                return true;
+            }
+            seen.insert(h);
+        }//for i
+        return false;      
+    }//check
+};
+
+#################
+Note at the end:
+#################
+（1）我们直接将每个子串放入哈希集合（Hashset）中，由于长度为 L 的子串有 N - L + 1 个，因此时间复杂度为o((N-L)L),并且这种方法的空间复杂度非常高，因为set 存储的是子串本身。
+（2）我们使用Rabin-Karp算法计算每个子串的哈希值，这种方法可以在o(1)的时间内计算两个相邻子串之间的哈希值变化（就是第一个子串的时间复杂度为o(L)）因此计算所有子串的哈希值的时间复杂度为o(N-L+1_。这种方法的空间复杂度较低，因为存储的是哈希值。
