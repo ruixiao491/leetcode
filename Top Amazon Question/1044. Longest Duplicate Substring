@@ -1,0 +1,139 @@
+////Binary search + rabin-Karp (but this has hash value conflict problems)
+class Solution {
+public:
+    string ans;
+    int mod;
+    int a;
+    string longestDupSubstring(string s) {
+        int low=1, hi=s.size()-1;
+        mod=1E9+7;
+        a=1007;
+        if(hi==low&&s[0]==s[1])
+        {
+            ans.push_back(s[0]);
+            return ans;
+        }
+        while(low<hi)
+        {
+            int mid=low+(hi-low)/2+((hi-low)%2==1);
+            if(check(mid,s))
+            {
+                low=mid;
+            }
+            else
+            {
+                hi=mid-1;
+            }
+        }//while
+        if(check(low,s)==0)
+        {
+            return "";
+        }
+        return ans;       
+    }
+    bool check(int length, string s)
+    {
+        long long h=0;
+        set<pair<long long,char>> seen;
+        for(int i=0;i<length;i++)
+        {
+            h=(h*a+s[i]-'a')%mod;
+        }//for i
+        seen.insert({h,s[0]});
+        long aL=1;
+        for(int i=0;i<length;i++)
+        {
+            aL=(aL*a)%mod;
+        }
+        for(int i=1;i<s.size()-length+1;i++)
+        {
+            h=(h*a-(s[i-1]-'a')*aL%mod+mod)%mod;
+            h=(h+s[i+length-1]-'a')%mod;
+            if(seen.count({h,s[i]}))
+            {
+                ans=s.substr(i,length);
+                return true;
+            }
+            seen.insert({h,s[i]});
+        }//for i
+        return false;
+    }//check
+};
+
+
+
+
+################################################################################
+The solution in the solution part: use 2 sets of mods to check the Hash conflict
+################################################################################
+class Solution {
+public:
+    string ans;
+    int mod1;
+    int mod2;
+    int a1;
+    int a2;
+    string longestDupSubstring(string s) {
+        int low=1, hi=s.size()-1;
+        if(hi==low&&s[0]==s[1])
+        {
+            ans.push_back(s[0]);
+            return ans;
+        }
+        a1=random()%100+26;
+        a2=random()%100+26;
+        mod1=rand()%(INT_MAX-1000000007)+1000000007;
+        mod2=rand()%(INT_MAX-1000000007)+1000000007; 
+        while(low<hi)
+        {
+            int mid=low+(hi-low)/2+((hi-low)%2==1);
+            if(check(mid,s))
+            {
+                low=mid;
+            }
+            else
+            {
+                hi=mid-1;
+            }
+        }//while
+        if(check(low,s)==0)
+        {
+            return "";
+        }
+        return ans;
+        
+    }//longestDupSubstring
+    
+    bool check(int length, string s)
+    {
+        long long h1=0, h2=0;
+        set<pair<long long,long long>> seen;
+        for(int i=0;i<length;i++)
+        {
+            h1=(h1*a1+s[i]-'a')%mod1;
+            h2=(h2*a2+s[i]-'a')%mod2;
+        }//for i
+        seen.insert({h1,h2});
+        long a1L=1, a2L=1;
+        for(int i=0;i<length;i++)
+        {
+            a1L=(a1L*a1)%mod1;
+            a2L=(a2L*a2)%mod2;
+        }
+        for(int i=1;i<s.size()-length+1;i++)
+        {
+            h1=(h1*a1-(s[i-1]-'a')*a1L%mod1+mod1)%mod1;
+            h1=(h1+s[i+length-1]-'a')%mod1;
+            h2=(h2*a2-(s[i-1]-'a')*a2L%mod2+mod2)%mod2;
+            h2=(h2+s[i+length-1]-'a')%mod2;
+            if(seen.count({h1,h2}))
+            {
+                ans=s.substr(i,length);
+                return true;
+            }
+            seen.insert({h1,h2});
+        }//for i
+        return false;
+    }//check
+    
+};
