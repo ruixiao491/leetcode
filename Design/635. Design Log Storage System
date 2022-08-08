@@ -1,0 +1,60 @@
+class LogSystem {
+public:
+    map<string,int> seen;
+    LogSystem() {
+        
+    }
+    
+    void put(int id, string timestamp) {
+        seen[timestamp]=id;
+        
+    }
+    
+    vector<int> retrieve(string start, string end, string granularity) {
+        vector<int> ans;
+        int length=0;
+        if(granularity=="Year")
+        {
+            length=4;
+        }
+        else if(granularity=="Month")
+        {
+            length=7;
+        }
+        else if(granularity=="Day")
+        {
+            length=10;
+        }
+        else if(granularity=="Hour")
+        {
+            length=13;
+        }
+        else if(granularity=="Minute")
+        {
+            length=16;
+        }
+        else 
+        {
+            length=19;
+        }
+        start=start.substr(0,length);
+        end=end.substr(0,length);
+        auto it=seen.lower_bound(start);
+        while(it!=seen.end()&&it->first.substr(0,length)<=end)
+        {
+            if(it->first.substr(0,length)>=start)
+            {
+                ans.push_back(it->second);
+            } 
+            it++;
+        }
+        return ans;
+    }
+};
+
+/**
+ * Your LogSystem object will be instantiated and called as such:
+ * LogSystem* obj = new LogSystem();
+ * obj->put(id,timestamp);
+ * vector<int> param_2 = obj->retrieve(start,end,granularity);
+ */
