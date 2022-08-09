@@ -1,0 +1,113 @@
+##########################################
+The solution in the solution part: map
+##########################################
+class RangeModule {
+public:
+    map<int,int> seen;
+    RangeModule() {
+        
+    }
+    
+    void addRange(int left, int right) {
+        auto it=seen.upper_bound(left);
+        if(it!=seen.begin())
+        {
+            auto it2=prev(it);
+            if(it2->second>=right)
+            {
+                return;
+            }
+            if(it2->second>=left)
+            {
+                left=it2->first;
+                seen.erase(it2);
+            }
+        }//if
+        while(it!=seen.end()&&it->first<=right)
+        {
+            right=max(right,it->second);
+            it=seen.erase(it);
+        }//while
+        seen[left]=right;
+        
+        
+        
+        
+    }
+    
+    bool queryRange(int left, int right) {
+        auto it=seen.upper_bound(left);
+        if(it!=seen.begin())
+        {
+            it--;
+            if(it->first<=left&&it->second>=right)
+            {
+                return true;
+            }
+        }
+        return false;          
+        
+        
+        
+    }
+    
+    void removeRange(int left, int right) {
+        auto it=seen.upper_bound(left);
+        if(it!=seen.begin())
+        {
+            auto it2=prev(it);
+            int val_L=it2->first;
+            int val_R=it2->second;
+            if(val_R>=right)
+            {
+                if(val_L==left)
+                {
+                    seen.erase(it2);
+                }
+                else
+                {
+                    seen[val_L]=left;
+                }
+                if(right!=val_R)
+                {
+                    seen.insert({right,val_R});
+                }
+            }//val_R>=right
+            else if(val_R>=left)
+            {
+                if(val_L==left)
+                {
+                    seen.erase(it2);
+                }
+                else
+                {
+                    seen[val_L]=left;
+                }
+                
+            }
+        }//if !begin
+        while(it!=seen.end()&&it->first<right)
+        {
+            if(it->second<=right)
+            {
+                it=seen.erase(it);
+            }
+            else
+            {
+                seen.insert({right,it->second});
+                seen.erase(it);
+                break;
+            }
+        }//while
+        
+        
+    }
+};
+
+/**
+ * Your RangeModule object will be instantiated and called as such:
+ * RangeModule* obj = new RangeModule();
+ * obj->addRange(left,right);
+ * bool param_2 = obj->queryRange(left,right);
+ * obj->removeRange(left,right);
+ */
