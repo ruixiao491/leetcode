@@ -1,0 +1,70 @@
+////My solution: using the same strategy as 516: dynamic programming
+class Solution {
+public:
+    bool isValidPalindrome(string s, int k) {
+        int n=s.size();
+        if(n-longestPalindrome(s)<=k)
+        {
+            return true;
+        }
+        return false;
+        
+    }
+    int longestPalindrome(string s)
+    {
+        int n=s.size();
+        vector<vector<int>> dp(n+1,vector<int>(n+1,1));
+        for(int i=n;i>0;i--)
+        {
+            for(int j=i+1;j<=n;j++)
+            {
+                if(s[i-1]==s[j-1])
+                {
+                    if(i+1<=j-1)
+                    {
+                        dp[i][j]=dp[i+1][j-1]+2;
+                    }
+                    else
+                    {
+                        dp[i][j]=2;
+                    }
+                }//if
+                else
+                {
+                    dp[i][j]=max(dp[i+1][j],dp[i][j-1]);
+                }
+                
+            }//for j
+        }//for i
+        return dp[1][n];
+            
+    }//longestPalindrome
+};
+
+
+################################################################
+The solution in the solution part: directly dynamic programming
+################################################################
+class Solution {
+public:
+    bool isValidPalindrome(string s, int k) {
+        int n=s.size();
+        vector<vector<int>>dp(n,vector<int>(n,0));
+        for(int i=n-2;i>=0;i--)
+        {
+            for(int j=i+1;j<n;j++)
+            {
+                if(s[i]==s[j])
+                {
+                    dp[i][j]=dp[i+1][j-1];
+                }
+                else
+                {
+                    dp[i][j]=1+min(dp[i+1][j],dp[i][j-1]);
+                }
+            }//for j
+        }//for i
+        
+        return dp[0][n-1]<=k;
+    }
+};
