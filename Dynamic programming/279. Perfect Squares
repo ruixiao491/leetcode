@@ -1,0 +1,97 @@
+/////The solution in the solution part:
+///Dynamic programming
+class Solution {
+public:
+    int numSquares(int n) {
+        vector<int> f(n + 1);
+        for (int i = 1; i <= n; i++) {
+            int minn = INT_MAX;
+            for (int j = 1; j * j <= i; j++) {
+                minn = min(minn, f[i - j * j]);
+            }
+            f[i] = minn + 1;
+        }
+        return f[n];
+    }
+};
+
+
+//////The solution in the solution part:
+///Greedy
+class Solution {
+public:
+    set<int> seen;
+    int numSquares(int n) {
+        for(int i=1;i*i<=n;i++)
+        {
+            seen.insert(i*i);
+        }//for
+        int count=1;
+        for(count=1;count<=n;count++)
+        {
+            if(is_divided_by(n,count))
+            {
+                return count;
+            }
+        }
+        return count;
+        
+    }
+    bool is_divided_by(int n, int count)
+    {
+        if(count==1)
+        {
+            return seen.count(n);
+        }
+        auto it=seen.begin();
+        while(it!=seen.end())
+        {
+            if(is_divided_by(n-*it,count-1))
+            {
+                return true;
+            }
+            it++;
+        }//while
+        return false;
+    }//is_divided_by
+};
+
+
+
+/////////The solution in the solution part:
+///BFS
+class Solution {
+public:
+    int numSquares(int n) {
+        set<int> seen;
+        queue<int> que;
+        que.push(0);
+        int count=1;
+        seen.insert(0);
+        while(!que.empty())
+        {
+            int length=que.size();
+            for(int i=0;i<length;i++)
+            {
+                int cur=que.front();
+                que.pop();
+                for(int i=0;i*i<=n;i++)
+                {
+                    int dest=cur+i*i;
+                    if(dest==n)
+                    {
+                        return count;
+                    }
+                    else if(dest<n&&seen.find(dest)==seen.end())
+                    {
+                        que.push(dest);
+                        seen.insert(dest);
+                    }//else if
+                }//for i
+            }//for
+            count++;
+        }//while
+        
+        return count;
+    }
+};
