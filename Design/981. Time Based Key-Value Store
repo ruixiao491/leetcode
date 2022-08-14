@@ -1,0 +1,27 @@
+class TimeMap {
+public:
+    map<string,map<int,string>> seen;
+    TimeMap() {
+        
+    }
+    
+    void set(string key, string value, int timestamp) {
+        seen[key][timestamp]=value;
+        
+    }
+    
+    string get(string key, int timestamp) {
+        auto it=seen[key].upper_bound(timestamp);
+        if(it!=seen[key].begin())
+        {
+           it--;
+            return it->second; 
+        }
+        else
+        {
+            return "";
+        }
+        
+        
+    }
+};
