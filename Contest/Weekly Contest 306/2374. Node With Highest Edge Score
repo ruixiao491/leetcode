@@ -1,0 +1,25 @@
+class Solution {
+public:
+    int edgeScore(vector<int>& edges) {
+        map<int,long long> seen;
+        for(int i=0;i<edges.size();i++)
+        {
+            seen[edges[i]]+=i;
+        }//for i
+        auto it=seen.begin();
+        long long sum=0;
+        int index=0;
+        while(it!=seen.end())
+        {
+            if(it->second>sum)
+            {
+                sum=it->second;
+                index=it->first;
+            }
+            it++;
+            
+        }//while
+        return index;
+        
+    }
+};
