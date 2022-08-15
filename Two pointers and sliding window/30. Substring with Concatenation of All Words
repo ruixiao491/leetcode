@@ -1,0 +1,130 @@
+###########################################
+The solution in the solution part
+////Hash table
+###########################################
+class Solution {
+public:
+    int n;
+    int k;
+    int wordLength;
+    int substringSize;
+    map<string,int> seen;
+    vector<int> findSubstring(string s, vector<string>& words) {
+        n=s.size();
+        k=words.size();
+        wordLength=words[0].size();
+        substringSize=wordLength*k;
+        for(int i=0;i<k;i++)
+        {
+            seen[words[i]]++;
+        }//for i
+        vector<int> ans;
+        for(int i=0;i+substringSize-1<n;i++)
+        {
+            //std::cout<<check(i,s)<<" "<<i<<std::endl;  
+            if(check(i,s))
+            {
+                ans.push_back(i);
+            }
+        }//for i
+        return ans;
+        
+    }//findSubstring
+    bool check(int i,string s)
+    {
+        map<string,int> remaining=seen;
+        int count=0;
+        for(int j=i;j<i+substringSize;j+=wordLength)
+        {
+            string sub=s.substr(j,wordLength);
+            if(remaining[sub]>0)
+            {
+                remaining[sub]--;
+                count++;
+            }//if
+            else
+            {
+                break;
+            }
+        }//for j
+        return count==k;
+    }//check
+};
+
+
+#####################################
+The solution in the solution part:
+sliding Window
+#####################################
+class Solution {
+public:
+    int n;
+    int k;
+    int wordLength;
+    int substringSize;
+    map<string,int> seen;
+    vector<int> ans;
+    vector<int> findSubstring(string s, vector<string>& words) {
+        n=s.size();
+        k=words.size();
+        wordLength=words[0].size();
+        substringSize=wordLength*k;
+        for(int i=0;i<k;i++)
+        {
+            seen[words[i]]++;
+        }//for i
+        for(int i=0;i<wordLength;i++)
+        {
+            slidingWindow(i,s);
+        }
+        return ans;
+            
+    }//findSubstring
+    void slidingWindow(int left,string s)
+    {
+        map<string,int> wordsFound;
+        int count=0;
+        bool excessWord=false;
+        for(int right=left;right+wordLength-1<n;right+=wordLength)
+        {
+            string sub=s.substr(right,wordLength);
+            if(seen.find(sub)==seen.end())
+            {
+                wordsFound.clear();
+                count=0;
+                excessWord=false;
+                left=right+wordLength;
+            }//if
+            else
+            {
+                while(right-left==substringSize||excessWord)
+                {
+                    string leftmostWord=s.substr(left,wordLength);
+                    left+=wordLength;
+                    wordsFound[leftmostWord]--;
+                    if(wordsFound[leftmostWord]==seen[leftmostWord])
+                    {
+                        excessWord=false;
+                    }
+                    else
+                    {
+                        count--;
+                    }
+                }//while
+                wordsFound[sub]++;
+                if(wordsFound[sub]<=seen[sub])
+                {
+                    count++;
+                }
+                else
+                {
+                    excessWord=true;
+                }
+                if(count==k&&!excessWord)
+                {
+                    ans.push_back(left);
+                }
+            }//else         
+        }//for right
+    }//slidingWindow
+};
