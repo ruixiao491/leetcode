@@ -1,0 +1,24 @@
+class Solution {
+public:
+    int minNumberOfHours(int initialEnergy, int initialExperience, vector<int>& energy, vector<int>& experience) {
+        int min_energy=0;
+        int n=energy.size();
+        for(int i=0;i<n;i++)
+        {
+            min_energy+=energy[i];
+        }//for i
+        int max_experience=0;
+        int sum=0;
+        for(int i=0;i<n;i++)
+        {
+            max_experience=max(max_experience,experience[i]-sum);
+            sum+=experience[i];
+        }//for i
+        int ans=0;
+        ans+=min_energy+1-initialEnergy>0 ? min_energy+1-initialEnergy:0;
+        ans+=max_experience+1-initialExperience>0 ? max_experience+1-initialExperience:0;
+        return ans;
+        
+        
+    }
+};
