@@ -1,0 +1,58 @@
+class Solution {
+public:
+    string largestPalindromic(string num) {
+        vector<int> counts(10,0);
+        for(int i=0;i<num.size();i++)
+        {
+            counts[num[i]-'0']++;
+        }//for i
+        
+        string test="";
+        int right=9;
+        while(right>0)
+        {
+            if(counts[right]>1)
+            {
+                int val=counts[right]/2;
+                while(val>0)
+                {
+                    test+=right+'0';
+                    val--;
+                }
+                counts[right]-=2*(counts[right]/2);
+                //std::cout<<test<<" "<<counts[right]<<" "<<right<<std::endl;
+            }//if
+            right--;
+        }//while
+        
+        if(test.size()!=0)
+        {
+            if(counts[0]>1)
+            {
+                int val=counts[0]/2;
+                while(val>0)
+                {
+                    test+=right+'0';
+                    val--;
+                }
+                counts[0]-=2*(counts[0]/2);
+            }
+            
+        }//if test!.empty
+        
+        string copy=test;
+        reverse(copy.begin(),copy.end());
+        for(int i=9;i>=0;i--)
+        {
+            if(counts[i]!=0)
+            {
+                test+=i+'0';
+                break;
+            }
+        }
+        
+        return test+copy;
+        
+        
+    }
+};
