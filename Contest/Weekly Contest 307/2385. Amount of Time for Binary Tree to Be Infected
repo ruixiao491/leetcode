@@ -1,0 +1,55 @@
+class Solution {
+public:
+    map<int,vector<int>> seen;
+    int amountOfTime(TreeNode* root, int start) {
+        helper(root);
+        if(seen.size()==0) return 0;
+        set<int> visit;
+        queue<int> que;
+        que.push(start);
+        visit.insert(start);
+        int time=0;
+        while(!que.empty())
+        {
+            int length=que.size();
+            for(int i=0;i<length;i++)
+            {
+                int cur=que.front();
+                //std::cout<<cur<<std::endl;
+                que.pop();
+                vector<int> edge=seen[cur];
+                for(int j=0;j<edge.size();j++)
+                {
+                    if(visit.find(edge[j])==visit.end())
+                    {
+                        visit.insert(edge[j]);
+                        que.push(edge[j]);
+                    }
+                }//for j
+            }//for i
+            time++;
+            
+        }//while
+        return time-1;
+        
+    }
+    void helper(TreeNode* root)
+    {
+        if(root==nullptr)
+        {
+            return;
+        }
+        if(root->left!=nullptr)
+        {
+            seen[root->val].push_back(root->left->val);
+            seen[root->left->val].push_back(root->val);
+            helper(root->left);
+        }
+        if(root->right!=nullptr)
+        {
+            seen[root->val].push_back(root->right->val);
+            seen[root->right->val].push_back(root->val);
+            helper(root->right);
+        }
+    }
+};
