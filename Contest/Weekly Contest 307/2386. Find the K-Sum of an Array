@@ -51,3 +51,49 @@ public:
         return maxsum-subtract[k-2];
     }
 };
+
+
+###########################################################################################################################################################
+The solution of others: DFS: https://leetcode.com/problems/find-the-k-sum-of-an-array/discuss/2462675/C%2B%2B-Explained-heuristic-DFS-296ms-faster-than-77
+############################################################################################################################################################
+class Solution {
+public:
+    priority_queue<long long> candidates;
+    int _k;
+    
+    void dfs(vector<int> &a, int index, int pick, long long val) {
+        if (pick == 0) {
+            candidates.push(val);
+            while (candidates.size() > _k) candidates.pop();
+            return;
+        }
+        if (index >= a.size()) return;
+        // Important prune!!
+        if (candidates.size() == _k && (long long) pick * a[index] + val >= candidates.top()) return;
+        
+        dfs(a, index + 1, pick - 1, val + a[index]);
+        dfs(a, index + 1, pick, val);
+    }
+    
+    long long kSum(vector<int>& a, int k) {
+        long long base = 0;
+        _k = k;
+        for (int i = 0; i < a.size(); i ++) {
+            if (a[i] > 0) base += a[i];
+            else a[i] = -a[i];
+        }
+        sort(a.begin(), a.end());
+        
+        candidates.push(0);
+        // Only select one
+        for (int i = 0; i < k && i < a.size(); i ++) candidates.push(a[i]);
+        
+        for (int pick = 2; pick <= 10; pick ++) {
+            dfs(a, 0, pick, 0LL);
+        }
+        
+        return base - candidates.top();
+    }
+};
+
+
