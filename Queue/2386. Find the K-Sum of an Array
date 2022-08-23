@@ -56,6 +56,16 @@ public:
 ############################################################################################################################################################
 The solution of others: DFS: https://leetcode.com/problems/find-the-k-sum-of-an-array/discuss/2462675/C%2B%2B-Explained-heuristic-DFS-296ms-faster-than-77
 ############################################################################################################################################################
+Firstly, sum up all positive number as base, sort numbers as abs value and try to search a combination of numbers to subtract from base.
+Observer that 2^11 = 2048 >= 2000 so we will never pick more than 11 elements
+
+Then, loop through how many numbers we will pick, use a stack to maintain the combinations. Whenever the stack size is greater than k, pop until the size becomes k.
+
+A very important pruning:
+If we have x numbers left to pick, and number in currenct index is v, when stack already has k elements, then x * v < pq.top() must be satisified, otherwise it's not possible to get a better solution in this branch.
+
+##########################################################################################################################################################################################################################
+
 class Solution {
 public:
     priority_queue<long long> candidates;
