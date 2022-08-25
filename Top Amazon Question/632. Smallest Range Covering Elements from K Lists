@@ -1,0 +1,43 @@
+##############################################################################
+The solution in the solution part: priority queue + Greedy + sliding pointers
+##############################################################################
+
+class Solution {
+public:
+    vector<int> smallestRange(vector<vector<int>>& nums) {
+        int rangeLeft=0, rangeRight=INT_MAX;
+        int length=nums.size();
+        vector<int> next(length);
+        auto cmp=[&](const int& u, const int&v)
+        {
+            return nums[u][next[u]]>nums[v][next[v]];
+        };//cmp
+        priority_queue<int,vector<int>,decltype(cmp)> que(cmp);
+        int minVal=0, maxVal=INT_MIN;
+        for(int i=0;i<length;i++)
+        {
+            que.push(i);
+            maxVal=max(maxVal,nums[i][0]);
+        }//for i
+        while(true)
+        {
+            int row=que.top();
+            que.pop();
+            minVal=nums[row][next[row]];
+            if(maxVal-minVal<rangeRight-rangeLeft)
+            {
+                rangeLeft=minVal;
+                rangeRight=maxVal;
+            }
+            if(next[row]==nums[row].size()-1)
+            {
+                break;
+            }
+            next[row]++;
+            maxVal=max(maxVal,nums[row][next[row]]);
+            que.push(row);
+        }//while
+        return {rangeLeft, rangeRight};
+        
+    }
+};
