@@ -1,0 +1,130 @@
+////My solution:
+class Solution {
+public:
+    vector<vector<int>> diagonalSort(vector<vector<int>>& mat) {
+        int m=mat.size();
+        int n=mat[0].size();
+        map<int,vector<int>> seen;
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                seen[i-j].push_back(mat[i][j]);
+            }//for j
+        }//for i
+        
+        auto it=seen.begin();
+        while(it!=seen.end())
+        {
+            int row=0, col=0;
+            if(it->first>0)
+            {
+                row=it->first;
+            }
+            else if(it->first<0)
+            {
+                col=abs(it->first);
+            }
+            vector<int> test=it->second;
+            sort(test.begin(),test.end());
+            int a=0;
+            while(row<m&&col<n)
+            {
+                mat[row][col]=test[a];
+                a++;
+                row++;
+                col++;
+            }//while
+            it++;      
+        }//while
+        
+        return mat;
+    }
+};
+
+
+#######################################################
+The solution in the solution part: Hash Table of Heaps
+#######################################################
+class Solution {
+public:
+    vector<vector<int>> diagonalSort(vector<vector<int>>& mat) {
+        // Store the matrix dimensions
+        size_t m = mat.size();
+        size_t n = mat[0].size();
+
+        // create a hasmap of min-heaps to store the diagonals
+        map<int, priority_queue<int, vector<int>, greater<int>>> diagonals;
+
+        // Insert the values into the Hash Map
+        for (size_t row = 0; row < m; row++) {
+            for (size_t col = 0; col < n; col++) {
+                // Observing that on each diagonal, the differences between the row and column
+                // indices of each element is the same.
+                // Hence we can use row - col as the key to collect elements on the same diagonal.
+                diagonals[row - col].push(mat[row][col]);
+            }
+        }
+
+        // Take values back out of the Hash Map
+        for (size_t row = 0; row < m; row++) {
+            for (size_t col = 0; col < n; col++) {
+                mat[row][col] = diagonals[row - col].top();
+                diagonals[row - col].pop();
+            }
+        }
+
+        return mat;
+    }
+};
+
+
+#######################################################################
+The solution in the solution part: Sort Diagonals One by One Using Heap
+#######################################################################
+class Solution {
+public:
+    vector<vector<int>> diagonalSort(vector<vector<int>>& mat) {
+        // Store the matrix dimensions.
+        size_t m = mat.size();
+        size_t n = mat[0].size();
+
+        // Sort each diagonal that starts on a row.
+        for (size_t row = 0; row < m; row++) {
+            sortDiagonal(row, 0, mat);
+        }
+
+        // Sort each diagonal that starts on a col.
+        // Note that we've already sorted the one starting
+        // at col = 0; this is the same as the one starting
+        // at row = 0.
+        for (size_t col = 0; col < n; col++) {
+            sortDiagonal(0, col, mat);
+        }
+
+        return mat;
+    }
+
+    // Helper function to sort the current diagonal at row, col
+    void sortDiagonal(size_t row, size_t col, vector<vector<int>>& mat) {
+        size_t m = mat.size();
+        size_t n = mat[0].size();
+
+        // create a min-heap to store the diagonal
+        priority_queue<int, vector<int>, greater<int>> diagonal;
+
+        size_t diagonal_length = min(m - row, n - col);
+        // Put values on this diagonal into the heap.
+        for (size_t i = 0; i < diagonal_length; i++) {
+            diagonal.push(mat[row + i][col + i]);
+        }
+
+        // Put values on heap back into this diagonal
+        for (size_t i = 0; i < diagonal_length; i++) {
+            mat[row + i][col + i] = diagonal.top();
+            diagonal.pop();
+        }
+    }
+};
+
+
