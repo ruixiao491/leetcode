@@ -1,0 +1,37 @@
+class Solution {
+public:
+    int garbageCollection(vector<string>& garbage, vector<int>& travel) {
+        int max_M=0;
+        int max_P=0;
+        int max_G=0;
+        int n=garbage.size();
+        int ans=0;
+        for(int i=0;i<n;i++)
+        {
+            ans+=garbage[i].size();
+            if(garbage[i].find('M')<garbage[i].size())
+            {
+                max_M=i;
+            }
+            if(garbage[i].find('P')<garbage[i].size())
+            {
+                max_P=i;
+            }
+            if(garbage[i].find('G')<garbage[i].size())
+            {
+                max_G=i;
+            }
+            
+        }//for i
+        
+        vector<int> time(n,0);
+        for(int i=0;i<travel.size();i++)
+        {
+            time[i+1]=time[i]+travel[i];
+        }
+        
+        ans=ans+time[max_M]+time[max_P]+time[max_G];
+        return ans;
+        
+    }
+};
