@@ -1,0 +1,91 @@
+////My solution: map
+class Solution {
+public:
+    vector<int> majorityElement(vector<int>& nums) {
+        int n=nums.size();
+        int limit=n/3;
+        vector<int> ans;
+        map<int,int> seen;
+        for(int i=0;i<nums.size();i++)
+        {
+            seen[nums[i]]++;
+        }
+        auto it=seen.begin();
+        while(it!=seen.end())
+        {
+            if(it->second>limit)
+            {
+                ans.push_back(it->first);
+            }
+            it++;
+        }//while
+        return ans;
+        
+    }
+};
+
+
+#####################################################################################################################################
+The solution in the solution part: with o(1) space complexity: Boyer-Moore Voting Algorithm (The solution for the follow-up question)
+#####################################################################################################################################
+class Solution {
+public:
+    vector<int> majorityElement(vector<int>& nums) {
+        vector<int> ans;
+        int element1=0;
+        int element2=0;
+        int vote1=0;
+        int vote2=0;
+        for(auto & num: nums)
+        {
+            if(vote1>0&&num==element1)
+            {
+                vote1++;
+            }
+            else if(vote2>0&&num==element2) 
+            {
+                vote2++;
+            }
+            else if(vote1==0)
+            {
+                element1=num;
+                vote1++;
+            }
+            else if(vote2==0)
+            {
+                element2=num;
+                vote2++;
+            }
+            else
+            {
+                vote1--;
+                vote2--;
+            }
+            
+        }//for nums
+        
+        int cnt1=0;
+        int cnt2=0;
+        for(auto& num: nums)
+        {
+            if(vote1>0&&num==element1)
+            {
+                cnt1++;
+            }
+            if(vote2>0&&num==element2)
+            {
+                cnt2++;
+            }
+        }//for num
+        
+        if(vote1>0&&cnt1>nums.size()/3)
+        {
+            ans.push_back(element1);
+        }
+        if(vote2>0&&cnt2>nums.size()/3)
+        {
+            ans.push_back(element2);
+        }
+        return ans;
+    }
+};
