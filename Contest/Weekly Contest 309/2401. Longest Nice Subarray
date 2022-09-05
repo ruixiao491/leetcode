@@ -1,0 +1,38 @@
+class Solution {
+public:
+    int longestNiceSubarray(vector<int>& nums) {
+        int n=nums.size();
+        int ans=1;
+        int left=0, right=1;
+        long long mask=nums[left];
+        while(right<n)
+        {
+            //std::cout<<mask<<"  "<<check(mask,nums[right])<<std::endl;
+            if(check(mask, nums[right])==1)
+            {
+                mask|=nums[right];
+                right++;
+            }
+            else
+            {
+                ans=max(ans,right-left);
+                mask-=nums[left];
+                left++;
+                while(left<right&&check(mask,nums[right])==0)
+                {
+                    mask-=nums[left];
+                    left++;
+                }//while
+                mask|=nums[right];
+                right++;
+                //std::cout<<mask<<" "<<nums[right]<<" "<<check(mask,nums[right])<<std::endl;
+            }//else          
+        }//while
+        ans=max(ans,right-left);
+        return ans;      
+    }
+    bool check(int a, int b)
+    {
+        return (a&b)==0;
+    }
+};
