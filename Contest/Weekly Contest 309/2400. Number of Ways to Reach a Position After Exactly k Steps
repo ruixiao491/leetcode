@@ -1,0 +1,34 @@
+class Solution {
+public:
+    int mod;
+    map<pair<int,int>,int> seen;
+    int numberOfWays(int startPos, int endPos, int k) {
+        mod=1E9+7;
+        int ans=helper(startPos, endPos,k);
+        return ans;
+               
+    }
+    int helper(int startPos, int endPos, int step)
+    {
+        if(seen.find({endPos,step})!=seen.end())
+        {
+            return seen[{endPos,step}];
+        }
+        long long counts=0;
+        if(step==1&&abs(endPos-startPos)==1)
+        {
+            seen.insert({{endPos,step},1});
+            return 1;
+        }
+        if(abs(endPos-startPos)>step)
+        {
+            seen.insert({{endPos,step},0});
+            return 0;
+        }
+        counts=(long long) (helper(startPos, endPos+1,step-1)+helper(startPos, endPos-1, step-1))%mod;
+        seen.insert({{endPos,step},counts});
+        return counts;
+    
+        
+    }//helper
+};
