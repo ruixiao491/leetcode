@@ -1,0 +1,70 @@
+struct nodes{
+    long long endtime;
+    int No;
+    long long counts;
+};
+
+class Solution {
+public:
+    int mostBooked(int n, vector<vector<int>>& meetings) {
+        auto cmp=[](const nodes& a, const nodes& b)
+        {
+            if(a.endtime==b.endtime)
+            {
+                return a.No>b.No;
+            }
+            return a.endtime>b.endtime;
+            
+        };
+        
+        priority_queue<nodes,vector<nodes>,decltype(cmp)> que(cmp);
+        for(int i=0;i<n;i++)
+        {
+            que.push({0,i,0});
+        }
+        
+        sort(meetings.begin(),meetings.end());
+        for(int i=0;i<meetings.size();i++)
+        {
+            //std::cout<<"test: "<<meetings[i][0]<<std::endl;
+            nodes a=que.top();
+            //que.pop();
+            if(a.endtime>meetings[i][0])
+            {
+                que.pop();
+                que.push({a.endtime+meetings[i][1]-meetings[i][0],a.No,a.counts+1});
+            }
+            else
+            {
+                while(!que.empty()&&a.endtime<meetings[i][0])
+                {
+                    que.pop();
+                    que.push({meetings[i][0],a.No,a.counts});
+                    a=que.top();
+                    //std::cout<<a.endtime<<" "<<meetings[i][0]<<std::endl;
+                }//while
+                que.pop();
+                que.push({meetings[i][1],a.No,a.counts+1});
+                
+            }
+        }//for i
+        int ans=1;
+        int result=0;
+        while(!que.empty())
+        {
+            nodes a=que.top();
+            que.pop();
+            if(a.counts>ans)
+            {
+                ans=a.counts;
+                result=a.No;
+            }
+            else if(a.counts==ans)
+            {
+                result=min(result,a.No);
+            }      
+        }//while
+        return result;
+        
+    }
+};
