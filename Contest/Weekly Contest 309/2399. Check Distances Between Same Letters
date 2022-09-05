@@ -1,0 +1,22 @@
+class Solution {
+public:
+    bool checkDistances(string s, vector<int>& distance) {
+        map<int,vector<int>> seen;
+        for(int i=0;i<s.size();i++)
+        {
+            seen[s[i]-'a'].push_back(i);
+        }//for i
+        auto it=seen.begin();
+        while(it!=seen.end())
+        {
+            int diff=it->second[1]-it->second[0]-1;
+            if(distance[it->first]!=diff)
+            {
+                return false;
+            }
+            it++;
+        }//while
+        return true;
+        
+    }
+};
