@@ -1,0 +1,89 @@
+////My solution: backtracking
+class Solution {
+public:
+    set<int> ans;
+    vector<int>dir;
+    vector<int> numsSameConsecDiff(int n, int k) {
+        string s=""; 
+        dir.push_back(k);
+        dir.push_back(-k);
+        vector<int> final;
+        for(int i=1;i<=9;i++)
+        {
+            backtrack(n,k,0,s,i);
+        }
+        
+        auto it=ans.begin();
+        while(it!=ans.end())
+        {
+            final.push_back(*it);
+            it++;
+        }//while
+        return final;
+        
+        
+    }
+    void backtrack(int n, int k, int start, string s,int num)
+    {
+        if(start==n)
+        {
+            ans.insert(stoi(s));
+            return;
+        }
+        //std::cout<<s<<" "<<num<<std::endl;
+        s.push_back(num+'0');
+        for(int i=0;i<2;i++)
+        {
+            if(num+dir[i]>=0&&num+dir[i]<=9)
+            {
+                backtrack(n,k,start+1,s,num+dir[i]);
+            }//if
+        }
+        s.pop_back();
+            
+    }//backtrack
+};
+
+
+#######################################
+The solution in the solution part: BFS
+#######################################
+class Solution {
+public:
+    vector<int> numsSameConsecDiff(int n, int k) {
+        vector<int> ans;
+        queue<int> que;
+        for(int i=1;i<=9;i++)
+        {
+            que.push(i);
+        }//for i
+        
+        int level=1;
+        while(level<n)
+        {
+            int length=que.size();
+            for(int i=0;i<length;i++)
+            {
+                int cur=que.front();
+                que.pop();
+                int tail=cur%10;
+                if(tail+k<=9)
+                {
+                    que.push(cur*10+tail+k);
+                }
+                if(tail-k>=0&&k!=0)
+                {
+                    que.push(cur*10+tail-k);
+                }
+            }//for i
+            level++;
+        }//while
+        while(!que.empty())
+        {
+            ans.push_back(que.front());
+            que.pop();
+        }//while
+        return ans;
+        
+    }
+};
