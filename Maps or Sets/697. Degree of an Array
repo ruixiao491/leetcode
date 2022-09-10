@@ -1,0 +1,66 @@
+///My solution: map + two pointers
+class Solution {
+public:
+    int findShortestSubArray(vector<int>& nums) {
+        map<int,int> seen;
+        int max_val=0;
+        for(int i=0;i<nums.size();i++)
+        {
+            seen[nums[i]]++;
+            max_val=max(max_val,seen[nums[i]]);
+        }//for i
+        int left=0, right=0, test=0, length=INT_MAX;
+        map<int,int> check;
+        while(right<nums.size())
+        {
+            check[nums[right]]++;
+            if(check[nums[right]]==max_val)
+            {
+                while(nums[left]!=nums[right])
+                {
+                    check[nums[left]]--;
+                    left++;
+                }
+                length=min(length,right-left+1);
+            }//if
+            right++;
+        }//while        
+        return length;
+    }
+};
+
+#######################################
+The solution in the solution part: maps
+#######################################
+class Solution {
+public:
+    int findShortestSubArray(vector<int>& nums) {
+        map<int,int> left;
+        map<int,int> right;
+        map<int,int> seen;
+        int max_val=0;
+        for(int i=0;i<nums.size();i++)
+        {
+            int x=nums[i];
+            if(left.count(nums[i])==0)
+            {
+                left.insert({nums[i],i});
+            }
+            right[nums[i]]=i;
+            seen[nums[i]]++;
+            max_val=max(max_val,seen[nums[i]]);
+        }//for i
+        int ans=INT_MAX;
+        auto it=seen.begin();
+        while(it!=seen.end())
+        {
+            if(it->second==max_val)
+            {
+                ans=min(ans,right[it->first]-left[it->first]+1);
+            }//if
+            it++;
+        }//while
+        return ans;
+        
+    }
+};
