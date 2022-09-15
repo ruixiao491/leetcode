@@ -1,0 +1,26 @@
+class Solution {
+public:
+    int mostFrequentEven(vector<int>& nums) {
+        map<int,int> seen;
+        int max_val=0;
+        for(int i=0;i<nums.size();i++)
+        {
+            if(nums[i]%2==0)
+            {
+                seen[nums[i]]++;
+                max_val=max(max_val,seen[nums[i]]);
+            }//if
+        }//for i
+        if(max_val==0) return -1;
+        auto it=seen.begin();
+        while(it!=seen.end())
+        {
+            if(it->second==max_val)
+            {
+                return it->first;
+            }
+            it++;
+        }//while
+        return -2;
+    }
+};
