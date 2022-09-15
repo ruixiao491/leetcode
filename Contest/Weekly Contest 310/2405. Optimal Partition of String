@@ -1,0 +1,36 @@
+class Solution {
+public:
+    int partitionString(string s) {
+        int ans=0;
+        int n=s.size();
+        int left=0, right=0;
+        set<char> seen;
+        while(right<n)
+        {
+            if(seen.find(s[right])==seen.end())
+            {
+                if(right==n-1)
+                {
+                    ans++;
+                }
+                seen.insert(s[right]);
+                right++;
+            }//if
+            else 
+            {
+                ans++;
+                seen.clear();
+                seen.insert(s[right]);
+                left=right; 
+                right++;
+                if(right==n)
+                {
+                    ans++;
+                }
+            }
+            
+        }//while
+        return ans;
+        
+    }
+};
