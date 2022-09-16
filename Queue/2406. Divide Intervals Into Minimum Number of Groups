@@ -1,0 +1,26 @@
+class Solution {
+public:
+    int minGroups(vector<vector<int>>& intervals) {
+        int n=intervals.size();
+        if(n==1) return 1;
+        sort(intervals.begin(),intervals.end());
+        int ans=0;
+        priority_queue<int,vector<int>,greater<int>> que;
+        for(int i=0;i<n;i++)
+        {
+            if(que.empty()||que.top()>=intervals[i][0])
+            {
+                que.push(intervals[i][1]);
+                ans++;
+            }
+            else
+            {
+                que.pop();
+                que.push(intervals[i][1]);      
+            }
+        }//for i
+
+        return ans;
+        
+    }
+};
