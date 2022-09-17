@@ -1,0 +1,50 @@
+#######################################
+The solution of others: Line sweeping
+#######################################
+class Solution {
+public:
+    vector<vector<int>> averageHeightOfBuildings(vector<vector<int>>& buildings) {
+        map<int,vector<int>> seen;
+        for(int i=0;i<buildings.size();i++)
+        {
+            seen[buildings[i][0]].push_back(buildings[i][2]);
+            seen[buildings[i][1]].push_back(-buildings[i][2]);
+        }//for i
+        
+        multiset<int> existing;
+        int sum=0;
+        vector<vector<int>> ans;
+        int prev=-1;
+        for(auto& item:seen)
+        {
+            if(existing.size()>0)
+            {
+                int ave=sum/existing.size();
+                if(ans.size()>0&&ans.back()[1]==prev&&ans.back()[2]==ave)
+                {
+                    ans.back()[1]=item.first;
+                }
+                else
+                {
+                    ans.push_back({prev,item.first,ave});
+                }
+            }//if
+            
+            for(int i=0;i<item.second.size();i++)
+            {
+                if(item.second[i]<0)
+                {
+                    existing.erase(existing.find(abs(item.second[i])));
+                    sum+=item.second[i];
+                }
+                else
+                {
+                    existing.insert(item.second[i]);
+                    sum+=item.second[i];
+                }
+            }//for i
+            prev=item.first;
+        }//for
+        return ans;
+    }
+};
