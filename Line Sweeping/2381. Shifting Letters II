@@ -1,0 +1,32 @@
+class Solution {
+public:
+    string shiftingLetters(string s, vector<vector<int>>& shifts) {
+        map<int,int> seen;
+        for(int i=0;i<shifts.size();i++)
+        {
+            int start=shifts[i][0];
+            int end=shifts[i][1]+1;
+            int step=shifts[i][2]==0? -1:1;
+            seen[start]+=step;
+            seen[end]-=step;
+            seen[start]=seen[start]%26;
+            seen[end]=seen[end]%26;
+        }//for i
+        auto it=seen.begin();
+        int prev=it->first;
+        int sum=it->second;
+        it++;
+        while(it!=seen.end())
+        {
+            int end_part=it->first;
+            for(int i=prev;i<end_part;i++)
+            {
+                s[i]=(s[i]-'a'+sum%26+26)%26+'a';
+            }//for i
+            sum+=it->second;
+            prev=end_part; 
+            it++;
+        }//while
+        return s;       
+    }
+};
