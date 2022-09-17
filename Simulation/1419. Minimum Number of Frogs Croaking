@@ -1,0 +1,47 @@
+class Solution {
+public:
+    int minNumberOfFrogs(string croakOfFrogs) {
+        int c=0, r=0,o=0, a=0, k=0;
+        int cnt=0;
+        int ans=0;
+        for(int i=0;i<croakOfFrogs.size();i++)
+        {
+            char cur=croakOfFrogs[i];
+            if(cur=='c')
+            {
+                c++;
+                cnt++;
+            }
+            else if(cur=='r')
+            {
+                r++;
+            }
+            else if(cur=='o')
+            {
+                o++;
+            }
+            else if(cur=='a')
+            {
+                a++;
+            }
+            else if(cur=='k')
+            {
+                k++;
+                cnt--;
+            }
+            ans=max(ans,cnt);
+            if(!(c>=r&&r>=o&&o>=a&&a>=k))
+            {
+                return -1;
+            }
+        }//for i
+        if(c!=r||r!=o||o!=a||a!=k)
+        {
+            return -1;
+        }
+        
+        return ans;
+           
+        
+    }
+};
