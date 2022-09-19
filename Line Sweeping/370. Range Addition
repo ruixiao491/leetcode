@@ -1,0 +1,25 @@
+class Solution {
+public:
+    vector<int> getModifiedArray(int length, vector<vector<int>>& updates) {
+        vector<int> ans(length,0);
+        for(int i=0;i<updates.size();i++)
+        {
+            int start=updates[i][0];
+            int end=updates[i][1];
+            int delta=updates[i][2];
+            ans[start]+=delta;
+            if(end+1<length)
+            {
+                ans[end+1]-=delta;
+            }
+        }//for i
+        
+        for(int i=1;i<length;i++)
+        {
+            ans[i]+=ans[i-1];
+        }//for i
+        return ans;
+        
+        
+    }
+};
