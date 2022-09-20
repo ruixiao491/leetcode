@@ -1,0 +1,137 @@
+///My solution: Line sweeping + priority queue + set
+class Solution {
+public:
+    vector<vector<int>> getSkyline(vector<vector<int>>& buildings) {
+        vector<vector<int>> edges;
+        for(int i=0;i<buildings.size();i++)
+        {
+            int start=buildings[i][0];
+            int end=buildings[i][1];
+            int height=buildings[i][2];
+            edges.push_back({start,height});
+            edges.push_back({end,-height});
+        }//for i
+        sort(edges.begin(),edges.end());
+        vector<vector<int>> ans;
+        priority_queue<int> que;
+        multiset<int> remove;
+        ans.push_back(edges[0]);
+        que.push(edges[0][1]);
+        for(int i=1;i<edges.size();i++)
+        {
+            //std::cout<<edges[i][0]<<" "<<edges[i][1]<<std::endl;
+            if(ans.size()>0&&edges[i][0]==ans.back()[0])
+            {
+                ans.pop_back();
+            }    
+            if(edges[i][1]>0)
+            {
+                que.push(edges[i][1]);
+                int cur=que.top();
+                
+                if(ans.size()>0&&cur==ans.back()[1]) continue;
+                ans.push_back({edges[i][0],cur});
+            }
+            else
+            {
+                if(que.top()==abs(edges[i][1]))
+                {
+                    que.pop();
+                    while(!que.empty()&&remove.find(que.top())!=remove.end())
+                    {
+                        remove.erase(remove.find(que.top()));
+                        que.pop();
+                    }//while
+                    if(!que.empty()&&que.top()!=ans.back()[1])
+                    {
+                        ans.push_back({edges[i][0],que.top()});
+                    }
+                    else if(que.empty())
+                    {
+                        ans.push_back({edges[i][0],0});
+                    }
+                }//if
+                else
+                {
+                    remove.insert(abs(edges[i][1]));
+                    if(!que.empty()&&que.top()!=ans.back()[1])
+                    {
+                        ans.push_back({edges[i][0],que.top()});
+                    }
+                    
+                }
+            }//else
+            
+        }//for i
+        return ans;
+        
+    }
+};
+
+
+
+
+
+##############################################################
+The solution in the solution part: Line sweep + priority queue
+##############################################################
+class Solution {
+public:
+    vector<vector<int>> getSkyline(vector<vector<int>>& buildings) {
+        // Iterate over all buildings, for each building i,
+        // add (position, i) to edges.
+        vector<vector<int>> edges;
+        for (int i = 0; i < buildings.size(); ++i){
+            edges.push_back({buildings[i][0], i});
+            edges.push_back({buildings[i][1], i});
+        }
+        
+        // Sort edges by non-decreasing order.
+        sort(edges.begin(), edges.end());
+        
+        // Initailize an empty Priority Queue 'live' to store all the newly added buildings,
+        // an empty list 'answer' to store the skyline key points.
+        priority_queue<pair<int, int>> live;
+        vector<vector<int>> answer;
+        int idx = 0;
+        
+        // Iterate over all the sorted edges.
+        while (idx < edges.size()){
+            
+            // Since we might have multiple edges at same x,
+            // Let the 'currX' be the current position.
+            int currX = edges[idx][0];
+            
+            // While we are handling the edges at 'currX':
+            while (idx < edges.size() && edges[idx][0] == currX){
+                // The index 'b' of this building in 'buildings'
+                int b = edges[idx][1];
+                
+                // If this is a left edge of building 'b', we
+                // add (height, right) of building 'b' to 'live'.
+                if (buildings[b][0] == currX){
+                    int right = buildings[b][1];
+                    int height = buildings[b][2];
+                    live.push({height, right});
+                }
+                idx += 1;
+            }
+            
+            // If the tallest live building has been passed,
+            // we remove it from 'live'.
+            while (!live.empty() && live.top().second <= currX)
+                live.pop();
+            
+            // Get the maximum height from 'live'.
+            int currHeight = live.empty() ? 0 : live.top().first;
+            
+            // If the height changes at 'currX', we add this
+            // skyline key point [currX, max_height] to 'answer'.
+            if (answer.empty() || answer[answer.size() - 1][1] != currHeight)
+                answer.push_back({currX, currHeight});
+        }
+        
+        // Return 'answer' as the skyline.
+        return answer;
+    }
+};
