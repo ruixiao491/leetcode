@@ -1,0 +1,62 @@
+class Solution {
+public:
+    string mostCommonWord(string paragraph, vector<string>& banned) {
+        vector<string> words=separatewords(paragraph);
+        map<string,int> seen;
+        set<string> check;
+        for(int i=0;i<banned.size();i++)
+        {
+            check.insert(banned[i]);
+        }
+        
+        for(int i=0;i<words.size();i++)
+        {
+            if(check.find(words[i])==check.end())
+            {
+                seen[words[i]]++;
+            }
+            
+        }//for i
+        
+        auto it=seen.begin();
+        int count=0;
+        string b="";
+        while(it!=seen.end())
+        {
+            if(it->second>count)
+            {
+                count=it->second;
+                b=it->first;
+            }
+            it++;
+        }
+        return b;
+        
+    }
+    vector<string> separatewords(string paragraph)
+    {
+        vector<string> ans;
+        string a="";
+        for(int i=0;i<paragraph.size();i++)
+        {
+            if(!isalpha(paragraph[i]))
+            {
+                if(a.size()>0)
+                {
+                    ans.push_back(a);
+                    a="";
+                }
+                       
+            }//if
+            else
+            {
+                a+=tolower(paragraph[i]);
+            }
+        }//for i
+        if(a.size()!=0)
+        {
+            ans.push_back(a);
+        }
+        return ans;
+    }
+};
