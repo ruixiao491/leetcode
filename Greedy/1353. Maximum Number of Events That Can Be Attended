@@ -43,3 +43,37 @@ public:
         return ans;
     }
 };
+
+
+
+#############################################
+The solution of others: map + priority queue
+#############################################
+class Solution {
+public:
+    int maxEvents(vector<vector<int>>& events) {
+        // 记录不同起始天对应的结束时间
+        int maxDay = 0;
+        unordered_map<int, vector<int>> umap;
+        for (auto& event : events) {
+            if (event[1] > maxDay) maxDay = event[1];
+            umap[event[0]].emplace_back(event[1]);
+        }
+        //
+        int cnt;
+        priority_queue<int, vector<int>, greater<>> pri_que;
+        for (int i = 1; i <= maxDay; ++i) {
+            while (!pri_que.empty() && pri_que.top() < i) pri_que.pop();
+            for (int s : umap[i]) {
+                pri_que.push(s);
+            }
+            if (!pri_que.empty()) {
+                ++cnt;
+                pri_que.pop();
+            }
+        }
+        return cnt;
+    }
+};
+
+
