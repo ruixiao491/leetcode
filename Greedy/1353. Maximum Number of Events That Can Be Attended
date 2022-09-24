@@ -1,0 +1,45 @@
+###########################################
+The solution in the solution part: Greedy
+###########################################
+class Solution {
+public:
+    #define N 100010
+    int maxEvents(vector<vector<int>>& events) {
+        vector<int>in[N], out[N];
+        int mx=0, cnt=0;
+        for(int i=0;i<events.size();i++)
+        {
+            int l=events[i][0], r=events[i][1];
+            mx=max(mx,r);
+            in[l].push_back(cnt);
+            out[r+1].push_back(cnt);
+            cnt++;
+        }//for i
+        int ans=0;
+        multiset<pair<int,int>> seen;
+        for(int i=1;i<=mx;i++)
+        {
+            for(int j=0;i<in[i].size();j++)
+            {
+                int num=in[i][j];
+                std::cout<<events[num][1]<<" "<<num<<std::endl;
+                seen.insert({events[num][1],num});
+            }//for j
+            for(auto x:out[i])
+            {
+                auto it=seen.find({events[x][1],x});
+                if(it!=seen.end())
+                {
+                    seen.erase(it);
+                }//if
+            }//for auto
+            if(!seen.empty())
+            {
+                seen.erase(seen.begin());
+                ans++;
+            }//if
+            
+        }//for i
+        return ans;
+    }
+};
