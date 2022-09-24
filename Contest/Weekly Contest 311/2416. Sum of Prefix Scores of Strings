@@ -1,0 +1,36 @@
+class Solution {
+public:
+    vector<int> sumPrefixScores(vector<string>& words) {
+        for(string& w:words) put(w);
+        vector<int> res;
+        for(string& w: words) res.push_back(search(w));
+        return res;
+        
+    }//sumPrefixScore
+private:
+    struct Node{
+    Node* next[26]={nullptr};
+    int cnt=0;
+    };
+    Node* root=new Node();
+    void put(string& w)
+    {
+        Node* nd=root;
+        for(char c:w){
+            if(!nd->next[c-'a']) nd->next[c-'a']=new Node();
+            nd=nd->next[c-'a'];
+            nd->cnt++;
+        }
+    }//put
+    int search(string& w)
+    {
+        Node* nd=root;
+        int res=0;
+        for(char c:w)
+        {
+            nd=nd->next[c-'a'];
+            res+=nd->cnt;
+        }//for
+        return res;
+    }//search
+};
