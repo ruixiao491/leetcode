@@ -1,0 +1,77 @@
+class Solution {
+public:
+    TreeNode* reverseOddLevels(TreeNode* root) {
+        vector<vector<int>> res;
+        queue<TreeNode*> que;
+        que.push(root);
+        int level=0;
+        while(!que.empty())
+        {
+            TreeNode* cur;
+            int length=que.size();
+            for(int i=0;i<length;i++)
+            {
+                cur=que.front();
+                que.pop();
+                if(res.size()-1<level||res.size()==0)
+                {
+                    res.push_back({cur->val});
+                }
+                else
+                {
+                    res[level].push_back(cur->val);
+                }
+                if(cur->left!=nullptr)
+                {
+                   que.push(cur->left); 
+                }
+                if(cur->right!=nullptr)
+                {
+                   que.push(cur->right);   
+                }
+            }//for i
+            level++;
+        }//while
+        for(int i=0;i<res.size();i++)
+        {
+            if(i%2==1)
+            {
+                reverse(res[i].begin(),res[i].end());
+            }
+        }//for i
+        
+        queue<TreeNode*> que2;
+        que2.push(root);
+        level=0;
+        while(!que2.empty())
+        {
+            TreeNode* cur;
+            int length=que2.size();
+            for(int i=0;i<length;i++)
+            {
+                cur=que2.front();
+                que2.pop();
+                if(level%2==1)
+                {
+                    cur->val=res[level][i];
+                }
+                if(cur->left!=nullptr)
+                {
+                   que2.push(cur->left); 
+                }
+                if(cur->right!=nullptr)
+                {
+                   que2.push(cur->right);   
+                }
+            }//for i
+            level++;
+            
+        }//while
+        
+        return root;
+        
+        
+    }
+    
+    
+};
