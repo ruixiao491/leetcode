@@ -1,0 +1,29 @@
+class Solution {
+public:
+    int longestContinuousSubstring(string s) {
+        int n=s.size();
+        if(n==1) return 1;
+        int left=0, right=1, ans=1;
+        char prev=s[0];
+        while(right<n)
+        {
+            if(s[right]==prev+1)
+            {
+                //std::cout<<right<<" "<<left<<" "<<prev<<std::endl;
+                prev=s[right];
+                right++;
+                ans=max(ans,right-left);
+                //std::cout<<right<<" "<<left<<" "<<prev<<" "<<ans<<std::endl;
+            }
+            else
+            {
+                left=right;
+                prev=s[right];
+                right++;
+            }
+            
+        }//while
+        return ans;
+        
+    }
+};
