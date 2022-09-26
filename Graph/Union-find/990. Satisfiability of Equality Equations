@@ -1,0 +1,120 @@
+////My solution: Union-find
+class Solution {
+public:
+    vector<int> root;
+    vector<int> rank;
+    int find(int x)
+    {
+        if(x==root[x])
+        {
+            return x;
+        }
+        return root[x]=find(root[x]);
+    }//find
+    
+    void unionbyrank(int x, int y)
+    {
+        int rootX=find(x);
+        int rootY=find(y);
+        if(rootX!=rootY)
+        {
+            if(rank[rootX]>rank[rootY])
+            {
+                root[rootY]=rootX;
+            }
+            else if(rank[rootX]<rank[rootY])
+            {
+                root[rootX]=rootY;
+            }
+            else
+            {
+                root[rootY]=rootX;
+                rank[rootX]++;
+            }
+        }
+    }//unionbyrank
+    
+    bool equationsPossible(vector<string>& equations) {
+        root=vector<int>(26);
+        rank=vector<int>(26,1);
+        int n=equations.size();
+        for(int i=0;i<26;i++)
+        {
+            root[i]=i;
+        }
+        auto cmp=[](const string& a, const string& b)
+        {
+            return a[1]>b[1];
+        };
+        sort(equations.begin(),equations.end(),cmp);      
+        for(int i=0;i<n;i++)
+        {
+            int a=equations[i][0]-'a';
+            int b=equations[i][3]-'a';
+            bool combine=equations[i][1]=='=';
+            //std::cout<<a<<" "<<b<<" "<<combine<<std::endl;
+            if(combine&&find(a)!=find(b))
+            {
+                unionbyrank(a,b);
+            }
+            else if(combine==0)
+            {
+                if(find(a)==find(b))
+                {
+                    return false;
+                }
+            }
+        }//for i
+        return true;
+        
+    }
+};
+
+
+
+
+########################################
+The solution in the solution part: DFS
+########################################
+class Solution {
+public:
+    bool equationsPossible(vector<string>& equations) {
+        constexpr int SIZE = 26;
+        vector<vector<int>> graph(SIZE);
+        vector<int> color(SIZE, -1);
+
+        for (string& eqn : equations) {
+            if (eqn[1] == '=') {
+                int x = eqn[0] - 'a';
+                int y = eqn[3] - 'a';
+                graph[x].push_back(y);
+                graph[y].push_back(x);
+            }
+        }
+
+        // mark the color of `node` as `c`
+        function<void(int, int)> dfs = [&](int node, int c) {
+            if (color[node] == -1) {
+                color[node] = c;
+                for (int nei : graph[node]) {
+                    dfs(nei, c);
+                }
+            }
+        };
+
+        for (int i = 0; i < SIZE; i++) {
+            dfs(i, i);
+        }
+
+        for (string& eqn : equations) {
+            if (eqn[1] == '!') {
+                int x = eqn[0] - 'a';
+                int y = eqn[3] - 'a';
+                if (color[x] == color[y]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+};
