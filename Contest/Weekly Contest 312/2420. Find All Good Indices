@@ -1,0 +1,22 @@
+class Solution {
+public:
+    vector<int> goodIndices(vector<int>& a, int k) {
+        int n=a.size();
+        vector<int> dec(n),inc(n);
+        for(int i=0;i<n;i++){
+            if(i==0||a[i]>a[i-1])
+                dec[i]=1;
+            else
+                dec[i]=dec[i-1]+1;
+            if(i==0||a[i]<a[i-1])
+                inc[i]=1;
+            else
+                inc[i]=inc[i-1]+1;
+        }
+        vector<int> ans;
+        for(int i=k;i<n-k;i++)
+            if(dec[i-1]>=k&&inc[i+k]>=k)
+                ans.push_back(i);
+        return ans;
+    }
+};
