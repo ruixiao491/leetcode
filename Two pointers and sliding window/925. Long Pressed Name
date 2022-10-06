@@ -1,0 +1,54 @@
+///My solution: similar to two pointers
+class Solution {
+public:
+    bool isLongPressedName(string name, string typed) {
+        if(name.size()>typed.size()) return false;
+        int n=name.size();
+        int left=0, right=0;
+        int cur_t=0;
+        while(right<n)
+        {
+            while(name[right]==name[left])
+            {
+                right++;
+            }
+            int length=right-left;
+            int count=0;
+            while(cur_t<typed.size()&&typed[cur_t]==name[left])
+            {
+                count++;
+                cur_t++;
+            }
+            //std::cout<<length<<" "<<count<<std::endl;
+            if(count<length) return false;
+            if(right==n&&cur_t<typed.size()) return false; 
+            left=right;
+            
+        }//while
+        return true;
+    }
+};
+
+
+###############################################
+The solution in the solution part: two pointers
+###############################################
+class Solution {
+public:
+    bool isLongPressedName(string name, string typed) {
+        int i = 0, j = 0;
+        while (j < typed.length()) {
+            if (i < name.length() && name[i] == typed[j]) {
+                i++;
+                j++;
+            } else if (j > 0 && typed[j] == typed[j - 1]) {
+                j++;
+            } else {
+                return false;
+            }
+        }
+        return i == name.length();
+    }
+};
+
+
