@@ -1,0 +1,54 @@
+////My solution: flip bit by bit
+class Solution {
+public:
+    int bitwiseComplement(int n) {
+        if(n==0) return 1;
+        int copy=n;
+        int count=0;
+        while(copy>0)
+        {
+            n=n^(1<<count);
+            //std::cout<<n<<std::endl;
+            copy=copy>>1;
+            count++;
+            
+        }//while
+        
+        return n;
+    }
+};
+
+
+
+###################################################################################
+The solution in the solution part: Compute Bit Length and Construct 1-bits Bitmask
+###################################################################################
+class Solution {
+public:
+    int bitwiseComplement(int n) {
+        if(n==0) return 1;
+        int length=log(n)/log(2)+1;
+        int bitmask=(1<<length)-1;
+        return bitmask^n;
+    }
+};
+
+
+
+#########################################################################################
+The solution in the solution part: highestOneBit OpenJDK algorithm from Hacker's Delight
+Propagate the highestOneBit to construct the bitmask (similar to the above method)
+#########################################################################################
+class Solution {
+public:
+    int bitwiseComplement(int n) {
+        if(n==0) return 1;
+        int bitmask=n;
+        bitmask|=(bitmask>>1);
+        bitmask|=(bitmask>>2); 
+        bitmask|=(bitmask>>4);
+        bitmask|=(bitmask>>8);
+        bitmask|=(bitmask>>16);
+        return bitmask^n;
+    }
+};
