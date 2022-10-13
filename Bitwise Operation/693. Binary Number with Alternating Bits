@@ -1,0 +1,35 @@
+///My solution:
+class Solution {
+public:
+    bool hasAlternatingBits(int n) {
+        if(n==1) return true;
+        int last=n%2;
+        n=n>>1;
+        while(n>0)
+        {
+            int cur=n%2;
+            if(cur^last==0)
+            {
+                return false;
+            }
+            last=cur;
+            n=n>>1;
+        }//while
+        return true;
+        
+    }
+};
+
+
+#####################################################
+The solution in the solution part: Bitwise Operation
+#####################################################
+class Solution {
+public:
+    bool hasAlternatingBits(int n) {
+        long a = n ^ (n >> 1);
+        return (a & (a + 1)) == 0;
+    }
+};
+
+
