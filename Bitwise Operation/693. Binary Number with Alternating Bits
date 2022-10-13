@@ -33,3 +33,22 @@ public:
 };
 
 
+#####################################################
+The solution in the solution part: BitWise Operation
+#####################################################
+class Solution {
+public:
+    bool hasAlternatingBits(int n) {
+        int cur=-1;
+        while(n!=0)
+        {
+            int u=n&1;
+            if((cur^u)==0) return false;
+            //std::cout<<u<<"  "<<cur<<std::endl;
+            cur=u;
+            n=n>>1;
+        }//while
+        return true;
+    }
+};
+
