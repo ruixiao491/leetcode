@@ -1,4 +1,4 @@
-///My solution:
+///My solution: transverse
 class Solution {
 public:
     bool hasAlternatingBits(int n) {
@@ -33,9 +33,9 @@ public:
 };
 
 
-#####################################################
-The solution in the solution part: BitWise Operation
-#####################################################
+################################################
+The solution in the solution part: Transverse
+################################################
 class Solution {
 public:
     bool hasAlternatingBits(int n) {
