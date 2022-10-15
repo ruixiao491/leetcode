@@ -1,0 +1,60 @@
+class Solution {
+public:
+    int maximumDetonation(vector<vector<int>>& bombs) {
+        int n=bombs.size();
+        vector<vector<int>> edges(n);
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(i!=j&&isconnected(i,j,bombs))
+                {
+                    edges[i].push_back(j);
+                }           
+                
+            }//for j
+        }//for i
+                
+        int ans=0;
+        
+        for(int i=0;i<n;i++)
+        {
+            queue<int> que;
+            que.push(i);
+            int count=1;
+            set<int> visited;
+            visited.insert(i);
+            while(!que.empty())
+            {
+                int cur=que.front();
+                //std::cout<<i<<" "<<cur<<" "<<count<<std::endl;
+                que.pop();
+                for(int j=0;j<edges[cur].size();j++)
+                {
+                    if(visited.count(edges[cur][j])==0)
+                    {
+                        visited.insert(edges[cur][j]);
+                        count++;
+                        que.push(edges[cur][j]);
+                    }//if
+                }//for j
+            }//while
+            ans=max(ans,count);
+            
+        }//for i
+        
+        return ans;
+               
+    }
+    bool isconnected(int i, int j, vector<vector<int>>& bombs)
+    {
+        long long dx=bombs[i][0]-bombs[j][0];
+        long long dy=bombs[i][1]-bombs[j][1];
+        long long r=bombs[i][2];
+        if((dx*dx+dy*dy)<=r*r)
+        {
+            return true;
+        }
+        return false;
+    }//isconnected
+};
