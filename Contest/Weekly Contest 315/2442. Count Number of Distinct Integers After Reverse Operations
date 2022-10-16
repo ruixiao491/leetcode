@@ -1,0 +1,30 @@
+class Solution {
+public:
+    int countDistinctIntegers(vector<int>& nums) {
+        int n=nums.size();
+        set<int> seen;
+        for(int i=0;i<n;i++)
+        {
+            //if(seen.find(nums[i])==seen.end())
+            //{
+                seen.insert(nums[i]);
+                seen.insert(reverse(nums[i]));
+            //}
+            
+        }//for
+        return seen.size();
+        
+    }//count
+    int reverse(int a)
+    {
+        if(a<10) return a;
+        int ans=0;
+        while(a>0)
+        {
+            int last=a%10;
+            ans=ans*10+last;
+            a=a/10;    
+        }//while
+        return ans;
+    }//reverse
+};
