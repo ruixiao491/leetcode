@@ -1,0 +1,26 @@
+class Solution {
+public:
+    bool sumOfNumberAndReverse(int num) {
+        for(int i=num;i>=num/2;i--)
+        {
+            if(i+reverse(i)==num)
+            {
+                return true;
+            }
+        }//for
+        return false;
+        
+    }
+    int reverse(int a)
+    {
+        if(a<10) return a;
+        int ans=0;
+        while(a>0)
+        {
+            int last=a%10;
+            ans=ans*10+last;
+            a=a/10;    
+        }//while
+        return ans;
+    }//reverse
+};
