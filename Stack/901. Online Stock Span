@@ -1,0 +1,70 @@
+////Stack
+class StockSpanner {
+public:
+stack<pair<int,int>> stk;
+int index;
+    StockSpanner() {
+        index=0;
+        
+
+    }
+    
+    int next(int price) {
+        if(index==0) 
+        {
+            stk.push({price,index});
+            index++;
+            return 1;
+        }
+        else
+        {
+            while(!stk.empty()&&stk.top().first<=price)
+            {
+                stk.pop();
+            }//while
+            int ans=0;
+            if(!stk.empty())
+            {
+                ans=index-stk.top().second;
+            }
+            else{
+                ans=index+1;
+            }
+            stk.push({price,index});
+            index++;
+            return ans;
+
+        }
+
+
+    }
+};
+
+
+
+
+##################################################
+The solution in the solution part: monotone Stack
+##################################################
+class StockSpanner {
+public:
+    StockSpanner() {
+        this->stk.emplace(-1, INT_MAX);
+        this->idx = -1;
+    }
+    
+    int next(int price) {
+        idx++;
+        while (price >= stk.top().second) {
+            stk.pop();
+        }
+        int ret = idx - stk.top().first;
+        stk.emplace(idx, price);
+        return ret;
+    }
+
+private:
+    stack<pair<int, int>> stk; 
+    int idx;
+};
+
