@@ -1,0 +1,41 @@
+////My solution: median + sort
+class Solution {
+public:
+    int minMoves2(vector<int>& nums) {
+        sort(nums.begin(),nums.end());
+        int n=nums.size();
+        int target=nums[n/2];
+        int ans=0;
+        for(int i=0;i<n;i++)
+        {
+            ans+=abs(nums[i]-target);
+        }//for i
+        return ans;
+    }
+};
+
+
+#####################################################
+The solution in the solution part: prefix sum + sort
+#####################################################
+class Solution {
+public:
+    int minMoves2(vector<int>& nums) {
+        sort(nums.begin(),nums.end());
+        long long ans=LLONG_MAX, total=0, sum=0;
+        for(int i=0;i<nums.size();i++)
+        {
+            total+=nums[i];
+        }
+        for(int i=0;i<nums.size();i++)
+        {
+            long long test=(long long)((long long)nums[i]*i-sum)+((total-sum)-(long long)nums[i]*(nums.size()-i));
+            //std::cout<<(long long)nums[i]*i-sum<<"  "<<((total-sum)-(long long)nums[i]*(nums.size()-i))<<"  "<<test<<std::endl;
+            
+            ans=min(ans,test);
+            sum+=nums[i];
+        }
+        return (int)ans;
+        
+    }
+};
