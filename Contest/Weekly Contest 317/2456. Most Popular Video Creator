@@ -1,0 +1,47 @@
+class Solution {
+public:
+    vector<vector<string>> mostPopularCreator(vector<string>& creators, vector<string>& ids, vector<int>& views) {
+        vector<vector<string>> ans;
+        int n=views.size();
+        map<string,long long> seen_counts;
+        map<string,vector<pair<int,string>>> seen_ids;
+        long long maxval=0;
+        for(int i=0;i<n;i++)
+        {
+            seen_counts[creators[i]]+=views[i];
+            maxval=max(maxval,seen_counts[creators[i]]);
+            seen_ids[creators[i]].push_back({-views[i],ids[i]});
+            
+        }//for i
+        vector<string> names;
+        auto it=seen_counts.begin();
+        while(it!=seen_counts.end())
+        {
+            if(it->second==maxval)
+            {
+                names.push_back(it->first);
+            }
+            it++;
+        }//while
+        auto cmp=[](pair<int,string>& a, pair<int,string>& b)
+        {
+            if(a.first!=b.first)
+            {
+                return a.first<b.first;
+            }
+            return a.second<b.second;
+        
+        };
+        
+        for(int i=0;i<names.size();i++)
+        {
+            //std::cout<<names[i]<<std::endl;
+            vector<pair<int,string>> id_name=seen_ids[names[i]];
+            sort(id_name.begin(),id_name.end(),cmp);
+            ans.push_back({names[i],id_name[0].second});
+            
+        }
+        return ans;
+        
+    }
+};
