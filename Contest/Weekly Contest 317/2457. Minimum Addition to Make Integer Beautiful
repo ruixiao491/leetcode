@@ -1,0 +1,49 @@
+class Solution {
+public:
+    long long makeIntegerBeautiful(long long n, int target) {
+        vector<int> digits=reversedigit(n);
+        int sum=0;
+        int flag=0;
+        int index=0;
+        long long numbers=0;
+        int a=0;
+        for(int i=0;i<digits.size();i++)
+        {
+            a+=digits[i];
+        }
+        if(a<=target) return 0;
+        
+        for(int i=0;i<digits.size();i++)
+        {
+            sum+=digits[i];
+            numbers=numbers*10+digits[i];
+            if(sum>=target)
+            {
+                flag=1;
+                index=i;
+                break;
+            }
+        }//for
+        if(flag==0) return 0;
+        numbers-=digits[index];
+        numbers=numbers/10+1;
+        int length=digits.size()-index;
+        long long power=pow(10,length);
+        //std::cout<<power<<std::endl;
+        long long ans=numbers*power-n;
+        return ans;
+        
+             
+    }
+    vector<int> reversedigit(long long n)
+    {
+        vector<int> ans;
+        while(n>0)
+        {
+            ans.push_back(n%10);
+            n=n/10;
+        }
+        reverse(ans.begin(),ans.end());
+        return ans;
+    }
+};
